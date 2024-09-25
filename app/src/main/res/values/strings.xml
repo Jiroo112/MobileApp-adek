@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">adek</string>
+    <string name="heading1_text">Selamat datang di ADEK </string>
+    <string name="desc1_text">Kami hadir untuk membantu kamu mencapai tujuan kesehatan dan kebugaran dengan cara yang konsisten, terukur, dan menyenangkan.</string>
+    <string name="heading2_text">Apa sih diet itu?</string>
+    <string name="desc2_text">“Diet bukan sekadar menurunkan berat badan, tapi tentang mencintai tubuhmu dengan cara yang benar.”</string>
+    <string name="heading3_text">Apa sih rahasianya?</string>
+    <string name="desc3_text">"Jangan biarkan kemarin menentukan hari ini. Kamu selalu punya kesempatan untuk bangkit lebih kuat, lebih sehat,dan lebih percaya diri!"</string>
+    <string name="heading4_text">Ayo kita mulai!</string>
+    <string name="desc4_text">Mulailah perjalanan sehatmu bersama kami sekarang!</string>
+</resources>
