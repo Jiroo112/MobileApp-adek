@@ -6,7 +6,6 @@ import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -17,7 +16,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class Login extends AppCompatActivity {
 
-    Button mbutton;
     TextView regist;
 
     @Override
@@ -31,7 +29,8 @@ public class Login extends AppCompatActivity {
             return insets;
         });
 
-        regist = findViewById(R.id.singup);
+        regist = (TextView) findViewById(R.id.register);
+
         regist.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

@@ -13,10 +13,13 @@
         android:theme="@style/Theme.Adek"
         tools:targetApi="31">
         <activity
-            android:name=".Regist"
+            android:name=".Login"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name=".Fragment"
+            android:exported="false" />
+        <activity
+            android:name=".Regist"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
