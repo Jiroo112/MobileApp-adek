@@ -2,11 +2,11 @@ package com.alphatz.adek;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,9 +37,9 @@ public class Dashboard extends AppCompatActivity {
 
             if (itemId == R.id.home) {
                 selectedFragment = new HomeFragment();
-            } else if (itemId == R.id.home) {
-                selectedFragment = new SearchFragment();
             } else if (itemId == R.id.search) {
+                selectedFragment = new SearchFragment();
+            } else if (itemId == R.id.profile) {
                 selectedFragment = new ProfileFragment();
             } else if (itemId == R.id.settings) {
                 selectedFragment = new SettingsFragment();
