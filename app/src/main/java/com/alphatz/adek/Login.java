@@ -88,7 +88,7 @@ public class Login extends AppCompatActivity {
                                 String username = jsonResponse.getJSONObject("user").getString("username");
 
                                 // Mengirim username ke DashboardActivity
-                                Intent intent = new Intent(Login.this, Regist.class);
+                                Intent intent = new Intent(Login.this, Dashboard.class);
                                 intent.putExtra("username", username);
                                 startActivity(intent);
                                 finish();
