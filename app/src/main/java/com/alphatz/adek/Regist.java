@@ -1,8 +1,5 @@
 package com.alphatz.adek;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,26 +8,32 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import sql_lite.DatabaseContract;
-import sql_lite.DatabaseHelper;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Regist extends AppCompatActivity {
 
     private EditText editTextEmail, editTextUsername, editTextPassword, editTextRePassword;
     private Button buttonRegister;
-    private SQLiteDatabase db;
+    private String URL_REGISTER = "http://10.0.2.2/ads_mysql/registrasi.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regist);
 
-        // Initialize database
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        db = dbHelper.getWritableDatabase();
-
-        editTextEmail = findViewById(R.id.input_emailRegist);
-        editTextUsername = findViewById(R.id.name_regist);
+        editTextEmail = findViewById(R.id.name_regist);
+        editTextUsername = findViewById(R.id.input_emailRegist);
         editTextPassword = findViewById(R.id.input_password);
         editTextRePassword = findViewById(R.id.input_repasword_regist);
         buttonRegister = findViewById(R.id.btn_regist);
@@ -38,8 +41,8 @@ public class Regist extends AppCompatActivity {
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = editTextEmail.getText().toString().trim();
-                String username = editTextUsername.getText().toString().trim();
+                String email = editTextEmail.getText().toString();
+                String username = editTextUsername.getText().toString();
                 String password = editTextPassword.getText().toString();
                 String rePassword = editTextRePassword.getText().toString();
 
@@ -52,52 +55,44 @@ public class Regist extends AppCompatActivity {
         });
     }
 
-    private void register(String email, String username, String password) {
-        // Check if email or username already exists
-        if (isEmailOrUsernameExists(email, username)) {
-            Toast.makeText(this, "Email or username already exists", Toast.LENGTH_LONG).show();
-            return;
-        }
+    private void register(final String email, final String username, final String password) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_REGISTER,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean success = jsonResponse.getBoolean("success");
+                            String message = jsonResponse.getString("message");
 
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.UserEntry.COLUMN_EMAIL, email);
-        values.put(DatabaseContract.UserEntry.COLUMN_USERNAME, username);
-        values.put(DatabaseContract.UserEntry.COLUMN_PASSWORD, password);
+                            Toast.makeText(Regist.this, message, Toast.LENGTH_LONG).show();
+                            if (success) {
+                                finish();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(Regist.this, "Parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(Regist.this, "Registration failed: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("email", email);
+                params.put("username", username);
+                params.put("password", password);
+                params.put("re_password", password);
+                return params;
+            }
+        };
 
-        long newRowId = db.insert(DatabaseContract.UserEntry.TABLE_NAME, null, values);
-
-        if (newRowId != -1) {
-            Toast.makeText(this, "Registration successful", Toast.LENGTH_LONG).show();
-            finish();
-        } else {
-            Toast.makeText(this, "Registration failed", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private boolean isEmailOrUsernameExists(String email, String username) {
-        String[] projection = {DatabaseContract.UserEntry._ID};
-        String selection = DatabaseContract.UserEntry.COLUMN_EMAIL + " = ? OR " +
-                DatabaseContract.UserEntry.COLUMN_USERNAME + " = ?";
-        String[] selectionArgs = {email, username};
-
-        Cursor cursor = db.query(
-                DatabaseContract.UserEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
-
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
-        return exists;
-    }
-
-    @Override
-    protected void onDestroy() {
-        db.close();
-        super.onDestroy();
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 }

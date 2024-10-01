@@ -2,7 +2,6 @@ package com.alphatz.adek;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +12,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class Dashboard extends AppCompatActivity {
 
+    private String username;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,13 +21,14 @@ public class Dashboard extends AppCompatActivity {
 
         // Menerima username dari Intent
         Intent intent = getIntent();
-        String username = intent.getStringExtra("username");
+        username = intent.getStringExtra("username");
 
         // Pastikan data username diterima
         if (username != null) {
             Toast.makeText(this, "Welcome, " + username, Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "No username received", Toast.LENGTH_SHORT).show();
+            username = "Pengguna"; // Default value jika username null
         }
 
         // Setup Bottom Navigation
@@ -36,7 +38,7 @@ public class Dashboard extends AppCompatActivity {
             int itemId = item.getItemId();
 
             if (itemId == R.id.home) {
-                selectedFragment = new HomeFragment();
+                selectedFragment = HomeFragment.newInstance(username);
             } else if (itemId == R.id.search) {
                 selectedFragment = new SearchFragment();
             } else if (itemId == R.id.profile) {
@@ -62,7 +64,7 @@ public class Dashboard extends AppCompatActivity {
 
         // Load default fragment
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new HomeFragment())
+                .replace(R.id.fragment_container, HomeFragment.newInstance(username))
                 .commit();
     }
 }

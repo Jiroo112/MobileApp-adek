@@ -6,9 +6,70 @@
     tools:context=".HomeFragment">
 
     <TextView
+        android:id="@+id/welcome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"
-        android:background="@color/active"/>
+        android:textSize="24sp"
+        android:text="USERNAME"
+        android:textStyle="bold"
+        android:gravity="top|left"/>
 
+    <!-- Grid pertama: 3x1 -->
+    <GridLayout
+        android:id="@+id/gridLayoutTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="70dp"
+        android:alignmentMode="alignMargins"
+        android:columnCount="3"
+        android:padding="12dp">
+
+        <!-- Baris pertama (3x1) -->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="gula"
+            android:src="@drawable/gula_dash" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="karbohidrat"
+            android:src="@drawable/karbo_dash" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="lemak"
+            android:src="@drawable/lemak_dash"/>
+    </GridLayout>
+
+    <!-- Grid kedua: 2x1 -->
+    <GridLayout
+        android:id="@+id/gridLayoutBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="200dp"
+        android:alignmentMode="alignMargins"
+        android:columnCount="2"
+        android:padding="8dp">
+
+        <!-- Baris kedua (2x1) -->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:contentDescription="protein"
+            android:src="@drawable/protein_dash" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="air"
+            android:src="@drawable/air_dash" />
+
+        />
+    </GridLayout>
 </FrameLayout>

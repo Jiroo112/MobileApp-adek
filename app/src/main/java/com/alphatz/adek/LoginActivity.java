@@ -1,9 +1,6 @@
 package com.alphatz.adek;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,27 +8,29 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
-import sql_lite.DatabaseContract;
-import sql_lite.DatabaseHelper;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText editTextUsername, editTextPassword;
-    private Button buttonLogin;
-    private TextView textViewSignUp;
-    private SQLiteDatabase db;
+    EditText editTextUsername, editTextPassword;
+    Button buttonLogin;
+    TextView textViewSignUp;
+    String URL_LOGIN = "http://10.0.2.2/ads_mysql/login.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Initialize database
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        db = dbHelper.getWritableDatabase();
-
-        // Initialize UI elements
         editTextUsername = findViewById(R.id.username_text);
         editTextPassword = findViewById(R.id.input_password);
         buttonLogin = findViewById(R.id.btn_login);
@@ -40,13 +39,13 @@ public class LoginActivity extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = editTextUsername.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
+                String username = editTextUsername.getText().toString();
+                String password = editTextPassword.getText().toString();
 
                 if (!username.isEmpty() && !password.isEmpty()) {
                     login(username, password);
                 } else {
-                    Toast.makeText(LoginActivity.this, "All fields must be filled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "kolom harus di isi semua", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -58,80 +57,52 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        // Add dummy user if it doesn't exist
-        if (!isUserExists("testuser")) {
-            addDummyUser("testuser", "password123");
-        }
     }
 
-    private void login(String username, String password) {
-        String[] projection = {
-                DatabaseContract.UserEntry._ID,
-                DatabaseContract.UserEntry.COLUMN_USERNAME
+    private void login(final String username, final String password) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_LOGIN,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean success = jsonResponse.getBoolean("success");
+                            String message = jsonResponse.getString("message");
+
+                            if (success) {
+                                // Mengambil username dari respons
+                                String username = jsonResponse.getJSONObject("user").getString("username");
+
+                                // Mengirim username ke DashboardActivity
+                                Intent intent = new Intent(LoginActivity.this, Dashboard.class);
+                                intent.putExtra("username", username);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(LoginActivity.this, "Parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(LoginActivity.this, "Login failed: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("username", username);
+                params.put("password", password);
+                return params;
+            }
         };
 
-        String selection = DatabaseContract.UserEntry.COLUMN_USERNAME + " = ? AND " +
-                DatabaseContract.UserEntry.COLUMN_PASSWORD + " = ?";
-        String[] selectionArgs = { username, password };
-
-        Cursor cursor = db.query(
-                DatabaseContract.UserEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
-
-        if (cursor.moveToFirst()) {
-            // Login successful
-            String loggedInUsername = cursor.getString(
-                    cursor.getColumnIndexOrThrow(DatabaseContract.UserEntry.COLUMN_USERNAME));
-
-            Intent intent = new Intent(LoginActivity.this, Dashboard.class);
-            intent.putExtra("username", loggedInUsername);
-            startActivity(intent);
-            finish();
-        } else {
-            // Login failed
-            Toast.makeText(this, "Invalid username or password", Toast.LENGTH_LONG).show();
-        }
-        cursor.close();
-    }
-
-    private boolean isUserExists(String username) {
-        String[] projection = {DatabaseContract.UserEntry._ID};
-        String selection = DatabaseContract.UserEntry.COLUMN_USERNAME + " = ?";
-        String[] selectionArgs = {username};
-
-        Cursor cursor = db.query(
-                DatabaseContract.UserEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
-
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
-        return exists;
-    }
-
-    private void addDummyUser(String username, String password) {
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.UserEntry.COLUMN_USERNAME, username);
-        values.put(DatabaseContract.UserEntry.COLUMN_PASSWORD, password);
-
-        db.insert(DatabaseContract.UserEntry.TABLE_NAME, null, values);
-    }
-
-    @Override
-    protected void onDestroy() {
-        db.close();
-        super.onDestroy();
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 }
