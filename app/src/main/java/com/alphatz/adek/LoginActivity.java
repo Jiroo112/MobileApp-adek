@@ -1,6 +1,7 @@
 package com.alphatz.adek;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,10 +27,25 @@ public class LoginActivity extends AppCompatActivity {
     TextView textViewSignUp;
     String URL_LOGIN = "http://10.0.2.2/ads_mysql/login.php";
 
+    SharedPreferences sharedPreferences;
+    private static final String PREF_NAME = "LoginPrefs";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+
+        // Check if user is already logged in
+        if (sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false)) {
+            String username = sharedPreferences.getString(KEY_USERNAME, "");
+            startDashboardActivity(username);
+            finish();
+            return;
+        }
 
         editTextUsername = findViewById(R.id.username_text);
         editTextPassword = findViewById(R.id.input_password);
@@ -70,13 +86,15 @@ public class LoginActivity extends AppCompatActivity {
                             String message = jsonResponse.getString("message");
 
                             if (success) {
-                                // Mengambil username dari respons
                                 String username = jsonResponse.getJSONObject("user").getString("username");
 
-                                // Mengirim username ke DashboardActivity
-                                Intent intent = new Intent(LoginActivity.this, Dashboard.class);
-                                intent.putExtra("username", username);
-                                startActivity(intent);
+                                // Save login state and username
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putBoolean(KEY_IS_LOGGED_IN, true);
+                                editor.putString(KEY_USERNAME, username);
+                                editor.apply();
+
+                                startDashboardActivity(username);
                                 finish();
                             } else {
                                 Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
@@ -104,5 +122,18 @@ public class LoginActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+    }
+
+    private void startDashboardActivity(String username) {
+        Intent intent = new Intent(LoginActivity.this, Dashboard.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
+    }
+
+    // Add this method to your LoginActivity
+    public static void logout(SharedPreferences sharedPreferences) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
     }
 }
