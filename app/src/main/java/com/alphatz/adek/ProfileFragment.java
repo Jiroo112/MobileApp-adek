@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,10 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 public class ProfileFragment extends Fragment {
 
@@ -33,25 +35,20 @@ public class ProfileFragment extends Fragment {
         Button logoutButton = view.findViewById(R.id.button_logout);
 
         // Set click listener for the logout button
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout();
-            }
-        });
+        logoutButton.setOnClickListener(v -> logout());
 
         tipe_diet = view.findViewById(R.id.tipe_diet);
-        dokter_fav= view.findViewById(R.id.dokter_fav);
+        dokter_fav = view.findViewById(R.id.dokter_fav);
 
         setupAnimations();
 
-        return view;
+        // Set click listener for tipe_diet to open ResepFragment
+        tipe_diet.setOnClickListener(v -> openResepFragment());
 
+        return view;
     }
 
-
     private void setupAnimations() {
-        tipe_diet.setOnClickListener(v -> animateView(tipe_diet));
         dokter_fav.setOnClickListener(v -> animateView(dokter_fav));
     }
 
@@ -68,6 +65,7 @@ public class ProfileFragment extends Fragment {
         scaleX.start();
         scaleY.start();
     }
+
     private void logout() {
         // Clear SharedPreferences
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE);
@@ -80,5 +78,12 @@ public class ProfileFragment extends Fragment {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         requireActivity().finish();
+    }
+
+    private void openResepFragment() {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new ResepFragment());
+        transaction.addToBackStack(null); // Allow user to go back to ProfileFragment
+        transaction.commit();
     }
 }

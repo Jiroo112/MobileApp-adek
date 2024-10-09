@@ -58,8 +58,11 @@ public class Dashboard extends AppCompatActivity {
         // Setup Floating Action Button
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            // Action for FAB click
-            Toast.makeText(Dashboard.this, "FAB Clicked", Toast.LENGTH_SHORT).show();
+            // Action for FAB click - show HomeFragment
+            Fragment homeFragment = HomeFragment.newInstance(username);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, homeFragment)
+                    .commit();
         });
 
         // Load default fragment

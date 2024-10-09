@@ -1,17 +1,17 @@
 package com.alphatz.adek;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 public class SearchFragment extends Fragment {
 
@@ -44,34 +44,30 @@ public class SearchFragment extends Fragment {
         tampilkanLebih = view.findViewById(R.id.tampilkan_lebih);
 
         // Set click listeners
-        setupAnimations();
+        setupClickListeners();
     }
 
-    private void setupAnimations() {
-        setClickListener(makananBerat);
-        setClickListener(minumanSehat);
-        setClickListener(desert);
-        setClickListener(kardio);
-        setClickListener(kekuatan);
-        setClickListener(interval);
-        setClickListener(tampilkanLebih);
+    private void setupClickListeners() {
+        makananBerat.setOnClickListener(v -> {
+            showRoast();
+            openResepFragment();
+        });
+
+        // Add click listeners for other ImageViews if needed
+        // Example: minumanSehat.setOnClickListener(v -> openResepFragment());
     }
 
-    private void setClickListener(View view) {
-        view.setOnClickListener(v -> animateView(v));
+    private void openResepFragment() {
+        Log.d("SearchFragment", "openResepFragment called");
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new ResepFragment());
+        transaction.addToBackStack(null); // Allows the user to go back to SearchFragment
+        transaction.commit();
+        Log.d("SearchFragment", "Fragment transaction committed");
     }
 
-    private void animateView(View view) {
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1f, 1.1f, 1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1f, 1.1f, 1f);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(scaleX, scaleY);
-        animatorSet.setDuration(200);
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        animatorSet.start();
-
-        // TODO: Add your click handling logic here
-        // For example: if (view.getId() == R.id.makanan_berat) { // Handle makanan berat click }
+    private void showRoast() {
+        String roastMessage = "Makanan berat? Siapa bilang diet itu mudah!";
+        Toast.makeText(getActivity(), roastMessage, Toast.LENGTH_SHORT).show();
     }
 }
