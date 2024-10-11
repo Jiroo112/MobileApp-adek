@@ -1,4 +1,4 @@
-package com.alphatz.adek;
+package com.alphatz.adek.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.alphatz.adek.R;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;

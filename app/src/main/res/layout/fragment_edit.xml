@@ -1,0 +1,265 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#f8f8f8">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/profilePhotoImageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="right"
+            android:src="@drawable/ic_profil0"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="Profile Photo" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Foto Profile"
+                android:textColor="#4CAF50"
+                android:textSize="16sp"
+                android:layout_gravity="start" />
+
+            <TextView
+                android:id="@+id/changePhotoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ganti Foto"
+                android:textColor="#4CAF50"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nama"
+            android:textColor="#000"
+            android:layout_weight="1"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jessic bin Innes"
+            android:textSize="16sp"
+            android:textColor="#000" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:contentDescription="Arrow" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Biografi"
+            android:textColor="#000"
+            android:layout_weight="1"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/bioTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bagikan pendapat anda disini"
+            android:textSize="16sp"
+            android:textColor="#777" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:contentDescription="Arrow" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/garis"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jenis Kelamin"
+            android:textColor="#000"
+            android:layout_weight="1"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/genderTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tidak bergender"
+            android:textSize="16sp"
+            android:textColor="#777" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:contentDescription="Arrow" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ulang tahun"
+            android:textColor="#000"
+            android:layout_weight="1"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/birthdayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15/06/2000"
+            android:textSize="16sp"
+            android:textColor="#777" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:contentDescription="Arrow" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tinggi"
+            android:textColor="#000"
+            android:layout_weight="1"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/heightTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="160 cm"
+            android:textSize="16sp"
+            android:textColor="#777" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:contentDescription="Arrow" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Berat awal"
+            android:textColor="#000"
+            android:layout_weight="1"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/startWeightTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50 kg"
+            android:textSize="16sp"
+            android:textColor="#777" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:contentDescription="Arrow" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="330dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Berat target"
+            android:textColor="#000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/targetWeightTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10 kg"
+            android:textSize="16sp"
+            android:textColor="#777" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:contentDescription="Arrow" />
+    </LinearLayout>
+
+</LinearLayout>

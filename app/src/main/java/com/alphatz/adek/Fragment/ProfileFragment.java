@@ -1,4 +1,4 @@
-package com.alphatz.adek;
+package com.alphatz.adek.Fragment;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
@@ -13,15 +13,17 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.alphatz.adek.Activity.LoginActivity;
+import com.alphatz.adek.R;
 
 public class ProfileFragment extends Fragment {
 
     private ImageView dokter_fav;
     private ImageView tipe_diet;
+    private ImageView settings;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -34,16 +36,18 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         Button logoutButton = view.findViewById(R.id.button_logout);
 
-        // Set click listener for the logout button
         logoutButton.setOnClickListener(v -> logout());
 
         tipe_diet = view.findViewById(R.id.tipe_diet);
         dokter_fav = view.findViewById(R.id.dokter_fav);
+        settings = view.findViewById(R.id.settings);
+
 
         setupAnimations();
 
-        // Set click listener for tipe_diet to open ResepFragment
+        //aksi waktu tipe_diet pencet
         tipe_diet.setOnClickListener(v -> openResepFragment());
+        settings.setOnClickListener(v -> openSettingsFragment());
 
         return view;
     }
@@ -67,13 +71,13 @@ public class ProfileFragment extends Fragment {
     }
 
     private void logout() {
-        // Clear SharedPreferences
+        //ngilangin sharepreferenced waktu logout
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
 
-        // Navigate back to LoginActivity
+        //ngebalikin ke login
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -83,7 +87,13 @@ public class ProfileFragment extends Fragment {
     private void openResepFragment() {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new ResepFragment());
-        transaction.addToBackStack(null); // Allow user to go back to ProfileFragment
+        transaction.addToBackStack(null); // ini biar user bisa balik ke profile pas "back"
+        transaction.commit();
+    }
+    private void openSettingsFragment() {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new SettingsFragment());
+        transaction.addToBackStack(null); // sama
         transaction.commit();
     }
 }

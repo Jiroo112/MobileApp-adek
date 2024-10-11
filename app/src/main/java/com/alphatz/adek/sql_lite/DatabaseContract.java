@@ -1,4 +1,4 @@
-package sql_lite;
+package com.alphatz.adek.sql_lite;
 
 import android.provider.BaseColumns;
 

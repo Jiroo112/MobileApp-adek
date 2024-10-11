@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="@drawable/custom_imageview"
+    android:layout_marginBottom="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Gambar artikel -->
+        <ImageView
+            android:id="@+id/gambarArtikel"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/gambar_kosong" />
+
+        <!-- Deskripsi artikel -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Judul artikel -->
+            <TextView
+                android:id="@+id/judulArtikel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Meningkatkan Laju Metabolisme"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Kategori artikel -->
+            <TextView
+                android:id="@+id/kategoriArtikel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kesehatan"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14sp" />
+
+            <!-- Like dan View count -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <!-- Jumlah Like -->
+                <TextView
+                    android:id="@+id/likeCountArtikel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_thumbs_up"
+                    android:drawablePadding="4dp"
+                    android:text="60"
+                    android:textSize="12sp" />
+
+                <!-- Jumlah View -->
+                <TextView
+                    android:id="@+id/viewCountArtikel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:drawableLeft="@drawable/ic_eye"
+                    android:drawablePadding="4dp"
+                    android:text="120"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

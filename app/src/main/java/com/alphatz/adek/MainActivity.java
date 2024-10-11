@@ -15,6 +15,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import com.alphatz.adek.Activity.LoginActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     ViewPager mSlideViewPage;

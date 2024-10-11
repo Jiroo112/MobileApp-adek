@@ -3,13 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileFragment">
-
+    tools:context=".Fragment.ProfileFragment">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/bunga_profil" />
+        android:src="@drawable/bunga_profil"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -17,6 +16,15 @@
         android:layout_gravity="top|center_horizontal"
         android:layout_marginTop="100dp"
         android:src="@drawable/ic_profil"/>
+
+    <ImageView
+        android:id="@+id/settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_setings"
+        android:layout_gravity="right"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"/>
 
     <ImageView
         android:id="@+id/profile_info"

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dokter"
+        android:textSize="24sp"
+        android:layout_margin="20dp"
+        android:textStyle="bold">
+
+    </TextView>
+    <include layout="@layout/item_dokter" android:id="@+id/doctor_sonya"/>
+    <!-- Include template buat dokter Boyke, lainnya juga gt -->
+    <include layout="@layout/item_dokter" android:id="@+id/doctor_boyke"/>
+
+    <include layout="@layout/item_dokter" android:id="@+id/doctor_jiro"/>
+</LinearLayout>

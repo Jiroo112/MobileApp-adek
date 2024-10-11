@@ -3,16 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    tools:context=".Fragment.HomeFragment">
 
     <TextView
         android:id="@+id/welcome"
-        android:layout_width="match_parent"
+        android:layout_width="426dp"
         android:layout_height="match_parent"
-        android:textSize="24sp"
+        android:gravity="top|left"
         android:text="USERNAME"
-        android:textStyle="bold"
-        android:gravity="top|left"/>
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <!-- Grid pertama: 3x1 -->
     <GridLayout
@@ -69,7 +69,5 @@
             android:layout_height="wrap_content"
             android:contentDescription="air"
             android:src="@drawable/air_dash" />
-
-        />
     </GridLayout>
 </FrameLayout>
