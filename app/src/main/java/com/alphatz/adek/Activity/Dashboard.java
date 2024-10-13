@@ -7,11 +7,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.alphatz.adek.Fragment.BmiFragment;
 import com.alphatz.adek.Fragment.HomeFragment;
 import com.alphatz.adek.Fragment.KonsultasiFragment;
 import com.alphatz.adek.Fragment.ProfileFragment;
 import com.alphatz.adek.Fragment.SearchFragment;
-import com.alphatz.adek.Fragment.etcFragment;
 import com.alphatz.adek.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,6 +37,9 @@ public class Dashboard extends AppCompatActivity {
             username = "Pengguna"; // Default value jika username null
         }
 
+        // Load default fragment (HomeFragment)
+        loadFragment(HomeFragment.newInstance(username));
+
         // Setup Bottom Navigation
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnItemSelectedListener(item -> {
@@ -44,19 +47,17 @@ public class Dashboard extends AppCompatActivity {
             int itemId = item.getItemId();
 
             if (itemId == R.id.perhitungan_bmi) {
-                selectedFragment = HomeFragment.newInstance(username);
+                selectedFragment = new BmiFragment();
             } else if (itemId == R.id.search) {
                 selectedFragment = new SearchFragment();
-            } else if (itemId == R.id.profile) {
-                selectedFragment = new ProfileFragment();
             } else if (itemId == R.id.konsultasi) {
                 selectedFragment = new KonsultasiFragment();
+            } else if (itemId == R.id.profile) {
+                selectedFragment = new ProfileFragment();
             }
 
             if (selectedFragment != null) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, selectedFragment)
-                        .commit();
+                loadFragment(selectedFragment);
             }
             return true;
         });
@@ -65,15 +66,14 @@ public class Dashboard extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             // Action for FAB click - show HomeFragment
-            Fragment homeFragment = HomeFragment.newInstance(username);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, homeFragment)
-                    .commit();
+            loadFragment(HomeFragment.newInstance(username));
         });
+    }
 
-        // Load default fragment
+    // Method untuk memuat fragment
+    private void loadFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, HomeFragment.newInstance(username))
+                .replace(R.id.fragment_container, fragment)
                 .commit();
     }
 }

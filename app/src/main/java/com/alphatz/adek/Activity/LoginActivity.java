@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
 
-        // Check if user is already logged in
+        // cek misal user sudah login sebelumnya
         if (sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false)) {
             String username = sharedPreferences.getString(KEY_USERNAME, "");
             startDashboardActivity(username);

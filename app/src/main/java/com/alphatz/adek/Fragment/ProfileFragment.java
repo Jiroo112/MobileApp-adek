@@ -29,6 +29,10 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static Fragment newInstance(String username) {
+        return null;
+    }
+
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
