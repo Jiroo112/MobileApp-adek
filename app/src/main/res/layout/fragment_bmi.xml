@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,29 +19,33 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/tvHeight"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/etHeight"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
-        android:text="180.0 cm ▼"
-        android:textColor="#FFFFFF"
+        android:hint="Masukkan tinggi badan (cm)"
+        android:textColor="#000000"
         android:textSize="18sp"
+        android:background="@android:drawable/edit_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintEnd_toStartOf="@id/etWeight" />
 
-    <TextView
-        android:id="@+id/tvWeight"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/etWeight"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="70.15 kg ▼"
-        android:textColor="#FFFFFF"
+        android:hint="Masukkan berat badan (kg)"
+        android:textColor="#000000"
         android:textSize="18sp"
+        android:background="@android:drawable/edit_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintStart_toEndOf="@id/etHeight" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switchGender"
@@ -49,19 +54,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvHeight" />
-
-    <TextView
-        android:id="@+id/tvAge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="Usia 23"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvWeight" />
+        app:layout_constraintTop_toBottomOf="@id/etHeight" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -84,37 +77,22 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Normal"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Hebat!"
-                    android:textColor="#4CAF50"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <TextView
+                    android:id="@+id/hasil_bmi"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:text="21.9"
+                    android:text=""
                     android:textSize="48sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <ImageView
+            <!-- Replace ImageView with CurvedGauge -->
+            <com.alphatz.adek.Activity.CurvedGauge
+                android:id="@+id/curvedGauge"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:src="@drawable/bmi_meter"
-                android:contentDescription="BMI Meter" />
+                android:layout_height="200dp"
+                android:layout_marginTop="16dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -162,6 +140,14 @@
                     android:layout_height="wrap_content"
                     android:text="• Kelas Obesitas III      >40"
                     android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/btnCalculate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Calculate BMI"
+                    android:background="@drawable/custom_button" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
