@@ -10,9 +10,24 @@
         android:layout_width="426dp"
         android:layout_height="match_parent"
         android:gravity="top|left"
-        android:text="USERNAME"
+        android:text="Username"
         android:textSize="24sp"
         android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="12dp"
+        android:layout_marginBottom="175dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_dashheader">
+        </ImageView>
+
+    </LinearLayout>
 
     <!-- Grid pertama: 3x1 -->
     <GridLayout
@@ -20,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="70dp"
+        android:layout_marginBottom="20dp"
         android:alignmentMode="alignMargins"
         android:columnCount="3"
         android:padding="12dp">
@@ -51,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="120dp"
         android:alignmentMode="alignMargins"
         android:columnCount="2"
         android:padding="8dp">

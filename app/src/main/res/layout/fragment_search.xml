@@ -171,7 +171,13 @@
                     android:src="@drawable/interval" />
             </LinearLayout>
         </HorizontalScrollView>
-
+        <ImageView
+            android:id="@+id/fleksibilitas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/fleksibilitas" />
 
         <!-- Artikel TextView -->
         <TextView
