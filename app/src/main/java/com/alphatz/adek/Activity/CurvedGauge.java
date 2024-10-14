@@ -39,7 +39,7 @@ public class CurvedGauge extends View {
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.LTGRAY);
         backgroundPaint.setStyle(Paint.Style.STROKE);
-        backgroundPaint.setStrokeWidth(30f);
+        backgroundPaint.setStrokeWidth(50f);
         backgroundPaint.setAntiAlias(true);
 
         // warna buat jarum
@@ -58,7 +58,7 @@ public class CurvedGauge extends View {
 
         // warna progres arc
         arcPaint = new Paint();
-        arcPaint.setStrokeWidth(30f);
+        arcPaint.setStrokeWidth(50f);
         arcPaint.setStyle(Paint.Style.STROKE);
         arcPaint.setAntiAlias(true);
 

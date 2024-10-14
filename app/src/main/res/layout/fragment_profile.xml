@@ -47,6 +47,7 @@
         android:textStyle="bold"/>
 
     <TextView
+        android:id="@+id/text_berat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="berat"
@@ -56,6 +57,7 @@
         android:textStyle="bold"/>
 
     <TextView
+        android:id="@+id/text_tinggi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="tinggi"
@@ -84,6 +86,7 @@
         android:layout_marginTop="215dp"
         android:clickable="true"
         android:focusable="true"/>
+
     <Button
         android:id="@+id/button_logout"
         android:layout_width="wrap_content"
