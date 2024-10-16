@@ -7,10 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Button;
-
 import androidx.fragment.app.Fragment;
-
 import com.alphatz.adek.R;
+import com.alphatz.adek.Activity.Konfirmasi; // Make sure to import your Konfirmasi class
 
 public class KonsultasiFragment extends Fragment {
 
@@ -23,12 +22,9 @@ public class KonsultasiFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_konsultasi, container, false);
 
-        //buat ganti nama dokter, pake item_dokter//
-
+        // Setup informasi dokter
         setupDoctorInfo(view, R.id.doctor_sonya, "dr. Sonya", R.drawable.ic_profil0);
-
         setupDoctorInfo(view, R.id.doctor_boyke, "dr. Boyke", R.drawable.ic_profil0);
-
         setupDoctorInfo(view, R.id.doctor_jiro, "dr. Jiro", R.drawable.ic_profil0);
 
         return view;
@@ -49,11 +45,11 @@ public class KonsultasiFragment extends Fragment {
         callTextView.setText("Call/Video Call");
         contactButton.setText("CONTACT");
 
-        //button sek kosong
-        contactButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
+        // Menangani klik tombol CONTACT
+        contactButton.setOnClickListener(v -> {
+            // Create an instance of the Konfirmasi dialog
+            Konfirmasi konfirmasiDialog = new Konfirmasi();
+            konfirmasiDialog.show(getChildFragmentManager(), "KonfirmasiDialog");
         });
     }
 }

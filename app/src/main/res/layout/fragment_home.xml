@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragment.HomeFragment">
 
     <TextView
@@ -75,7 +76,6 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:contentDescription="protein"
             android:src="@drawable/protein_dash" />
 
@@ -85,4 +85,63 @@
             android:contentDescription="air"
             android:src="@drawable/air_dash" />
     </GridLayout>
+
+    <!-- CardView untuk input BMI dan Gauge -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:layout_marginBottom="100dp"
+        android:padding="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Input tinggi dan berat badan -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="16dp">
+
+                <EditText
+                    android:id="@+id/input_tinggi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Tinggi (cm)"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    android:background="@drawable/custom_edittext"
+                    android:textColorHint="#888888" />
+
+                <EditText
+                    android:id="@+id/input_berat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Berat (kg)"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/custom_edittext"
+                    android:textColorHint="#888888" />
+            </LinearLayout>
+
+
+            <!-- LinearGauge untuk BMI -->
+            <com.alphatz.adek.Activity.LinearGauge
+                android:id="@+id/bmiGauge"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginBottom="20dp"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 </FrameLayout>

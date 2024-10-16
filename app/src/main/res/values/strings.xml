@@ -8,6 +8,7 @@
     <string name="desc3_text">"Jangan biarkan kemarin menentukan hari ini. Kamu selalu punya kesempatan untuk bangkit lebih kuat, lebih sehat,dan lebih percaya diri!"</string>
     <string name="heading4_text">Ayo kita mulai!</string>
     <string name="desc4_text">Mulailah perjalanan sehatmu bersama kami sekarang!</string>
+    <string name="konfirmasi_image_desc">Gambar konfirmasi</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

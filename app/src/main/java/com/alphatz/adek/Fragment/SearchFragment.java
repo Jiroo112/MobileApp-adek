@@ -59,15 +59,29 @@ public class SearchFragment extends Fragment {
         cardViewImage1 = view.findViewById(R.id.imageView1);
         cardViewImage2 = view.findViewById(R.id.imageView2);
 
-        setupClickListeners();
+        // Tambahkan listener untuk textResep dan textOlahraga
+        TextView textResep = view.findViewById(R.id.selengkapnya_resep);
+        TextView textOlahraga = view.findViewById(R.id.selengkapnya_olahraga);
 
+        textResep.setOnClickListener(v -> openResepFragment());
+        textOlahraga.setOnClickListener(v -> openOlahragaFragment());
+
+        setupClickListeners();
         setupArtikelInfo(view, R.id.artikel1, "Meningkatkan Laju Metabolisme", "Kesehatan", "60", "120");
         setupArtikelInfo(view, R.id.artikel2, "Panduan Makanan Sehat", "Gaya Hidup", "45", "100");
 
-        //start transisi gambar
+        // Start transisi gambar
         startCardViewImageRotation();
     }
 
+    private void openOlahragaFragment() {
+        Log.d("SearchFragment", "openOlahragaFragment called");
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new OlahragaFragment());
+        transaction.addToBackStack(null);
+        transaction.commit();
+        Log.d("SearchFragment", "Fragment transaction committed to OlahragaFragment");
+    }
     private void setupClickListeners() {
         makananBerat.setOnClickListener(v -> {
             showRoast();

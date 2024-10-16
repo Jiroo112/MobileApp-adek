@@ -38,7 +38,7 @@
                 android:id="@+id/judulArtikel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Meningkatkan Laju Metabolisme"
+                android:text="Olahraga Kardiovaskular"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
