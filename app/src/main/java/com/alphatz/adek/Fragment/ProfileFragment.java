@@ -3,7 +3,6 @@ package com.alphatz.adek.Fragment;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,11 +13,11 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.alphatz.adek.Activity.LoginActivity;
 import com.alphatz.adek.R;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -37,14 +36,28 @@ public class ProfileFragment extends Fragment {
     private ImageView settings;
     private TextView beratTextView;
     private TextView tinggiTextView;
-    private String idUser = "670b5";
+    private TextView txt_username;
+
+    private RequestQueue requestQueue;
+    private String baseUrl = "http://10.0.2.2/ads_mysql/profil2.php";
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
-    public static Fragment newInstance(String username) {
-        return null;
+    public static ProfileFragment newInstance(String username) {
+        ProfileFragment fragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        args.putString("username", username);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @SuppressLint("MissingInflatedId")
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestQueue = Volley.newRequestQueue(requireContext()); // Inisialisasi Volley
     }
 
     @SuppressLint("MissingInflatedId")
@@ -63,13 +76,22 @@ public class ProfileFragment extends Fragment {
         settings = view.findViewById(R.id.settings);
         beratTextView = view.findViewById(R.id.text_berat);
         tinggiTextView = view.findViewById(R.id.text_tinggi);
+        txt_username = view.findViewById(R.id.txt_username);
 
         // Set nilai awal TextView
         beratTextView.setText("Loading...");
         tinggiTextView.setText("Loading...");
 
+        // Set username
+        if (getArguments() != null) {
+            String username = getArguments().getString("username", "Pengguna");
+            txt_username.setText(username);
+            getUserDataFromApi(username);  // Panggil method untuk ambil data dari API
+        } else {
+            txt_username.setText("Pengguna");
+        }
+
         Log.d(TAG, "Calling getUserDataFromApi");
-        getUserDataFromApi(idUser);
 
         setupAnimations();
 
@@ -80,14 +102,13 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private void getUserDataFromApi(String idUser) {
-        String url = "http://10.0.2.2/ads_mysql/profil2.php?id_user=" + idUser;
-        Log.d(TAG, "Requesting URL: " + url);
+    // Method untuk melakukan request API dan mengambil data user
+    private void getUserDataFromApi(String username) {
+        String url = baseUrl + "?username=" + username;
 
-        RequestQueue queue = Volley.newRequestQueue(requireContext());
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
-                    Log.d(TAG, "Response received: " + response);
+                    Log.d(TAG, "Response: " + response);
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getString("status").equals("success")) {
@@ -95,31 +116,28 @@ public class ProfileFragment extends Fragment {
                             String berat = data.getString("berat_badan");
                             String tinggi = data.getString("tinggi_badan");
 
-                            Log.d(TAG, "Parsed data - Berat: " + berat + ", Tinggi: " + tinggi);
-
-                            requireActivity().runOnUiThread(() -> {
-                                beratTextView.setText(berat + " kg");
-                                tinggiTextView.setText(tinggi + " cm");
-                                Log.d(TAG, "TextView updated on UI thread");
-                            });
+                            // Set data ke TextView
+                            beratTextView.setText(berat + " kg");
+                            tinggiTextView.setText(tinggi + " cm");
                         } else {
-                            Log.e(TAG, "API returned non-success status");
+                            Toast.makeText(getContext(), "Data pengguna tidak ditemukan", Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
-                        Log.e(TAG, "JSON parsing error", e);
+                        Log.e(TAG, "JSON Parsing error: " + e.getMessage());
+                        Toast.makeText(getContext(), "Error parsing data", Toast.LENGTH_SHORT).show();
                     }
                 },
                 error -> {
-                    Log.e(TAG, "Volley error: " + error.toString());
+                    Log.e(TAG, "Volley error: " + error.getMessage());
+                    Toast.makeText(getContext(), "Error fetching data", Toast.LENGTH_SHORT).show();
                 });
 
-        // Set timeout policy to handle slow network
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                5000,  // Timeout in ms
+                5000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        queue.add(stringRequest);
+        requestQueue.add(stringRequest);  // Tambahkan request ke antrean
     }
 
     private void setupAnimations() {
@@ -147,11 +165,8 @@ public class ProfileFragment extends Fragment {
         editor.clear();
         editor.apply();
 
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
         requireActivity().finish();
-        Log.d(TAG, "Logout completed, starting LoginActivity");
+        Log.d(TAG, "Logout completed");
     }
 
     private void openResepFragment() {

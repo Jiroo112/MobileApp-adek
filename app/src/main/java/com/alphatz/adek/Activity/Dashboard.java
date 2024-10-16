@@ -38,6 +38,12 @@ public class Dashboard extends AppCompatActivity {
         }
 
         // Load default fragment (HomeFragment)
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, ProfileFragment.newInstance(username))
+                    .commit();
+        }
+
         loadFragment(HomeFragment.newInstance(username));
 
         // Setup Bottom Navigation
@@ -53,7 +59,7 @@ public class Dashboard extends AppCompatActivity {
             } else if (itemId == R.id.konsultasi) {
                 selectedFragment = new KonsultasiFragment();
             } else if (itemId == R.id.profile) {
-                selectedFragment = new ProfileFragment();
+                selectedFragment = ProfileFragment.newInstance(username);
             }
 
             if (selectedFragment != null) {

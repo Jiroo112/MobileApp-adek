@@ -17,6 +17,16 @@
         android:layout_marginTop="100dp"
         android:src="@drawable/ic_profil"/>
 
+    <TextView
+        android:id="@+id/txt_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="username"
+        android:layout_gravity="center|center_horizontal"
+        android:layout_marginBottom="150dp"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+
     <ImageView
         android:id="@+id/settings"
         android:layout_width="wrap_content"

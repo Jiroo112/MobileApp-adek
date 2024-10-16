@@ -14,10 +14,10 @@ public class CurvedGauge extends View {
     private Paint backgroundPaint;
     private Paint needlePaint;
     private Paint textPaint;
-    private Paint arcPaint;
+    private Paint segmentPaint;
     private RectF oval;
-    private float progress = 0; // nilainy dari 0 - 100
-    private String bmiLabel = "0";
+    private float progress = 0; // value from 0 - 100
+    private String bmiLabel = "";
 
     public CurvedGauge(Context context) {
         super(context);
@@ -35,34 +35,29 @@ public class CurvedGauge extends View {
     }
 
     private void init() {
-        // inisialiasi warna gauge nya (arc)
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.LTGRAY);
         backgroundPaint.setStyle(Paint.Style.STROKE);
-        backgroundPaint.setStrokeWidth(50f);
+        backgroundPaint.setStrokeWidth(60f);
         backgroundPaint.setAntiAlias(true);
 
-        // warna buat jarum
         needlePaint = new Paint();
         needlePaint.setColor(Color.BLACK);
-        needlePaint.setStrokeWidth(8f);
-        needlePaint.setStyle(Paint.Style.STROKE);
+        needlePaint.setStrokeWidth(10f);
+        needlePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         needlePaint.setAntiAlias(true);
 
-        // warna teks (label)
         textPaint = new Paint();
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(50f);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setAntiAlias(true);
 
-        // warna progres arc
-        arcPaint = new Paint();
-        arcPaint.setStrokeWidth(50f);
-        arcPaint.setStyle(Paint.Style.STROKE);
-        arcPaint.setAntiAlias(true);
+        segmentPaint = new Paint();
+        segmentPaint.setStyle(Paint.Style.STROKE);
+        segmentPaint.setStrokeWidth(60f);
+        segmentPaint.setAntiAlias(true);
 
-        //ngebuat RectF buat gambar arc
         oval = new RectF();
     }
 
@@ -72,57 +67,54 @@ public class CurvedGauge extends View {
 
         int width = getWidth();
         int height = getHeight();
-        int radius = Math.min(width, height) / 2 - 50;
+        int radius = Math.min(width, height) / 2 - 60;
 
-        // oval area untuk arc
         oval.set(width / 2f - radius, height / 2f - radius, width / 2f + radius, height / 2f + radius);
 
-        // background gauge
+        // Draw background
         canvas.drawArc(oval, 180, 180, false, backgroundPaint);
 
-        // progres berdasarkan value yang sekarang
-        float sweepAngle = (progress / 100f) * 180f;
-        arcPaint.setColor(getColorForBmi(Float.parseFloat(bmiLabel))); // Get color based on BMI label
-        canvas.drawArc(oval, 180, sweepAngle, false, arcPaint);
+        // Draw color segments
+        drawColorSegments(canvas, radius);
 
-        // jarum
-        float needleAngle = 180 + sweepAngle;
-        float needleX = width / 2f + (float) Math.cos(Math.toRadians(needleAngle)) * radius;
-        float needleY = height / 2f + (float) Math.sin(Math.toRadians(needleAngle)) * radius;
+        // Draw needle
+        float needleAngle = 180 + (progress / 100f) * 180f;
+        float needleLength = radius - 20;
+        float needleX = width / 2f + (float) Math.cos(Math.toRadians(needleAngle)) * needleLength;
+        float needleY = height / 2f + (float) Math.sin(Math.toRadians(needleAngle)) * needleLength;
         canvas.drawLine(width / 2f, height / 2f, needleX, needleY, needlePaint);
 
-        //bmi label
-        canvas.drawText(bmiLabel, width / 2f, height / 2f + 30, textPaint);
+        // Draw circle at needle base
+        canvas.drawCircle(width / 2f, height / 2f, 20f, needlePaint);
+
+        // Draw BMI label
+        canvas.drawText(bmiLabel, width / 2f, height / 2f + radius + 80, textPaint);
     }
 
-    // fungsi buat ngewarnain arc sesuai dengan value bmi
-    private int getColorForBmi(float bmiValue) {
-        // Set colors based on BMI value
-        if (bmiValue < 18.5) {
-            return Color.RED; // Underweight
-        } else if (bmiValue >= 18.5 && bmiValue < 24.9) {
-            return Color.GREEN; // Normal
-        } else if (bmiValue >= 25 && bmiValue < 30) {
-            return Color.YELLOW; // Overweight
-        } else {
-            return Color.RED; // Obesity
+    private void drawColorSegments(Canvas canvas, int radius) {
+        int[] colors = {Color.BLUE, Color.GREEN, Color.YELLOW, Color.parseColor("#FFA500"), Color.RED};
+        float[] segments = {0.15f, 0.3f, 0.3f, 0.15f, 0.1f};
+        float startAngle = 180f;
+
+        for (int i = 0; i < colors.length; i++) {
+            segmentPaint.setColor(colors[i]);
+            float sweepAngle = segments[i] * 180f;
+            canvas.drawArc(oval, startAngle, sweepAngle, false, segmentPaint);
+            startAngle += sweepAngle;
         }
     }
 
-    // fungsi buat progres biar ad animasi
     public void setProgressWithAnimation(float bmiValue) {
-        // buat progres ada di dalam kisaran 0 hingga 100 sesuai dg skala BMI
-        float mappedValue = Math.max(0, Math.min(100, ((bmiValue - 10) / 30) * 100)); // 10 itu batas bawah, 40 batas atasny
-        bmiLabel = String.format("%.1f", bmiValue); // Update label (menunjukkan bmi)
+        float mappedValue = Math.max(0, Math.min(100, ((bmiValue - 10) / 30) * 100));
+        bmiLabel = String.format("%.1f", bmiValue);
 
-        // menganimasikan progres
         ValueAnimator animator = ValueAnimator.ofFloat(progress, mappedValue);
-        animator.setDuration(1000); // delay 1 sec
+        animator.setDuration(1000);
         animator.addUpdateListener(valueAnimator -> {
             progress = (float) valueAnimator.getAnimatedValue();
-            invalidate(); // Redraw view
+            invalidate();
         });
-        animator.start(); // animasi start
+        animator.start();
     }
 
     public float getProgress() {
