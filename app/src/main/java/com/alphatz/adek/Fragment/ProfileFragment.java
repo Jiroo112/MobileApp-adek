@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.alphatz.adek.Activity.LinearGauge;
 import com.alphatz.adek.R;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -31,12 +31,13 @@ import org.json.JSONObject;
 public class ProfileFragment extends Fragment {
 
     private static final String TAG = "ProfileFragment";
-    private ImageView dokter_fav;
     private ImageView tipe_diet;
     private ImageView settings;
     private TextView beratTextView;
     private TextView tinggiTextView;
+    private TextView bmiTextView;
     private TextView txt_username;
+    private LinearGauge linearGauge; // LinearGauge untuk menggantikan CurvedGauge
 
     private RequestQueue requestQueue;
     private String baseUrl = "http://10.0.2.2/ads_mysql/profil2.php";
@@ -57,7 +58,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestQueue = Volley.newRequestQueue(requireContext()); // Inisialisasi Volley
+        requestQueue = Volley.newRequestQueue(requireContext());
     }
 
     @SuppressLint("MissingInflatedId")
@@ -72,28 +73,25 @@ public class ProfileFragment extends Fragment {
         logoutButton.setOnClickListener(v -> logout());
 
         tipe_diet = view.findViewById(R.id.tipe_diet);
-        dokter_fav = view.findViewById(R.id.dokter_fav);
         settings = view.findViewById(R.id.settings);
         beratTextView = view.findViewById(R.id.text_berat);
         tinggiTextView = view.findViewById(R.id.text_tinggi);
+        bmiTextView = view.findViewById(R.id.text_bmi);
         txt_username = view.findViewById(R.id.txt_username);
+        linearGauge = view.findViewById(R.id.linearGauge); // Inisialisasi LinearGauge
 
         // Set nilai awal TextView
         beratTextView.setText("Loading...");
         tinggiTextView.setText("Loading...");
+        bmiTextView.setText("Loading...");
 
-        // Set username
         if (getArguments() != null) {
             String username = getArguments().getString("username", "Pengguna");
             txt_username.setText(username);
-            getUserDataFromApi(username);  // Panggil method untuk ambil data dari API
+            getUserDataFromApi(username);
         } else {
             txt_username.setText("Pengguna");
         }
-
-        Log.d(TAG, "Calling getUserDataFromApi");
-
-        setupAnimations();
 
         tipe_diet.setOnClickListener(v -> openResepFragment());
         settings.setOnClickListener(v -> openSettingsFragment());
@@ -102,7 +100,6 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    // Method untuk melakukan request API dan mengambil data user
     private void getUserDataFromApi(String username) {
         String url = baseUrl + "?username=" + username;
 
@@ -119,6 +116,10 @@ public class ProfileFragment extends Fragment {
                             // Set data ke TextView
                             beratTextView.setText(berat + " kg");
                             tinggiTextView.setText(tinggi + " cm");
+
+                            // Hitung dan tampilkan BMI
+                            calculateAndDisplayBMI(berat, tinggi);
+
                         } else {
                             Toast.makeText(getContext(), "Data pengguna tidak ditemukan", Toast.LENGTH_SHORT).show();
                         }
@@ -137,25 +138,27 @@ public class ProfileFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        requestQueue.add(stringRequest);  // Tambahkan request ke antrean
+        requestQueue.add(stringRequest);
     }
 
-    private void setupAnimations() {
-        dokter_fav.setOnClickListener(v -> animateView(dokter_fav));
-    }
+    private void calculateAndDisplayBMI(String beratStr, String tinggiStr) {
+        try {
+            double berat = Double.parseDouble(beratStr);
+            double tinggi = Double.parseDouble(tinggiStr) / 100;
 
-    private void animateView(View view) {
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1f, 1.2f, 1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1f, 1.2f, 1f);
+            double bmi = berat / (tinggi * tinggi);
 
-        scaleX.setDuration(300);
-        scaleY.setDuration(300);
+            String bmiText = String.format("%.2f", bmi);
 
-        scaleX.setInterpolator(new AccelerateDecelerateInterpolator());
-        scaleY.setInterpolator(new AccelerateDecelerateInterpolator());
+            bmiTextView.setText("BMI: " + bmiText);
 
-        scaleX.start();
-        scaleY.start();
+            // Update LinearGauge dengan animasi
+            linearGauge.setProgressWithAnimation((float) bmi);
+
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "Error parsing berat or tinggi: " + e.getMessage());
+            Toast.makeText(getContext(), "Error calculating BMI", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void logout() {

@@ -15,6 +15,7 @@ public class LinearGauge extends View {
     private Paint needlePaint;
     private Paint textPaint;
     private Paint segmentPaint;
+    private Paint needleHeadPaint;  // Tambahan untuk menggambar jarum
     private RectF rect;
     private float progress = 0; // value from 0 - 100
     private String bmiLabel = "";
@@ -56,6 +57,11 @@ public class LinearGauge extends View {
         segmentPaint.setStyle(Paint.Style.FILL);
         segmentPaint.setAntiAlias(true);
 
+        needleHeadPaint = new Paint();  // Inisialisasi jarum
+        needleHeadPaint.setColor(Color.RED);
+        needleHeadPaint.setStyle(Paint.Style.FILL);
+        needleHeadPaint.setAntiAlias(true);
+
         rect = new RectF();
     }
 
@@ -79,6 +85,9 @@ public class LinearGauge extends View {
         // Draw needle (indicator)
         float needleX = padding + (progress / 100f) * (width - 2 * padding);
         canvas.drawLine(needleX, rect.top, needleX, rect.bottom, needlePaint);
+
+        // Draw needle head (the circular part)
+        canvas.drawCircle(needleX, (rect.top + rect.bottom) / 2, 10, needleHeadPaint);
 
         // Draw BMI label above the needle
         canvas.drawText(bmiLabel, needleX, rect.top - 20, textPaint);

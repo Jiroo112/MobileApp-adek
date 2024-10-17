@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragment.ProfileFragment">
 
     <ImageView
@@ -87,16 +88,54 @@
         android:clickable="true"
         android:focusable="true"/>
 
-    <ImageView
-        android:id="@+id/dokter_fav"
+
+    <!-- CardView untuk input BMI dan Gauge -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/dokter_fav_profil"
-        android:layout_gravity="center"
-        android:layout_marginTop="215dp"
-        android:clickable="true"
-        android:focusable="true"/>
+        android:layout_gravity="center|bottom"
+        android:layout_margin="16dp"
+        android:padding="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BMI anda adalah"
+                    android:padding="12dp"
+                    android:textStyle="bold"
+                    android:textSize="22dp">
+
+                </TextView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/text_bmi"
+                    android:text="loading.."
+                    android:padding="12dp"
+                    android:textStyle="bold"
+                    android:textSize="22dp"
+                    android:layout_marginLeft="35dp">
+                </TextView>
+            </LinearLayout>
+
+            <com.alphatz.adek.Activity.LinearGauge
+                android:id="@+id/linearGauge"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginBottom="20dp"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
     <Button
         android:id="@+id/button_logout"
         android:layout_width="wrap_content"
