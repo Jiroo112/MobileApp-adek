@@ -12,4 +12,11 @@
     <color name="oren">#FFA500</color>
     <color name="biru_muda">#ADD8E6</color>
     <color name="ungu">#800080</color>
+    <color name="dot_blue">#1E90FF</color>
+    <color name="dot_light_green">#90EE90</color>
+    <color name="dot_green">#32CD32</color>
+    <color name="dot_yellow">#FFD700</color>
+    <color name="dot_orange">#FFA500</color>
+    <color name="dot_dark_orange">#FF8C00</color>
+    <color name="dot_red">#FF4500</color>
 </resources>

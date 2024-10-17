@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="20dp"
+    android:background="@drawable/rounded_rectangle_background">
 
     <TextView
         android:id="@+id/text_title"
@@ -44,40 +45,48 @@
         android:inputType="number"
         android:layout_marginBottom="16dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nutrisi"
-        android:textSize="16sp"
-        android:layout_marginBottom="8dp"/>
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/button_background">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nutrisi"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"/>
 
-    <TextView
-        android:id="@+id/text_kalori"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Kalori : 1.4"
-        android:layout_marginBottom="4dp"/>
+        <TextView
+            android:id="@+id/text_kalori"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kalori : 1.4"
+            android:layout_marginBottom="4dp"/>
 
-    <TextView
-        android:id="@+id/text_protein"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Protein: 0.025"
-        android:layout_marginBottom="4dp"/>
+        <TextView
+            android:id="@+id/text_protein"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Protein: 0.025"
+            android:layout_marginBottom="4dp"/>
 
-    <TextView
-        android:id="@+id/text_karbo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Karbo : 0.285"
-        android:layout_marginBottom="4dp"/>
+        <TextView
+            android:id="@+id/text_karbo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Karbo : 0.285"
+            android:layout_marginBottom="4dp"/>
 
-    <TextView
-        android:id="@+id/text_gula"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Gula : 0.000"
-        android:layout_marginBottom="16dp"/>
+        <TextView
+            android:id="@+id/text_gula"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gula : 0.000"
+            android:layout_marginBottom="16dp"/>
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/button_tambahkan"

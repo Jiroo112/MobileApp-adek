@@ -9,6 +9,13 @@
     <string name="heading4_text">Ayo kita mulai!</string>
     <string name="desc4_text">Mulailah perjalanan sehatmu bersama kami sekarang!</string>
     <string name="konfirmasi_image_desc">Gambar konfirmasi</string>
+    <string name="severe_underweight">Severe underweight     16.0-16.9</string>
+    <string name="underweight">Underweight            17.0-18.4</string>
+    <string name="normal">Normal                 18.5-24.9</string>
+    <string name="kegemukan">Kegemukan              25.0-29.9</string>
+    <string name="kelas_obesitas_i">Kelas Obesitas I        30.0-34.9</string>
+    <string name="kelas_obesitas_ii">Kelas Obesitas II       35.0-39.9</string>
+    <string name="kelas_obesitas_iii">Kelas Obesitas III      >40</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

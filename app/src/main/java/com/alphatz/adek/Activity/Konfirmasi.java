@@ -19,39 +19,51 @@ public class Konfirmasi extends DialogFragment {
     private ImageView imageView;
     private Button btnIya, btnTidak;
 
-    @Nullable
+    @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.setCanceledOnTouchOutside(false); // Membuat dialog tidak bisa ditutup dengan sentuhan di luar
-
+        dialog.setCanceledOnTouchOutside(false);
         return dialog;
     }
 
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_konfirmasi, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_konfirmasi, container, false);
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initializeViews(view);
+        setupListeners();
+        setDialogImage();
+    }
+
+    private void initializeViews(View view) {
         imageView = view.findViewById(R.id.konfirmasi_image);
         btnIya = view.findViewById(R.id.btn_iya);
         btnTidak = view.findViewById(R.id.btn_tidak);
+    }
 
-        // Set gambar
+    private void setupListeners() {
+        btnIya.setOnClickListener(v -> onIyaClicked());
+        btnTidak.setOnClickListener(v -> onTidakClicked());
+    }
+
+    private void setDialogImage() {
         imageView.setImageResource(R.drawable.konf_kons_kosong);
+    }
 
-        // Set OnClickListener untuk tombol Iya
-        btnIya.setOnClickListener(v -> {
-            // Logika untuk tombol Iya
-            dismiss(); // Menutup dialog
-        });
+    private void onIyaClicked() {
+        // Logika untuk tombol Iya
+        dismiss();
+    }
 
-        // Set OnClickListener untuk tombol Tidak
-        btnTidak.setOnClickListener(v -> {
-            // Logika untuk tombol Tidak
-            dismiss(); // Menutup dialog
-        });
-
-        return view;
+    private void onTidakClicked() {
+        // Logika untuk tombol Tidak
+        dismiss();
     }
 }

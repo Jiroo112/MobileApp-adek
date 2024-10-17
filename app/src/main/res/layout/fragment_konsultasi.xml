@@ -12,8 +12,17 @@
         android:textSize="24sp"
         android:layout_margin="20dp"
         android:textStyle="bold">
-
     </TextView>
+    <EditText
+        android:id="@+id/search_field"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="  Cari makanan/minuman"
+        android:drawableStart="@drawable/ic_search"
+        android:background="@drawable/search_background"
+        android:padding="10dp"
+        android:textColor="#000"
+        android:layout_marginBottom="20dp"/>
     <include layout="@layout/item_dokter" android:id="@+id/doctor_sonya"/>
     <!-- Include template buat dokter Boyke, lainnya juga gt -->
     <include layout="@layout/item_dokter" android:id="@+id/doctor_boyke"/>

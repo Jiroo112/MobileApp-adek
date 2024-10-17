@@ -69,10 +69,6 @@ public class ProfileFragment extends Fragment {
 
         Log.d(TAG, "onCreateView started");
 
-        Button logoutButton = view.findViewById(R.id.button_logout);
-        logoutButton.setOnClickListener(v -> logout());
-
-        tipe_diet = view.findViewById(R.id.tipe_diet);
         settings = view.findViewById(R.id.settings);
         beratTextView = view.findViewById(R.id.text_berat);
         tinggiTextView = view.findViewById(R.id.text_tinggi);
@@ -93,7 +89,6 @@ public class ProfileFragment extends Fragment {
             txt_username.setText("Pengguna");
         }
 
-        tipe_diet.setOnClickListener(v -> openResepFragment());
         settings.setOnClickListener(v -> openSettingsFragment());
 
         Log.d(TAG, "onCreateView completed");
@@ -161,24 +156,6 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void logout() {
-        Log.d(TAG, "Logout initiated");
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.apply();
-
-        requireActivity().finish();
-        Log.d(TAG, "Logout completed");
-    }
-
-    private void openResepFragment() {
-        Log.d(TAG, "Opening ResepFragment");
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new ResepFragment());
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
 
     private void openSettingsFragment() {
         Log.d(TAG, "Opening SettingsFragment");

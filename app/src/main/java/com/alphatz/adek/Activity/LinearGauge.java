@@ -15,7 +15,7 @@ public class LinearGauge extends View {
     private Paint needlePaint;
     private Paint textPaint;
     private Paint segmentPaint;
-    private Paint needleHeadPaint;  // Tambahan untuk menggambar jarum
+    private Paint needleHeadPaint; // Tambahan untuk menggambar jarum
     private RectF rect;
     private float progress = 0; // value from 0 - 100
     private String bmiLabel = "";
@@ -57,7 +57,7 @@ public class LinearGauge extends View {
         segmentPaint.setStyle(Paint.Style.FILL);
         segmentPaint.setAntiAlias(true);
 
-        needleHeadPaint = new Paint();  // Inisialisasi jarum
+        needleHeadPaint = new Paint(); // Inisialisasi jarum
         needleHeadPaint.setColor(Color.RED);
         needleHeadPaint.setStyle(Paint.Style.FILL);
         needleHeadPaint.setAntiAlias(true);
@@ -94,8 +94,16 @@ public class LinearGauge extends View {
     }
 
     private void drawColorSegments(Canvas canvas) {
-        int[] colors = {Color.BLUE, Color.GREEN, Color.YELLOW, Color.parseColor("#FFA500"), Color.RED};
-        float[] segments = {0.15f, 0.3f, 0.3f, 0.15f, 0.1f};
+        int[] colors = {
+                Color.parseColor("#1E90FF"), // Dot Blue
+                Color.parseColor("#90EE90"),  // Dot Light Green
+                Color.parseColor("#32CD32"),  // Dot Green
+                Color.parseColor("#FFD700"),  // Dot Yellow
+                Color.parseColor("#FFA500"),  // Dot Orange
+                Color.parseColor("#FF4500")   // Dot Red
+        };
+
+        float[] segments = {0.1f, 0.1f, 0.3f, 0.2f, 0.15f, 0.15f}; // Sesuaikan dengan panjang segmen yang diinginkan
         float startX = rect.left;
         float segmentWidth = rect.width();
 
