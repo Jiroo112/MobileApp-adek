@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/perhitungan_bmi"
-        android:title="BMI"
+        android:id="@+id/asupan"
+        android:title="Asupan"
         android:icon="@drawable/ic_thumbs_up" />
     <item
         android:id="@+id/search"

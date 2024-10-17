@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nasi Putih"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Takaran"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/edit_text_takaran"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="gram"
+        android:inputType="number"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Porsi"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/edit_text_porsi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="2"
+        android:inputType="number"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nutrisi"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/text_kalori"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kalori : 1.4"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/text_protein"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Protein: 0.025"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/text_karbo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Karbo : 0.285"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/text_gula"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gula : 0.000"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/button_tambahkan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tambahkan"
+        android:backgroundTint="#66d2c6"/>
+
+</LinearLayout>

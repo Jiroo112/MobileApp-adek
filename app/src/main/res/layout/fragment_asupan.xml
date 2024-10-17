@@ -1,14 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.AsupanFragment">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Title -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Asupan Hari Ini"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#555"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"/>
 
-</FrameLayout>
+    <!-- Tab Layout - Cari Makanan / Terakhir Dimakan / Catatan Minum -->
+    <LinearLayout
+        android:id="@+id/linear_layout_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
+        android:gravity="center">
+
+        <!-- "Cari Makanan" Tab -->
+        <TextView
+            android:id="@+id/tab_cari_makanan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Cari Makanan"
+            android:textColor="#555"
+            android:textSize="16sp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"/>
+
+        <!-- "Terakhir Dimakan" Tab -->
+        <TextView
+            android:id="@+id/tab_terakhir_dimakan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Terakhir Dimakan"
+            android:textColor="#555"
+            android:textSize="16sp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"/>
+
+        <!-- "Catatan Minum" Tab -->
+        <TextView
+            android:id="@+id/tab_catatan_minum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Catatan Minum"
+            android:textColor="#555"
+            android:textSize="16sp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"/>
+    </LinearLayout>
+
+    <!-- Search Input Field -->
+    <EditText
+        android:id="@+id/search_field"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Cari makanan/minuman"
+        android:background="@drawable/search_background"
+        android:padding="10dp"
+        android:textColor="#000"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- Add New Intake Button -->
+    <Button
+        android:id="@+id/btn_tambahasupan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#66d2c6"
+        android:text="Tambah asupan baru"
+        android:textColor="#ffffff"
+        android:layout_gravity="center"
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:background="@drawable/button_background"/>
+
+    <!-- List Title -->
+    <TextView
+        android:id="@+id/text_food_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Daftar makanan dan minuman"
+        android:textSize="16sp"
+        android:layout_marginTop="20dp"
+        android:textColor="#000"/>
+</LinearLayout>

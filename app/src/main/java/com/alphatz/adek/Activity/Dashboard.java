@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.alphatz.adek.Fragment.AsupanFragment;
 import com.alphatz.adek.Fragment.BmiFragment;
 import com.alphatz.adek.Fragment.HomeFragment;
 import com.alphatz.adek.Fragment.KonsultasiFragment;
@@ -52,8 +53,8 @@ public class Dashboard extends AppCompatActivity {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
 
-            if (itemId == R.id.perhitungan_bmi) {
-                selectedFragment = new BmiFragment();
+            if (itemId == R.id.asupan) {
+                selectedFragment = new AsupanFragment();
             } else if (itemId == R.id.search) {
                 selectedFragment = new SearchFragment();
             } else if (itemId == R.id.konsultasi) {
