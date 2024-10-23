@@ -75,7 +75,6 @@
         android:textColor="#000"
         android:layout_marginBottom="20dp"/>
 
-    <!-- Add New Intake Button -->
     <Button
         android:id="@+id/btn_tambahasupan"
         android:layout_width="wrap_content"
@@ -97,4 +96,21 @@
         android:textSize="16sp"
         android:layout_marginTop="20dp"
         android:textColor="#000"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Container untuk CardView daftar menu -->
+        <LinearLayout
+            android:id="@+id/menu_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"/>
+    </LinearLayout>
+
+
 </LinearLayout>

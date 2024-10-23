@@ -6,49 +6,71 @@
     android:orientation="vertical"
     tools:context=".Fragment.MakananBeratFragment">
 
+    <!-- ImageView di bagian atas -->
     <ImageView
-        android:layout_width="wrap_content"
+        android:id="@+id/imageResep"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/makanan_berat_r">
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/resep" />
 
-    </ImageView>
+    <!-- Tombol Filter, Dessert, Minuman Sehat -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:padding="10dp"
             android:text="Filter"
-            android:background="@drawable/button_filter">
-
-        </Button>
+            android:background="@drawable/button_filter" />
 
         <Button
             android:id="@+id/btn_desert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:padding="10dp"
             android:text="Dessert"
-            android:background="@drawable/button_filter">
-        </Button>
+            android:background="@drawable/button_filter" />
 
         <Button
             android:id="@+id/btn_minuman_sehat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:padding="10dp"
             android:text="Minuman Sehat"
-            android:background="@drawable/button_filter">
-        </Button>
+            android:background="@drawable/button_filter" />
     </LinearLayout>
-    <include layout="@layout/item_makanan_berat" android:id="@+id/MB1" />
-    <include layout="@layout/item_makanan_berat" android:id="@+id/MB2" />
-    <include layout="@layout/item_makanan_berat" android:id="@+id/MB3" />
+
+    <!-- TextView judul menu -->
+    <TextView
+        android:id="@+id/textViewMenuMakanan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Menu Makanan"
+        android:padding="16dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:background="@drawable/custom_edittext"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp" />
+
+    <!-- RecyclerView untuk menampilkan menu makanan -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewMakanan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_makanan" />
+
 </LinearLayout>

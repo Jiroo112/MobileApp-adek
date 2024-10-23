@@ -15,17 +15,17 @@ import androidx.fragment.app.DialogFragment;
 
 import com.alphatz.adek.R;
 
-public class Konfirmasi extends DialogFragment {
+public class UpdateBerat extends DialogFragment {
     private ImageView imageView;
     private Button btnIya, btnTidak;
+    private int imageResourceId = R.drawable.update_usia; // Set default gambar "makanan_kering"
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // No title bar
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent); // Transparent background
-        dialog.setCanceledOnTouchOutside(false); // Dialog cannot be canceled by touching outside
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         return dialog;
     }
 
@@ -33,7 +33,7 @@ public class Konfirmasi extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_konsultasi, container, false);
+        return inflater.inflate(R.layout.dialog_update, container, false);
     }
 
     @Override
@@ -41,13 +41,14 @@ public class Konfirmasi extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         initializeViews(view);
         setupListeners();
-        setDialogImage(); // Set default image for the dialog
     }
 
     private void initializeViews(View view) {
         imageView = view.findViewById(R.id.konfirmasi_image);
         btnIya = view.findViewById(R.id.btn_iya);
         btnTidak = view.findViewById(R.id.btn_tidak);
+
+        imageView.setImageResource(imageResourceId);
     }
 
     private void setupListeners() {
@@ -55,17 +56,13 @@ public class Konfirmasi extends DialogFragment {
         btnTidak.setOnClickListener(v -> onTidakClicked());
     }
 
-    private void setDialogImage() {
-        imageView.setImageResource(R.drawable.konf_kons_kosong); // Set default image
-    }
-
     private void onIyaClicked() {
-        // Logic for Iya button
+        // Logic untuk tombol Iya
         dismiss();
     }
 
     private void onTidakClicked() {
-        // Logic for Tidak button
+        // Logic untuk tombol Tidak
         dismiss();
     }
 }

@@ -2,6 +2,7 @@ package com.alphatz.adek.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import com.alphatz.adek.Fragment.AsupanFragment;
 import com.alphatz.adek.Fragment.BmiFragment;
 import com.alphatz.adek.Fragment.HomeFragment;
 import com.alphatz.adek.Fragment.KonsultasiFragment;
+import com.alphatz.adek.Fragment.OlahragaFragment;
 import com.alphatz.adek.Fragment.ProfileFragment;
 import com.alphatz.adek.Fragment.SearchFragment;
 import com.alphatz.adek.R;
@@ -20,11 +22,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class Dashboard extends AppCompatActivity {
 
     private String username;
+    private BottomNavigationView bottomNav;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        // Inisialisasi views
+        bottomNav = findViewById(R.id.bottom_navigation);
+        fab = findViewById(R.id.fab);
 
         // Menerima username dari Intent
         Intent intent = getIntent();
@@ -48,7 +56,6 @@ public class Dashboard extends AppCompatActivity {
         loadFragment(HomeFragment.newInstance(username));
 
         // Setup Bottom Navigation
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
@@ -70,7 +77,6 @@ public class Dashboard extends AppCompatActivity {
         });
 
         // Setup Floating Action Button
-        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             // Action for FAB click - show HomeFragment
             loadFragment(HomeFragment.newInstance(username));
@@ -82,5 +88,36 @@ public class Dashboard extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
+    }
+
+    // Method untuk menyembunyikan bottom navigation dan fab
+    public void hideBottomNavigation() {
+        if (bottomNav != null) {
+            bottomNav.setVisibility(View.GONE);
+        }
+        if (fab != null) {
+            fab.setVisibility(View.GONE);
+        }
+    }
+
+    // Method untuk menampilkan bottom navigation dan fab
+    public void showBottomNavigation() {
+        if (bottomNav != null) {
+            bottomNav.setVisibility(View.VISIBLE);
+        }
+        if (fab != null) {
+            fab.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Cek apakah fragment saat ini adalah OlahragaFragment
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (currentFragment instanceof OlahragaFragment) {
+            // Tampilkan kembali bottom navigation saat kembali
+            showBottomNavigation();
+        }
+        super.onBackPressed();
     }
 }

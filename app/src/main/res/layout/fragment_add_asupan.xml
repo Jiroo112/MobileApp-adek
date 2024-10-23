@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tambah Asupan"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:textSize="28sp"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/garis"
+        android:layout_margin="10dp"
+        android:contentDescription="Separator line"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search_background"
+                android:hint="nama menu"
+                android:padding="16dp"
+                android:drawableEnd="@drawable/dot_red"
+                android:inputType="text"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Informasi Nutrisi"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:textSize="28sp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search_background"
+                android:hint="Takaran"
+                android:padding="16dp"
+                android:layout_marginBottom="15dp"
+                android:drawableEnd="@drawable/dot_red"
+                android:inputType="text"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search_background"
+                android:hint="Jumlah Porsi"
+                android:padding="16dp"
+                android:layout_marginBottom="15dp"
+                android:drawableEnd="@drawable/dot_red"
+                android:inputType="number"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search_background"
+                android:hint="Jumlah Kalori"
+                android:padding="16dp"
+                android:layout_marginBottom="15dp"
+                android:drawableEnd="@drawable/dot_red"
+                android:inputType="number"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search_background"
+                android:hint="Jumlah Karbohidrat"
+                android:padding="16dp"
+                android:layout_marginBottom="15dp"
+                android:drawableEnd="@drawable/dot_red"
+                android:inputType="numberDecimal"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search_background"
+                android:hint="Jumlah Protein"
+                android:padding="16dp"
+                android:layout_marginBottom="15dp"
+                android:drawableEnd="@drawable/dot_red"
+                android:inputType="numberDecimal"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search_background"
+                android:hint="Jumlah gula"
+                android:padding="16dp"
+                android:layout_marginBottom="15dp"
+                android:drawableEnd="@drawable/dot_red"
+                android:inputType="numberDecimal"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSimpan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Simpan"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="16dp"
+        app:cornerRadius="8dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/custom_button" />
+</LinearLayout>

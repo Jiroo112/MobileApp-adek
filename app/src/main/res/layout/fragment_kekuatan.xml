@@ -21,7 +21,9 @@
             android:id="@+id/btn_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:background="@drawable/button_filter"
             android:text="filter">
         </Button>
 
@@ -29,7 +31,9 @@
             android:id="@+id/btn_kekuatan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:background="@drawable/button_filter"
             android:text="kekuatan">
         </Button>
 
@@ -37,7 +41,9 @@
             android:id="@+id/btn_kelenturan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:background="@drawable/button_filter"
             android:text="kelenturan">
         </Button>
     </LinearLayout>

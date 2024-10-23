@@ -1,15 +1,11 @@
 package com.alphatz.adek.Fragment;
 
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.alphatz.adek.Activity.LinearGauge;
+import com.alphatz.adek.Activity.UpdateTinggi; // Import UpdateTinggi
+import com.alphatz.adek.Activity.UpdateBerat;
 import com.alphatz.adek.R;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -37,7 +35,7 @@ public class ProfileFragment extends Fragment {
     private TextView tinggiTextView;
     private TextView bmiTextView;
     private TextView txt_username;
-    private LinearGauge linearGauge; // LinearGauge untuk menggantikan CurvedGauge
+    private LinearGauge linearGauge;
 
     private RequestQueue requestQueue;
     private String baseUrl = "http://10.0.2.2/ads_mysql/profil2.php";
@@ -74,9 +72,8 @@ public class ProfileFragment extends Fragment {
         tinggiTextView = view.findViewById(R.id.text_tinggi);
         bmiTextView = view.findViewById(R.id.text_bmi);
         txt_username = view.findViewById(R.id.txt_username);
-        linearGauge = view.findViewById(R.id.linearGauge); // Inisialisasi LinearGauge
+        linearGauge = view.findViewById(R.id.linearGauge);
 
-        // Set nilai awal TextView
         beratTextView.setText("Loading...");
         tinggiTextView.setText("Loading...");
         bmiTextView.setText("Loading...");
@@ -92,7 +89,25 @@ public class ProfileFragment extends Fragment {
         settings.setOnClickListener(v -> openSettingsFragment());
 
         Log.d(TAG, "onCreateView completed");
+
+        beratTextView.setOnClickListener(v -> {
+            // Create an instance of the UpdateUsia dialog
+            UpdateBerat konfirmasiDialog = new UpdateBerat();
+            konfirmasiDialog.show(getChildFragmentManager(), "KonfirmasiDialog");
+        });
+
+        tinggiTextView.setOnClickListener(v -> {
+            // Create an instance of the UpdateTinggi dialog
+            showUpdateTinggi(); // Ganti panggilan ke UpdateTinggi
+        });
+
         return view;
+    }
+
+    private void showUpdateTinggi() {
+        // Membuat instance baru dari UpdateTinggi
+        UpdateTinggi updateTinggiFragment = new UpdateTinggi();
+        updateTinggiFragment.show(getChildFragmentManager(), "UpdateTinggiDialog");
     }
 
     private void getUserDataFromApi(String username) {
@@ -108,11 +123,9 @@ public class ProfileFragment extends Fragment {
                             String berat = data.getString("berat_badan");
                             String tinggi = data.getString("tinggi_badan");
 
-                            // Set data ke TextView
                             beratTextView.setText(berat + " kg");
                             tinggiTextView.setText(tinggi + " cm");
 
-                            // Hitung dan tampilkan BMI
                             calculateAndDisplayBMI(berat, tinggi);
 
                         } else {
@@ -147,7 +160,6 @@ public class ProfileFragment extends Fragment {
 
             bmiTextView.setText("BMI: " + bmiText);
 
-            // Update LinearGauge dengan animasi
             linearGauge.setProgressWithAnimation((float) bmi);
 
         } catch (NumberFormatException e) {
@@ -155,7 +167,6 @@ public class ProfileFragment extends Fragment {
             Toast.makeText(getContext(), "Error calculating BMI", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private void openSettingsFragment() {
         Log.d(TAG, "Opening SettingsFragment");

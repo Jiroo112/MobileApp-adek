@@ -15,7 +15,7 @@ public class LinearGauge extends View {
     private Paint needlePaint;
     private Paint textPaint;
     private Paint segmentPaint;
-    private Paint needleHeadPaint; // Tambahan untuk menggambar jarum
+    private Paint needleHeadPaint;
     private RectF rect;
     private float progress = 0; // value from 0 - 100
     private String bmiLabel = "";
@@ -57,7 +57,7 @@ public class LinearGauge extends View {
         segmentPaint.setStyle(Paint.Style.FILL);
         segmentPaint.setAntiAlias(true);
 
-        needleHeadPaint = new Paint(); // Inisialisasi jarum
+        needleHeadPaint = new Paint();
         needleHeadPaint.setColor(Color.RED);
         needleHeadPaint.setStyle(Paint.Style.FILL);
         needleHeadPaint.setAntiAlias(true);
@@ -79,31 +79,28 @@ public class LinearGauge extends View {
         // Draw background
         canvas.drawRect(rect, backgroundPaint);
 
-        // Draw color segments
         drawColorSegments(canvas);
 
-        // Draw needle (indicator)
+        // indikator jarum e
         float needleX = padding + (progress / 100f) * (width - 2 * padding);
         canvas.drawLine(needleX, rect.top, needleX, rect.bottom, needlePaint);
 
-        // Draw needle head (the circular part)
         canvas.drawCircle(needleX, (rect.top + rect.bottom) / 2, 10, needleHeadPaint);
 
-        // Draw BMI label above the needle
         canvas.drawText(bmiLabel, needleX, rect.top - 20, textPaint);
     }
 
     private void drawColorSegments(Canvas canvas) {
         int[] colors = {
-                Color.parseColor("#1E90FF"), // Dot Blue
-                Color.parseColor("#90EE90"),  // Dot Light Green
-                Color.parseColor("#32CD32"),  // Dot Green
-                Color.parseColor("#FFD700"),  // Dot Yellow
-                Color.parseColor("#FFA500"),  // Dot Orange
-                Color.parseColor("#FF4500")   // Dot Red
+                Color.parseColor("#1E90FF"), // Dot biru
+                Color.parseColor("#90EE90"),  // Dot ijo muda
+                Color.parseColor("#32CD32"),  // Dot ijo
+                Color.parseColor("#FFD700"),  // Dot kuning
+                Color.parseColor("#FFA500"),  // Dot Oren
+                Color.parseColor("#FF4500")   // Dot merah
         };
 
-        float[] segments = {0.1f, 0.1f, 0.3f, 0.2f, 0.15f, 0.15f}; // Sesuaikan dengan panjang segmen yang diinginkan
+        float[] segments = {0.1f, 0.1f, 0.3f, 0.2f, 0.15f, 0.15f};
         float startX = rect.left;
         float segmentWidth = rect.width();
 

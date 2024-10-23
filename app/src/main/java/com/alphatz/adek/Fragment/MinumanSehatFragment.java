@@ -1,6 +1,7 @@
 package com.alphatz.adek.Fragment;
 
 import android.os.Bundle;
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -12,7 +13,7 @@ import com.alphatz.adek.R;
 
 public class MinumanSehatFragment extends Fragment {
 
-    private Button btnMakananSehat, btnDesert, btnFilter;
+    private Button btnMakananSehat, btnDessert, btnFilter;
 
     public MinumanSehatFragment() {
         // Required empty public constructor
@@ -21,6 +22,14 @@ public class MinumanSehatFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Handle back press
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                navigateToResepFragment();
+            }
+        });
     }
 
     @Override
@@ -29,29 +38,30 @@ public class MinumanSehatFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_minuman_sehat, container, false);
 
         btnMakananSehat = view.findViewById(R.id.btn_makanan_sehat);
-        btnDesert = view.findViewById(R.id.btn_desert);
+        btnDessert = view.findViewById(R.id.btn_desert);
         btnFilter = view.findViewById(R.id.btn_filter);
 
-        btnMakananSehat.setOnClickListener(v -> {
-            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new MakananBeratFragment());
-            transaction.addToBackStack(null); // Menambahkan fragment ke backstack agar bisa kembali
-            transaction.commit();
-        });
-        btnFilter.setOnClickListener(v -> {
-            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new ResepFragment());
-            transaction.addToBackStack(null);
-            transaction.commit();
-        });
-        btnDesert.setOnClickListener(v -> {
-            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new DessertFragment());
-            transaction.addToBackStack(null);
-            transaction.commit();
-        });
+        btnMakananSehat.setOnClickListener(v -> navigateToFragment(new MakananBeratFragment()));
+        btnFilter.setOnClickListener(v -> navigateToFragment(new ResepFragment()));
+        btnDessert.setOnClickListener(v -> navigateToFragment(new DessertFragment()));
 
-        // Tambahkan logika lainnya untuk tombol jika diperlukan
         return view;
+    }
+
+    private void navigateToFragment(Fragment fragment) {
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void navigateToResepFragment() {
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new ResepFragment());
+        transaction.commit();
+    }
+
+    public boolean isCurrentFragment() {
+        return isVisible() && getUserVisibleHint();
     }
 }

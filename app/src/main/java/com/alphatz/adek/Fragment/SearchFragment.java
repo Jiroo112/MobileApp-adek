@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.alphatz.adek.Activity.Dashboard;
 import com.alphatz.adek.R;
 
 public class SearchFragment extends Fragment {
@@ -33,7 +34,7 @@ public class SearchFragment extends Fragment {
 
     private final int[] cardViewImages = {R.drawable.sandwich_bayam, R.drawable.dada_ayam}; // Array gambar untuk CardView
     private int currentCardViewImageIndex = 0;
-    private boolean isImage1Visible = true; // Menunjukkan gambar mana yang sedang terlihat
+    private boolean isImage1Visible = true;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -49,6 +50,7 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //inisialisasi biasa
         makananBerat = view.findViewById(R.id.makanan_berat);
         minumanSehat = view.findViewById(R.id.minuman_sehat);
         desert = view.findViewById(R.id.desert);
@@ -59,36 +61,49 @@ public class SearchFragment extends Fragment {
         cardViewImage1 = view.findViewById(R.id.imageView1);
         cardViewImage2 = view.findViewById(R.id.imageView2);
 
-        // Tambahkan listener untuk textResep dan textOlahraga
-        TextView textResep = view.findViewById(R.id.selengkapnya_resep);
-        TextView textOlahraga = view.findViewById(R.id.selengkapnya_olahraga);
 
+        TextView textResep = view.findViewById(R.id.textResep);
+        TextView textOlahraga = view.findViewById(R.id.textOlahraga);
+
+        //nambahin listener buat textResep sama textOlahraga (ini kudunya-
+        //di text selengkapnya )
         textResep.setOnClickListener(v -> openResepFragment());
         textOlahraga.setOnClickListener(v -> openOlahragaFragment());
 
+
+        //ini ga terlalu penting nanti diganti sama data API
         setupClickListeners();
         setupArtikelInfo(view, R.id.artikel1, "Meningkatkan Laju Metabolisme", "Kesehatan", "60", "120");
         setupArtikelInfo(view, R.id.artikel2, "Panduan Makanan Sehat", "Gaya Hidup", "45", "100");
 
-        // Start transisi gambar
         startCardViewImageRotation();
     }
 
+    //buat pindah ke OlahragaFragment
     private void openOlahragaFragment() {
         Log.d("SearchFragment", "openOlahragaFragment called");
+
+        // ini buat ngehide bottom navigation nya
+        if (getActivity() instanceof Dashboard) {
+            ((Dashboard) getActivity()).hideBottomNavigation();
+        }
+
+        // transaksi fragment ke OlahragaFragment (intinya buat pindah ke fragment lain)
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new OlahragaFragment());
-        transaction.addToBackStack(null);
+        transaction.addToBackStack("SearchFragment");
         transaction.commit();
+
         Log.d("SearchFragment", "Fragment transaction committed to OlahragaFragment");
     }
+
     private void setupClickListeners() {
         makananBerat.setOnClickListener(v -> {
             showRoast();
             openResepFragment();
         });
     }
-
+    //ini sama de kaya openOlahragaFragment (tapi ini masih blm ky openOlahragaFragement)
     private void openResepFragment() {
         Log.d("SearchFragment", "openResepFragment called");
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();

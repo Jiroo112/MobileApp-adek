@@ -65,7 +65,8 @@
         android:textSize="20sp"
         android:layout_gravity="center|center_horizontal"
         android:layout_marginTop="30dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:clickable="true"/>
 
     <TextView
         android:id="@+id/text_tinggi"
