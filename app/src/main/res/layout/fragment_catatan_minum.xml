@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F7FDFD"
+    tools:context=".Fragment.CatatanMinum">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Asupan Hari Ini"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#555"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Tab Layout - Cari Makanan / Terakhir Dimakan / Catatan Minum -->
+    <LinearLayout
+        android:id="@+id/linear_layout_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
+        android:gravity="center">
+
+        <!-- "Cari Makanan" Tab -->
+        <TextView
+            android:id="@+id/tab_cari_makanan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Cari Makanan"
+            android:textColor="#555"
+            android:textSize="16sp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true" />
+
+        <!-- "Terakhir Dimakan" Tab -->
+        <TextView
+            android:id="@+id/tab_terakhir_dimakan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Terakhir Dimakan"
+            android:textColor="#555"
+            android:textSize="16sp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true" />
+
+        <!-- "Catatan Minum" Tab -->
+        <TextView
+            android:id="@+id/tab_catatan_minum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Catatan Minum"
+            android:textColor="#555"
+            android:textSize="16sp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true" />
+    </LinearLayout>
+
+
+    <!-- Circular Water Intake Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:background="#E7FBF9">
+
+        <com.alphatz.adek.Model.WaterIntakeView
+            android:id="@+id/waterIntakeView"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <!-- Increase/Decrease Water Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp">
+
+        <!-- Decrease Button -->
+        <ImageView
+            android:id="@+id/btnDecrease"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/button_circle"
+            android:src="@drawable/ic_minus"
+            android:contentDescription="Decrease Water" />
+
+        <!-- Add Water Button -->
+        <Button
+            android:id="@+id/btnAddWater"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:text="TAMBAHKAN"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#00CDBD"
+            android:gravity="center"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Water Amount Presets -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+
+        <!-- Water Preset Buttons -->
+        <Button
+            android:id="@+id/btn100ml"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="100 ml"
+            android:paddingTop="35dp"
+            android:background="@drawable/bg_water100ml"
+            android:textColor="#555555"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/btn250ml"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="250 ml"
+            android:paddingTop="35dp"
+            android:background="@drawable/bg_water250ml"
+            android:textColor="#555555"
+            android:gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"/>
+
+        <Button
+            android:id="@+id/btn500ml"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="500 ml"
+            android:paddingTop="35dp"
+            android:background="@drawable/bg_water500ml"
+            android:textColor="#555555"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/btnLainnya"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="Lainnya"
+            android:paddingTop="35dp"
+            android:background="@drawable/bg_waterlainnya"
+            android:textColor="#555555"
+            android:gravity="center"
+            android:layout_marginStart="10dp"/>
+    </LinearLayout>
+</LinearLayout>

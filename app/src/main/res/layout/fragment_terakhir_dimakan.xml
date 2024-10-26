@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    tools:context=".Fragment.TerakhirDimakan">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Asupan Hari Ini"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#555"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Tab Layout - Cari Makanan / Terakhir Dimakan / Catatan Minum -->
+    <LinearLayout
+        android:id="@+id/linear_layout_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
+        android:gravity="center">
+
+        <!-- "Cari Makanan" Tab -->
+        <TextView
+            android:id="@+id/tab_cari_makanan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Cari Makanan"
+            android:textColor="#555"
+            android:textSize="16sp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true" />
+
+        <!-- "Terakhir Dimakan" Tab -->
+        <TextView
+            android:id="@+id/tab_terakhir_dimakan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Terakhir Dimakan"
+            android:textColor="#555"
+            android:textSize="16sp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true" />
+
+        <!-- "Catatan Minum" Tab -->
+        <TextView
+            android:id="@+id/tab_catatan_minum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Catatan Minum"
+            android:textColor="#555"
+            android:textSize="16sp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- First Date Group -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="  15 November 2024"
+                android:background="@drawable/button_filter"
+                android:backgroundTint="@color/hijau_navy"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                android:paddingVertical="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_food_history"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:clipToPadding="false" />
+
+            </LinearLayout>
+
+            <!-- Second Date Group -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="  11 November 2024"
+                android:background="@drawable/button_filter"
+                android:backgroundTint="@color/hijau_navy"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                android:paddingVertical="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_food_history_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:clipToPadding="false" />
+
+            </LinearLayout>
+
+            <!-- Add more food groups if needed -->
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <!-- Button size -->
+    <size
+        android:width="60dp"
+        android:height="60dp" />
+
+    <!-- Button background color (solid white) -->
+    <solid android:color="#FFFFFF" />
+
+    <!-- Black outline (stroke) -->
+    <stroke
+        android:width="2dp"
+        android:color="#000000" />
+
+    <!-- Ensure it's a perfect circle -->
+    <corners android:radius="30dp" />
+</shape>
