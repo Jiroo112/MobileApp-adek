@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -25,8 +27,11 @@ public class CatatanMinum extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Button btn100ml, btn250ml, btn500ml, btnLainnya;
+    private Button btn100ml, btn250ml, btn500ml, btnLainnya, btnAddWater;
+    private ImageView btnDecrease;
+    private TextView tabCariMakanan, tabTerakhirDimakan, tabCatatanMinum;
     private WaterIntakeView waterIntakeView;
+    private static final int DECREASE_AMOUNT = 2500; // Amount to decrease in ml
 
     public CatatanMinum() {
         // Required empty public constructor
@@ -70,7 +75,22 @@ public class CatatanMinum extends Fragment {
         btn250ml = view.findViewById(R.id.btn250ml);
         btn500ml = view.findViewById(R.id.btn500ml);
         btnLainnya = view.findViewById(R.id.btnLainnya);
+        btnAddWater = view.findViewById(R.id.btnAddWater);
+        btnDecrease = view.findViewById(R.id.btnDecrease);
         waterIntakeView = view.findViewById(R.id.waterIntakeView);
+        tabCariMakanan = view.findViewById(R.id.tab_cari_makanan);
+        tabTerakhirDimakan = view.findViewById(R.id.tab_terakhir_dimakan);
+        tabCatatanMinum = view.findViewById(R.id.tab_catatan_minum);
+
+        tabTerakhirDimakan.setOnClickListener(v -> {
+            TerakhirDimakan terakhirDimakanFragment = new TerakhirDimakan();
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, terakhirDimakanFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
     }
 
     private void setupClickListeners() {
@@ -78,6 +98,61 @@ public class CatatanMinum extends Fragment {
         btn250ml.setOnClickListener(v -> addWaterIntake(250));
         btn500ml.setOnClickListener(v -> addWaterIntake(500));
         btnLainnya.setOnClickListener(v -> showCustomAmountDialog());
+        btnAddWater.setOnClickListener(v -> showAddWaterDialog());
+        tabCariMakanan.setOnClickListener(v -> {
+            openAsupanFragment();
+        });
+        // Add click listener for decrease button
+        btnDecrease.setOnClickListener(v -> decreaseWaterIntake());
+    }
+
+    private void openAsupanFragment() {
+        AsupanFragment asupanFragment = new AsupanFragment();
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, asupanFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void decreaseWaterIntake() {
+        int currentIntake = waterIntakeView.getCurrent();
+        if (currentIntake >= DECREASE_AMOUNT) {
+            waterIntakeView.setCurrent(currentIntake - DECREASE_AMOUNT);
+            saveWaterIntakeData();
+            Toast.makeText(getContext(), "Dikurangi " + DECREASE_AMOUNT + " ml", Toast.LENGTH_SHORT).show();
+        } else if (currentIntake > 0) {
+            // If current intake is less than DECREASE_AMOUNT but greater than 0
+            waterIntakeView.setCurrent(0);
+            saveWaterIntakeData();
+            Toast.makeText(getContext(), "Asupan air direset ke 0 ml", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "Asupan air sudah 0 ml", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showAddWaterDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Pilih jumlah air yang akan ditambahkan");
+
+        final String[] amounts = {"100 ml", "250 ml", "500 ml", "Jumlah lain"};
+        builder.setItems(amounts, (dialog, which) -> {
+            switch (which) {
+                case 0:
+                    addWaterIntake(100);
+                    break;
+                case 1:
+                    addWaterIntake(250);
+                    break;
+                case 2:
+                    addWaterIntake(500);
+                    break;
+                case 3:
+                    showCustomAmountDialog();
+                    break;
+            }
+        });
+
+        builder.show();
     }
 
     private void addWaterIntake(int amount) {
@@ -136,7 +211,6 @@ public class CatatanMinum extends Fragment {
         loadWaterIntakeData();
     }
 
-    // Optional: Method to reset daily intake
     public void resetDailyIntake() {
         waterIntakeView.reset();
         saveWaterIntakeData();

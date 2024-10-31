@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -64,53 +64,27 @@
             android:clickable="true"/>
     </LinearLayout>
 
-    <!-- Search Input Field -->
+
     <EditText
         android:id="@+id/search_field"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Cari makanan/minuman"
-        android:background="@drawable/search_background"
-        android:padding="10dp"
-        android:textColor="#000"
-        android:layout_marginBottom="20dp"/>
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:hint="Cari makanan..."
+        android:padding="12dp"
+        android:background="@android:drawable/edit_text"/>
 
-    <Button
-        android:id="@+id/btn_tambahasupan"
+    <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#66d2c6"
-        android:text="Tambah asupan baru"
-        android:textColor="#ffffff"
         android:layout_gravity="center"
-        android:padding="16dp"
-        android:textSize="16sp"
-        android:background="@drawable/button_background"/>
+        android:visibility="gone"/>
 
-    <!-- List Title -->
-    <TextView
-        android:id="@+id/text_food_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Daftar makanan dan minuman"
-        android:textSize="16sp"
-        android:layout_marginTop="20dp"
-        android:textColor="#000"/>
-
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <!-- Container untuk CardView daftar menu -->
-        <LinearLayout
-            android:id="@+id/menu_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"/>
-    </LinearLayout>
-
+        android:layout_marginTop="16dp"/>
 
 </LinearLayout>
