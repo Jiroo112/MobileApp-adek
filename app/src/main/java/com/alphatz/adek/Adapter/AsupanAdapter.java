@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alphatz.adek.Model.AsupanModel;
@@ -13,9 +14,9 @@ import com.alphatz.adek.R;
 
 import java.util.List;
 
-public class AsupanAdapter extends RecyclerView.Adapter<AsupanAdapter.AsupanViewHolder> {
-    private final List<AsupanModel> menuList;
-    private final OnItemClickListener listener;
+public class AsupanAdapter extends RecyclerView.Adapter<AsupanAdapter.ViewHolder> {
+    private List<AsupanModel> menuList;
+    private OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(AsupanModel menu);
@@ -28,39 +29,41 @@ public class AsupanAdapter extends RecyclerView.Adapter<AsupanAdapter.AsupanView
 
     @NonNull
     @Override
-    public AsupanViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_makanan, parent, false);
-        return new AsupanViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_asupan, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AsupanViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AsupanModel menu = menuList.get(position);
-        holder.bind(menu, listener);
-    }
+        holder.tvNamaMenu.setText(menu.getNamaMenu());
 
+        holder.cardView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(menu);
+            }
+        });
+    }
     @Override
     public int getItemCount() {
-        return menuList.size();
+        return menuList != null ? menuList.size() : 0;
     }
 
     public void updateList(List<AsupanModel> newList) {
-        menuList.clear();
-        menuList.addAll(newList);
+        this.menuList = newList;
         notifyDataSetChanged();
     }
 
-    static class AsupanViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textViewNama;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvNamaMenu;
+        CardView cardView;
 
-        public AsupanViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewNama = itemView.findViewById(R.id.text_view_nama);
-        }
-
-        public void bind(AsupanModel menu, OnItemClickListener listener) {
-            textViewNama.setText(menu.getNamaMenu());
-            itemView.setOnClickListener(v -> listener.onItemClick(menu));
+            tvNamaMenu = itemView.findViewById(R.id.tv_nama_menu);
+            cardView = itemView.findViewById(R.id.card_view);
         }
     }
 }

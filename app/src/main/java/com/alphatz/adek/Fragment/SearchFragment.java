@@ -26,7 +26,8 @@ public class SearchFragment extends Fragment {
     private ImageView makananBerat, minumanSehat, desert;
     private ImageView kardio, kekuatan, interval;
     private ImageView tampilkanLebih;
-    private ImageView cardViewImage1, cardViewImage2; // Dua ImageView untuk CardView
+    private ImageView cardViewImage1, cardViewImage2;
+    private TextView selengkapnya_resep, selengkapnya_olahraga;
 
     private Handler handler = new Handler();
     private final int[] artikelImages = {R.drawable.gambar_kosong, R.drawable.gambar_kosong}; // Array gambar untuk artikel
@@ -53,6 +54,8 @@ public class SearchFragment extends Fragment {
         //inisialisasi biasa
         makananBerat = view.findViewById(R.id.makanan_berat);
         minumanSehat = view.findViewById(R.id.minuman_sehat);
+        selengkapnya_olahraga = view.findViewById(R.id.selengkapnya_olahraga);
+        selengkapnya_resep = view.findViewById(R.id.selengkapnya_resep);
         desert = view.findViewById(R.id.desert);
         kardio = view.findViewById(R.id.kardio);
         kekuatan = view.findViewById(R.id.kekuatan);
@@ -62,55 +65,49 @@ public class SearchFragment extends Fragment {
         cardViewImage2 = view.findViewById(R.id.imageView2);
 
 
-        TextView textResep = view.findViewById(R.id.textResep);
-        TextView textOlahraga = view.findViewById(R.id.textOlahraga);
+        TextView textSelengkapnyaResep = view.findViewById(R.id.selengkapnya_resep);
+        TextView textSelengkapnyaOlahraga = view.findViewById(R.id.selengkapnya_olahraga);
 
         //nambahin listener buat textResep sama textOlahraga (ini kudunya-
         //di text selengkapnya )
-        textResep.setOnClickListener(v -> openResepFragment());
-        textOlahraga.setOnClickListener(v -> openOlahragaFragment());
+        textSelengkapnyaResep.setOnClickListener(v -> openResepFragment());
+        textSelengkapnyaOlahraga.setOnClickListener(v -> openOlahragaFragment());
 
 
-        //ini ga terlalu penting nanti diganti sama data API
-        setupClickListeners();
         setupArtikelInfo(view, R.id.artikel1, "Meningkatkan Laju Metabolisme", "Kesehatan", "60", "120");
         setupArtikelInfo(view, R.id.artikel2, "Panduan Makanan Sehat", "Gaya Hidup", "45", "100");
 
         startCardViewImageRotation();
     }
 
-    //buat pindah ke OlahragaFragment
+    // Pada bagian openResepFragment dan openOlahragaFragment, tambahkan ke BackStack dengan ID yang mudah dilacak.
+    private void openResepFragment() {
+        Log.d("SearchFragment", "openResepFragment called");
+
+        if (getActivity() instanceof Dashboard) {
+            ((Dashboard) getActivity()).hideBottomNavigation();
+        }
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new ResepFragment());
+        transaction.addToBackStack("SearchFragment"); // Tambahkan dengan identitas yang konsisten
+        transaction.commit();
+
+        Log.d("SearchFragment", "Fragment transaction committed to ResepFragment");
+    }
+
     private void openOlahragaFragment() {
         Log.d("SearchFragment", "openOlahragaFragment called");
 
-        // ini buat ngehide bottom navigation nya
         if (getActivity() instanceof Dashboard) {
             ((Dashboard) getActivity()).hideBottomNavigation();
         }
 
-        // transaksi fragment ke OlahragaFragment (intinya buat pindah ke fragment lain)
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new OlahragaFragment());
         transaction.addToBackStack("SearchFragment");
         transaction.commit();
 
         Log.d("SearchFragment", "Fragment transaction committed to OlahragaFragment");
-    }
-
-    private void setupClickListeners() {
-        makananBerat.setOnClickListener(v -> {
-            showRoast();
-            openResepFragment();
-        });
-    }
-    //ini sama de kaya openOlahragaFragment (tapi ini masih blm ky openOlahragaFragement)
-    private void openResepFragment() {
-        Log.d("SearchFragment", "openResepFragment called");
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new ResepFragment());
-        transaction.addToBackStack(null);
-        transaction.commit();
-        Log.d("SearchFragment", "Fragment transaction committed");
     }
 
     private void showRoast() {
@@ -168,7 +165,6 @@ public class SearchFragment extends Fragment {
         nextImageView.setImageResource(cardViewImages[currentCardViewImageIndex]);
         nextImageView.setVisibility(View.VISIBLE); // Make the next image visible
 
-        // Create slide out animation for the current image
         Animation slideOutRight = new TranslateAnimation(
                 Animation.RELATIVE_TO_PARENT, 0f,
                 Animation.RELATIVE_TO_PARENT, 1f,

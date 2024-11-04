@@ -17,5 +17,14 @@
     <string name="kelas_obesitas_ii">Kelas Obesitas II       35.0-39.9</string>
     <string name="kelas_obesitas_iii">Kelas Obesitas III      >40</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="kategori_array">
+        <item>Makanan</item>
+        <item>Minuman</item>
+        <item>Dessert</item>
+    </string-array>
+    <string-array name="konsultan_array">
+        <item>101</item>
+        <item>102</item>
+        <item>103</item>
+    </string-array>
 </resources>

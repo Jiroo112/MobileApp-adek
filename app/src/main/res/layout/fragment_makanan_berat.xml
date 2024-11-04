@@ -6,7 +6,6 @@
     android:orientation="vertical"
     tools:context=".Fragment.MakananBeratFragment">
 
-    <!-- ImageView di bagian atas -->
     <ImageView
         android:id="@+id/imageResep"
         android:layout_width="match_parent"
@@ -15,7 +14,15 @@
         android:scaleType="centerCrop"
         android:src="@drawable/resep" />
 
-    <!-- Tombol Filter, Dessert, Minuman Sehat -->
+    <EditText
+        android:id="@+id/searchField"
+        android:background="@drawable/button_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:hint="Cari makanan..."
+        android:padding="16dp"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,27 +57,19 @@
             android:background="@drawable/button_filter" />
     </LinearLayout>
 
-    <!-- TextView judul menu -->
-    <TextView
-        android:id="@+id/textViewMenuMakanan"
-        android:layout_width="match_parent"
+    <!-- Add ProgressBar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Menu Makanan"
-        android:padding="16dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:background="@drawable/custom_edittext"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp" />
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
-    <!-- RecyclerView untuk menampilkan menu makanan -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewMakanan"
+        android:id="@+id/recyclerView"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:scrollbars="vertical"
-        tools:listitem="@layout/item_makanan" />
-
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="8dp"/>
 </LinearLayout>

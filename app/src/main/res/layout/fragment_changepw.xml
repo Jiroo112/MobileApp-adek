@@ -36,7 +36,7 @@
             android:inputType="textPassword"
             android:layout_marginTop="32dp"
             android:padding="12dp"
-            android:background="@android:drawable/edit_text"/>
+            android:background="@drawable/button_filter"/>
 
         <EditText
             android:id="@+id/input_confirm_password"
@@ -46,7 +46,7 @@
             android:inputType="textPassword"
             android:layout_marginTop="16dp"
             android:padding="12dp"
-            android:background="@android:drawable/edit_text"/>
+            android:background="@drawable/button_filter"/>
 
         <TextView
             android:layout_width="match_parent"

@@ -1,43 +1,26 @@
 package com.alphatz.adek.Model;
 
 public class AsupanModel {
-    private int idMenu;
     private String namaMenu;
-    private double kalori;
-    private double protein;
-    private double karbo;
-    private double gula;
+    private String kategori;
 
-    public AsupanModel(int idMenu, String namaMenu, double kalori, double protein, double karbo, double gula) {
-        this.idMenu = idMenu;
+    public AsupanModel(String namaMenu) {
         this.namaMenu = namaMenu;
-        this.kalori = kalori;
-        this.protein = protein;
-        this.karbo = karbo;
-        this.gula = gula;
-    }
-
-    public int getIdMenu() {
-        return idMenu;
     }
 
     public String getNamaMenu() {
         return namaMenu;
     }
 
-    public double getKalori() {
-        return kalori;
+    public void setNamaMenu(String namaMenu) {
+        this.namaMenu = namaMenu;
     }
 
-    public double getProtein() {
-        return protein;
+    public String getKategori() {
+        return kategori;
     }
 
-    public double getKarbo() {
-        return karbo;
-    }
-
-    public double getGula() {
-        return gula;
+    public void setKategori(String kategori) {
+        this.kategori = kategori;
     }
 }

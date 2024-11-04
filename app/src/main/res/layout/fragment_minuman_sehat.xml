@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Fragment.MakananBeratFragment">
+    tools:context=".Fragment.MinumanSehatFragment">
 
     <ImageView
         android:id="@+id/imageResep"
@@ -13,6 +13,15 @@
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:src="@drawable/resep" />
+
+    <EditText
+        android:id="@+id/searchField"
+        android:background="@drawable/button_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:hint="Cari makanan..."
+        android:padding="16dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -24,33 +33,43 @@
             android:id="@+id/btn_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:padding="10dp"
             android:text="Filter"
-            android:background="@drawable/button_filter">
-        </Button>
+            android:background="@drawable/button_filter" />
 
         <Button
             android:id="@+id/btn_desert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="Dessert"
+            android:layout_marginLeft="10dp"
             android:padding="10dp"
-            android:background="@drawable/button_filter">
-        </Button>
+            android:text="Dessert"
+            android:background="@drawable/button_filter" />
 
         <Button
             android:id="@+id/btn_makanan_sehat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="Makanan Sehat"
+            android:layout_marginLeft="10dp"
             android:padding="10dp"
-            android:background="@drawable/button_filter">
-        </Button>
+            android:text="Makanan Sehat"
+            android:background="@drawable/button_filter" />
     </LinearLayout>
-    <include layout="@layout/item_minuman_sehat" android:id="@+id/MS1" />
-    <include layout="@layout/item_minuman_sehat" android:id="@+id/MS2" />
-    <include layout="@layout/item_minuman_sehat" android:id="@+id/MS3" />
+
+    <!-- Add ProgressBar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="8dp"/>
 </LinearLayout>

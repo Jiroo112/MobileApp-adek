@@ -12,7 +12,7 @@ import com.alphatz.adek.Fragment.AsupanFragment;
 import com.alphatz.adek.Fragment.BmiFragment;
 import com.alphatz.adek.Fragment.HomeFragment;
 import com.alphatz.adek.Fragment.KonsultasiFragment;
-import com.alphatz.adek.Fragment.OlahragaFragment;
+//import com.alphatz.adek.Fragment.OlahragaFragment;
 import com.alphatz.adek.Fragment.ProfileFragment;
 import com.alphatz.adek.Fragment.SearchFragment;
 import com.alphatz.adek.R;
@@ -110,14 +110,4 @@ public class Dashboard extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        // Cek apakah fragment saat ini adalah OlahragaFragment
-        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (currentFragment instanceof OlahragaFragment) {
-            // Tampilkan kembali bottom navigation saat kembali
-            showBottomNavigation();
-        }
-        super.onBackPressed();
-    }
 }

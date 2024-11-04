@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,6 +14,15 @@
         android:scaleType="centerCrop"
         android:src="@drawable/resep" />
 
+    <EditText
+        android:id="@+id/searchField"
+        android:background="@drawable/button_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:hint="Cari makanan..."
+        android:padding="16dp"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,54 +30,46 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_makanan_berat"
+            android:id="@+id/btn_makanan_sehat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/button_filter"
             android:padding="10dp"
-            android:text="makanan berat">
-
-        </Button>
+            android:text="Makanan Sehat"
+            android:background="@drawable/button_filter" />
 
         <Button
             android:id="@+id/btn_desert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/button_filter"
             android:padding="10dp"
-            android:text="Dessert"></Button>
+            android:text="Dessert"
+            android:background="@drawable/button_filter" />
 
         <Button
             android:id="@+id/btn_minuman_sehat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/button_filter"
             android:padding="10dp"
-            android:text="Minuman Sehat"></Button>
+            android:text="Minuman Sehat"
+            android:background="@drawable/button_filter" />
     </LinearLayout>
 
-    <include
-        android:id="@+id/susu_stroberi"
-        layout="@layout/item_resep"
-        android:layout_width="match_parent"
+    <!-- Add ProgressBar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"/>
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
-    <include
-        android:id="@+id/es_jeruk"
-        layout="@layout/item_resep"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"/>
-
-    <include
-        android:id="@+id/es_teh"
-        layout="@layout/item_resep"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"/>
-
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="8dp"/>
 </LinearLayout>
