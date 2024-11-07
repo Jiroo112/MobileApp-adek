@@ -22,13 +22,13 @@
         android:layout_marginBottom="8dp"/>
 
     <LinearLayout
+        android:id="@+id/layout_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/rounded_rectangle_background"
         android:padding="8dp"
         android:layout_marginBottom="12dp">
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,6 +100,14 @@
             android:text="Bahasa"
             android:drawableEnd="@drawable/ic_arrow_right"
             android:padding="8dp"/>
+        <TextView
+            android:id="@+id/logout_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Log out"
+            android:padding="8dp"
+            android:drawableEnd="@drawable/ic_arrow_right"/>
+
     </LinearLayout>
 
     <TextView

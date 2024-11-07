@@ -1,6 +1,8 @@
 package com.alphatz.adek.Activity;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,7 +44,7 @@ public class Konfirmasi extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         initializeViews(view);
         setupListeners();
-        setDialogImage(); // Set default image for the dialog
+        setDialogImage();
     }
 
     private void initializeViews(View view) {
@@ -56,16 +59,26 @@ public class Konfirmasi extends DialogFragment {
     }
 
     private void setDialogImage() {
-        imageView.setImageResource(R.drawable.konf_kons_kosong); // Set default image
+        imageView.setImageResource(R.drawable.konf_kons_kosong);
     }
 
     private void onIyaClicked() {
-        // Logic for Iya button
+        String phoneNumber = "+6282132640141";
+        String message = "Permisi dok, saya ingin berkonsultasi..";
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://wa.me/" + phoneNumber + "?text=" + Uri.encode(message)));
+
+        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            Toast.makeText(getContext(), "WhatsApp tidak terinstall", Toast.LENGTH_SHORT).show();
+        }
+
         dismiss();
     }
 
     private void onTidakClicked() {
-        // Logic for Tidak button
         dismiss();
     }
 }

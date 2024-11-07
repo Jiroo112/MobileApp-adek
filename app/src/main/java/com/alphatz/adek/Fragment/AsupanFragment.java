@@ -162,13 +162,15 @@ public class AsupanFragment extends Fragment {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new AsupanAdapter(menuList, menu -> {
-            // Handle item click
             if (menu != null) {
-                Toast.makeText(getContext(), "Selected: " + menu.getNamaMenu(), Toast.LENGTH_SHORT).show();
+                // Tampilkan BottomSheet untuk item yang di klik
+                AsupanBottomSheet bottomSheet = AsupanBottomSheet.newInstance(menu.getNamaMenu());
+                bottomSheet.show(getParentFragmentManager(), "AsupanBottomSheet");
             }
         });
         recyclerView.setAdapter(adapter);
     }
+
 
     private void setupSearch() {
         searchField.addTextChangedListener(new TextWatcher() {
