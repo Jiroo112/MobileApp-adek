@@ -54,7 +54,7 @@ public class AsupanFragment extends Fragment {
 
 
     public AsupanFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
@@ -71,7 +71,7 @@ public class AsupanFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
-            // Perbaikan implementasi onClick
+
             TextView buttonAddAsupan = view.findViewById(R.id.button_tambah_menu);
             buttonAddAsupan.setOnClickListener(v -> openAddAsupanFragment());
 
@@ -80,6 +80,7 @@ public class AsupanFragment extends Fragment {
             setupSearch();
             setupTabs();
             fetchMenuData();
+
         } catch (Exception e) {
             Log.e(TAG, "Error in onViewCreated: " + e.getMessage());
             showError("Terjadi kesalahan saat memuat aplikasi");
@@ -90,18 +91,15 @@ public class AsupanFragment extends Fragment {
         Log.d(TAG, "openAddAsupanFragment called");
 
         try {
-            // Pastikan fragment masih attached ke activity
             if (!isAdded()) {
                 Log.e(TAG, "Fragment not attached to activity");
                 return;
             }
-
-            // Hide bottom navigation if we're in Dashboard activity
             if (getActivity() instanceof Dashboard) {
                 ((Dashboard) getActivity()).hideBottomNavigation();
             }
 
-            // Gunakan childFragmentManager jika fragment di dalam fragment
+            //pakein childparentfragment soalnya ini fragment dalam fragment
             FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, new AddAsupanFragment());
             transaction.addToBackStack("AsupanFragment");
@@ -145,17 +143,15 @@ public class AsupanFragment extends Fragment {
             tabTerakhirDimakan.setTextColor(requireContext().getColor(android.R.color.darker_gray));
             tabCatatanMinum.setTextColor(requireContext().getColor(R.color.active));
 
-            // Pindah ke fragment CatatanMinum
             replaceFragment(new CatatanMinum());
         });
     }
 
-    // Fungsi untuk mengganti fragment
     private void replaceFragment(Fragment fragment) {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment) // Pastikan ID sesuai dengan container di layout
-                .addToBackStack(null) // Menyimpan ke back stack jika ingin dapat kembali ke fragment sebelumnya
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null) // simpen ke back stack misap pingin bisa balik ke fragment sebelumnya
                 .commit();
     }
 
@@ -163,14 +159,12 @@ public class AsupanFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new AsupanAdapter(menuList, menu -> {
             if (menu != null) {
-                // Tampilkan BottomSheet untuk item yang di klik
                 AsupanBottomSheet bottomSheet = AsupanBottomSheet.newInstance(menu.getNamaMenu());
                 bottomSheet.show(getParentFragmentManager(), "AsupanBottomSheet");
             }
         });
         recyclerView.setAdapter(adapter);
     }
-
 
     private void setupSearch() {
         searchField.addTextChangedListener(new TextWatcher() {

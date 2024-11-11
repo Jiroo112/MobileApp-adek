@@ -70,16 +70,9 @@ public class KelenturanFragment extends Fragment {
         });
         recyclerViewOlahraga.setAdapter(olahragaAdapter);
 
-        // Initialize Volley request queue
         requestQueue = Volley.newRequestQueue(requireContext());
-
-        // Setup search functionality
         setupSearch();
-
-        // Setup button click listeners
         setupButtonListeners();
-
-        // Fetch olahraga data from API
         getOlahragaData();
 
         return view;
@@ -198,7 +191,7 @@ public class KelenturanFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Tampilkan lagi bottom navigation waktu fragment ini dihancurkan
+        // nampilin lagi nav bottom misal fragment ini di destroy
         if (getActivity() instanceof Dashboard) {
             ((Dashboard) getActivity()).showBottomNavigation();
         }

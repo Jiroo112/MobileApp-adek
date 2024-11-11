@@ -57,14 +57,12 @@ public class SettingsFragment extends Fragment {
 
     private void performLogout() {
         if (getActivity() != null) {
-            // Membuat AlertDialog untuk konfirmasi
             new AlertDialog.Builder(getActivity())
                     .setTitle("Konfirmasi Logout")
                     .setMessage("Apakah Anda yakin ingin keluar?")
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // Jika "Ya" ditekan, lakukan logout
                             SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREF_NAME, getActivity().MODE_PRIVATE);
                             LoginActivity.logout(sharedPreferences);
                             Intent intent = new Intent(getActivity(), LoginActivity.class);

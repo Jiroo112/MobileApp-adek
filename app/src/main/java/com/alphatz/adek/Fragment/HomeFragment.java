@@ -19,7 +19,7 @@ public class HomeFragment extends Fragment {
     private String username;
 
     public HomeFragment() {
-        // Required empty public constructor
+
     }
 
     public static HomeFragment newInstance(String username) {

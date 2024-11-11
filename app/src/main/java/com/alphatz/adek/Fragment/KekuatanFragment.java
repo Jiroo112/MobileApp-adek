@@ -69,16 +69,9 @@ public class KekuatanFragment extends Fragment {
         });
         recyclerViewOlahraga.setAdapter(olahragaAdapter);
 
-        // Initialize Volley request queue
         requestQueue = Volley.newRequestQueue(requireContext());
-
-        // Setup search functionality
         setupSearch();
-
-        // Setup button click listeners
         setupButtonListeners();
-
-        // Fetch olahraga data from API
         getOlahragaData();
 
         return view;

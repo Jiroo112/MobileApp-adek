@@ -69,16 +69,9 @@ public class MinumanSehatFragment extends Fragment {
         });
         recyclerViewMakanan.setAdapter(makananAdapter);
 
-        // Initialize Volley request queue
         requestQueue = Volley.newRequestQueue(requireContext());
-
-        // Setup search functionality
         setupSearch();
-
-        // Setup button click listeners
         setupButtonListeners();
-
-        // Fetch menu data from API
         getMenuMakanan();
 
         return view;

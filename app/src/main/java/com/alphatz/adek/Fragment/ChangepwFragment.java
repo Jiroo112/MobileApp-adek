@@ -35,20 +35,20 @@ public class ChangepwFragment extends Fragment {
     private String userEmail; // Menyimpan email pengguna
 
     public ChangepwFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_changepw, container, false);
 
         editTextNewPassword = view.findViewById(R.id.input_new_password);
         editTextConfirmPassword = view.findViewById(R.id.input_confirm_password);
         buttonUpdatePassword = view.findViewById(R.id.btn_update_password);
 
-        // Ambil email dari SharedPreferences
+        // ngambil email dari SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("LoginPrefs", getContext().MODE_PRIVATE);
         userEmail = sharedPreferences.getString("username", null); // Mengambil email dari SharedPreferences
 
@@ -79,7 +79,7 @@ public class ChangepwFragment extends Fragment {
 
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                             if (success) {
-                                // Kembali ke ProfileFragment setelah berhasil
+                                // balik ke ProfileFragment setelah berhasil
                                 getFragmentManager()
                                         .beginTransaction()
                                         .replace(R.id.fragment_container, new ProfileFragment())

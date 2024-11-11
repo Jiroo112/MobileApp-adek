@@ -119,7 +119,8 @@ public class KonsultasiFragment extends Fragment {
                                     konsultanObj.getString("email"),
                                     konsultanObj.getString("nama_lengkap"),
                                     konsultanObj.getString("jenis"),
-                                    konsultanObj.getString("no_hp")
+                                    konsultanObj.getString("no_hp"),
+                                    konsultanObj.optString("foto_dokter", null)
                             );
                             konsultanList.add(konsultan);
                         }
@@ -143,13 +144,9 @@ public class KonsultasiFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                 });
 
-        request.setRetryPolicy(new DefaultRetryPolicy(
-                30000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
         requestQueue.add(request);
     }
+
 
     private void showKonfirmasiDialog(KonsultasiModel konsultan) {
         Konfirmasi konfirmasiDialog = new Konfirmasi();

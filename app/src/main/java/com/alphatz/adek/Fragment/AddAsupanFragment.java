@@ -47,15 +47,13 @@ public class AddAsupanFragment extends Fragment {
         editTextLemak = view.findViewById(R.id.jumlah_lemak);
         editTextProtein = view.findViewById(R.id.jumlah_protein);
         editTextGula = view.findViewById(R.id.jumlah_gula);
-
-        // Inisialisasi Spinner untuk kategori
+        //ktgr
         spinnerKategori = view.findViewById(R.id.spinner_kategori);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.kategori_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerKategori.setAdapter(adapter);
-
-        // Inisialisasi Spinner untuk konsultan
+        //kons
         spinnerKonsultan = view.findViewById(R.id.spinner_konsultan);
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(getContext(),
                 R.array.konsultan_array, android.R.layout.simple_spinner_item);
@@ -69,7 +67,6 @@ public class AddAsupanFragment extends Fragment {
                 simpanData();
             }
         });
-
         return view;
     }
 
@@ -87,7 +84,6 @@ public class AddAsupanFragment extends Fragment {
             Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_POST_MENU,
                 new Response.Listener<String>() {
                     @Override
@@ -130,10 +126,8 @@ public class AddAsupanFragment extends Fragment {
                 return params;
             }
         };
-
-        // Add timeout settings
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                30000,  // 30 seconds timeout
+                30000,  // 30 detik timeout
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         ));

@@ -46,7 +46,6 @@ public class Dashboard extends AppCompatActivity {
             username = "Pengguna"; // Default value jika username null
         }
 
-        // Load default fragment (HomeFragment)
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, ProfileFragment.newInstance(username))
@@ -55,7 +54,6 @@ public class Dashboard extends AppCompatActivity {
 
         loadFragment(HomeFragment.newInstance(username));
 
-        // Setup Bottom Navigation
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
@@ -75,22 +73,17 @@ public class Dashboard extends AppCompatActivity {
             }
             return true;
         });
-
-        // Setup Floating Action Button
         fab.setOnClickListener(view -> {
-            // Action for FAB click - show HomeFragment
             loadFragment(HomeFragment.newInstance(username));
         });
     }
 
-    // Method untuk memuat fragment
     private void loadFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
     }
 
-    // Method untuk menyembunyikan bottom navigation dan fab
     public void hideBottomNavigation() {
         if (bottomNav != null) {
             bottomNav.setVisibility(View.GONE);
@@ -99,8 +92,6 @@ public class Dashboard extends AppCompatActivity {
             fab.setVisibility(View.GONE);
         }
     }
-
-    // Method untuk menampilkan bottom navigation dan fab
     public void showBottomNavigation() {
         if (bottomNav != null) {
             bottomNav.setVisibility(View.VISIBLE);

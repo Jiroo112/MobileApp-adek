@@ -1,5 +1,8 @@
 package com.alphatz.adek.Adapter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.alphatz.adek.R;
 import com.alphatz.adek.Model.KonsultasiModel;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.List;
 
 public class KonsultasiAdapter extends RecyclerView.Adapter<KonsultasiAdapter.DoctorViewHolder> {
@@ -67,6 +72,28 @@ public class KonsultasiAdapter extends RecyclerView.Adapter<KonsultasiAdapter.Do
             doctorName.setText(konsultan.getNamaLengkap());
             doctorSpecialty.setText(konsultan.getJenis());
 
+            //gambar dokter
+            if (konsultan.getFotoDokter() != null && !konsultan.getFotoDokter().isEmpty()) {
+                try {
+                    // ngedecode base64 jadi bitmap
+                    byte[] decodedString = Base64.decode(konsultan.getFotoDokter(), Base64.DEFAULT);
+
+                    // glide buat ngubah gambar kosong jadi gambar dr db
+                    Glide.with(itemView.getContext())
+                            .load(decodedString)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .placeholder(R.drawable.gambar_kosong)
+                            .error(R.drawable.gambar_kosong)
+                            .centerCrop()
+                            .into(doctorImage);
+                } catch (IllegalArgumentException e) {
+                    doctorImage.setImageResource(R.drawable.gambar_kosong);
+                } catch (Exception e) {
+                    doctorImage.setImageResource(R.drawable.gambar_kosong);
+                }
+            } else {
+                doctorImage.setImageResource(R.drawable.gambar_kosong);
+            }
             contactButton.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDoctorClick(konsultan);

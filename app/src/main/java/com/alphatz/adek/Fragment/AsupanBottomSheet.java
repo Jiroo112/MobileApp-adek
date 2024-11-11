@@ -51,7 +51,7 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
 
         requestQueue = Volley.newRequestQueue(requireContext());
 
-        // Ambil nama menu dari argumen dan muat data
+        // ngambil data nama menu dari argumen
         if (getArguments() != null) {
             String namaMenu = getArguments().getString(ARG_NAMA_MENU);
             fetchMenuDetail(namaMenu);

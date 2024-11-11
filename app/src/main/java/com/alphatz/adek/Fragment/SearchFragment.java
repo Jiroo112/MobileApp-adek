@@ -24,7 +24,7 @@ import com.alphatz.adek.R;
 
 public class SearchFragment extends Fragment {
     private ImageView makananBerat, minumanSehat, desert;
-    private ImageView kardio, kekuatan, interval;
+    private ImageView kelenturan, kekuatan, interval;
     private ImageView tampilkanLebih;
     private ImageView cardViewImage1, cardViewImage2;
     private TextView selengkapnya_resep, selengkapnya_olahraga;
@@ -38,7 +38,6 @@ public class SearchFragment extends Fragment {
     private boolean isImage1Visible = true;
 
     public SearchFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -51,33 +50,97 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //inisialisasi biasa
+        // Inisialisasi view
         makananBerat = view.findViewById(R.id.makanan_berat);
         minumanSehat = view.findViewById(R.id.minuman_sehat);
         selengkapnya_olahraga = view.findViewById(R.id.selengkapnya_olahraga);
         selengkapnya_resep = view.findViewById(R.id.selengkapnya_resep);
         desert = view.findViewById(R.id.desert);
-        kardio = view.findViewById(R.id.kardio);
+        kelenturan = view.findViewById(R.id.kardio);
         kekuatan = view.findViewById(R.id.kekuatan);
         interval = view.findViewById(R.id.interval);
         tampilkanLebih = view.findViewById(R.id.tampilkan_lebih);
         cardViewImage1 = view.findViewById(R.id.imageView1);
         cardViewImage2 = view.findViewById(R.id.imageView2);
 
+        makananBerat.setOnClickListener(v -> openMakananBeratFragment());
+        minumanSehat.setOnClickListener(v -> openMinumanSehatFragment());
+        desert.setOnClickListener(v -> openDessertFragment());
+        kelenturan.setOnClickListener(v -> openKelenturanFragment());
+        kekuatan.setOnClickListener(v -> openKekuatanFragment());
+//        interval.setOnClickListener(v -> openIntervalFragment());
 
         TextView textSelengkapnyaResep = view.findViewById(R.id.selengkapnya_resep);
         TextView textSelengkapnyaOlahraga = view.findViewById(R.id.selengkapnya_olahraga);
-
-        //nambahin listener buat textResep sama textOlahraga (ini kudunya-
-        //di text selengkapnya )
         textSelengkapnyaResep.setOnClickListener(v -> openResepFragment());
         textSelengkapnyaOlahraga.setOnClickListener(v -> openOlahragaFragment());
-
 
         setupArtikelInfo(view, R.id.artikel1, "Meningkatkan Laju Metabolisme", "Kesehatan", "60", "120");
         setupArtikelInfo(view, R.id.artikel2, "Panduan Makanan Sehat", "Gaya Hidup", "45", "100");
 
         startCardViewImageRotation();
+    }
+
+    // method untuk membuka fragment tapi ngilangin nav bar yg ada dibawah ( nge hide )
+    private void openMakananBeratFragment() {
+        if (getActivity() instanceof Dashboard) {
+            ((Dashboard) getActivity()).hideBottomNavigation(); //hide
+        }
+
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new MakananBeratFragment());
+        transaction.addToBackStack("SearchFragment");
+        transaction.commit();
+    }
+
+    private void openMinumanSehatFragment() {
+        if (getActivity() instanceof Dashboard) {
+            ((Dashboard) getActivity()).hideBottomNavigation(); // Sembunyikan nav bottom
+        }
+
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new MinumanSehatFragment());
+        transaction.addToBackStack("SearchFragment");
+        transaction.commit();
+    }
+
+    private void openDessertFragment() {
+        if (getActivity() instanceof Dashboard) {
+            ((Dashboard) getActivity()).hideBottomNavigation(); // Sembunyikan nav bottom
+        }
+
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new DessertFragment());
+        transaction.addToBackStack("SearchFragment");
+        transaction.commit();
+    }
+
+//    private void openKardioFragment(){
+//        if (getActivity() instanceof  Dashboard){
+//            ((Dashboard) getActivity()).hideBottomNavigation();
+//        }
+//    }
+
+    private void openKekuatanFragment() {
+        if (getActivity() instanceof Dashboard) {
+            ((Dashboard) getActivity()).hideBottomNavigation();
+        }
+
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new KekuatanFragment());
+        transaction.addToBackStack("SearchFragment");
+        transaction.commit();
+    }
+
+    private void openKelenturanFragment() {
+        if (getActivity() instanceof Dashboard) {
+            ((Dashboard) getActivity()).hideBottomNavigation();
+        }
+
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new KelenturanFragment());
+        transaction.addToBackStack("SearchFragment");
+        transaction.commit();
     }
 
     // Pada bagian openResepFragment dan openOlahragaFragment, tambahkan ke BackStack dengan ID yang mudah dilacak.
@@ -156,11 +219,9 @@ public class SearchFragment extends Fragment {
     }
 
     private void animateImageChange() {
-        // Get the currently visible image and the next image
         ImageView currentImageView = isImage1Visible ? cardViewImage1 : cardViewImage2;
         ImageView nextImageView = isImage1Visible ? cardViewImage2 : cardViewImage1;
 
-        // Set the next image resource
         currentCardViewImageIndex = (currentCardViewImageIndex + 1) % cardViewImages.length;
         nextImageView.setImageResource(cardViewImages[currentCardViewImageIndex]);
         nextImageView.setVisibility(View.VISIBLE); // Make the next image visible

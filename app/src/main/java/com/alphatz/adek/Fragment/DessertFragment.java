@@ -48,15 +48,14 @@ public class DessertFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dessert, container, false);
 
-        // Initialize views
         recyclerViewMakanan = view.findViewById(R.id.recyclerView);
         btnMinumanSehat = view.findViewById(R.id.btn_minuman_sehat);
         btnMakananSehat= view.findViewById(R.id.btn_makanan_sehat);
         btnFilter = view.findViewById(R.id.btn_filter);
-        progressBar = view.findViewById(R.id.progressBar); // Add ProgressBar to layout
-        searchField = view.findViewById(R.id.searchField); // Add EditText to layout
+        progressBar = view.findViewById(R.id.progressBar);
+        searchField = view.findViewById(R.id.searchField);
 
-        // Setup RecyclerView
+        //rcv
         recyclerViewMakanan.setLayoutManager(new LinearLayoutManager(getContext()));
         makananAdapter = new ResepAdapter(menuList, new ResepAdapter.OnMakananClickListener() {
             @Override
@@ -68,16 +67,9 @@ public class DessertFragment extends Fragment {
         });
         recyclerViewMakanan.setAdapter(makananAdapter);
 
-        // Initialize Volley request queue
         requestQueue = Volley.newRequestQueue(requireContext());
-
-        // Setup search functionality
         setupSearch();
-
-        // Setup button click listeners
         setupButtonListeners();
-
-        // Fetch menu data from API
         getMenuMakanan();
 
         return view;

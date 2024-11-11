@@ -16,7 +16,7 @@ public class CurvedGauge extends View {
     private Paint textPaint;
     private Paint segmentPaint;
     private RectF oval;
-    private float progress = 0; // value from 0 - 100
+    private float progress = 0;
     private String bmiLabel = "";
 
     public CurvedGauge(Context context) {

@@ -31,10 +31,10 @@ public class CatatanMinum extends Fragment {
     private ImageView btnDecrease;
     private TextView tabCariMakanan, tabTerakhirDimakan, tabCatatanMinum;
     private WaterIntakeView waterIntakeView;
-    private static final int DECREASE_AMOUNT = 2500; // Amount to decrease in ml
+    private static final int DECREASE_AMOUNT = 2500;
 
     public CatatanMinum() {
-        // Required empty public constructor
+
     }
 
     public static CatatanMinum newInstance(String param1, String param2) {
@@ -60,11 +60,8 @@ public class CatatanMinum extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_catatan_minum, container, false);
 
-        // Initialize views
         initializeViews(view);
-        // Load saved data
         loadWaterIntakeData();
-        // Set up click listeners
         setupClickListeners();
 
         return view;
@@ -102,7 +99,7 @@ public class CatatanMinum extends Fragment {
         tabCariMakanan.setOnClickListener(v -> {
             openAsupanFragment();
         });
-        // Add click listener for decrease button
+
         btnDecrease.setOnClickListener(v -> decreaseWaterIntake());
     }
 
@@ -121,7 +118,6 @@ public class CatatanMinum extends Fragment {
             saveWaterIntakeData();
             Toast.makeText(getContext(), "Dikurangi " + DECREASE_AMOUNT + " ml", Toast.LENGTH_SHORT).show();
         } else if (currentIntake > 0) {
-            // If current intake is less than DECREASE_AMOUNT but greater than 0
             waterIntakeView.setCurrent(0);
             saveWaterIntakeData();
             Toast.makeText(getContext(), "Asupan air direset ke 0 ml", Toast.LENGTH_SHORT).show();
@@ -151,7 +147,6 @@ public class CatatanMinum extends Fragment {
                     break;
             }
         });
-
         builder.show();
     }
 

@@ -46,7 +46,6 @@ public class ResepFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Gunakan try-catch untuk mendeteksi error layout inflation
         try {
             View view = inflater.inflate(R.layout.fragment_resep, container, false);
             initializeViews(view);
