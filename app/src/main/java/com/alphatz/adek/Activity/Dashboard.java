@@ -12,7 +12,6 @@ import com.alphatz.adek.Fragment.AsupanFragment;
 import com.alphatz.adek.Fragment.BmiFragment;
 import com.alphatz.adek.Fragment.HomeFragment;
 import com.alphatz.adek.Fragment.KonsultasiFragment;
-//import com.alphatz.adek.Fragment.OlahragaFragment;
 import com.alphatz.adek.Fragment.ProfileFragment;
 import com.alphatz.adek.Fragment.SearchFragment;
 import com.alphatz.adek.R;
@@ -46,18 +45,17 @@ public class Dashboard extends AppCompatActivity {
             username = "Pengguna"; // Default value jika username null
         }
 
+        // Load default fragment (HomeFragment) hanya sekali saat pertama kali
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, ProfileFragment.newInstance(username))
-                    .commit();
+            loadFragment(HomeFragment.newInstance(username));
         }
 
-        loadFragment(HomeFragment.newInstance(username));
-
+        // Set listener untuk BottomNavigationView
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
 
+            // Logika if-else untuk memilih fragment berdasarkan item yang diklik
             if (itemId == R.id.asupan) {
                 selectedFragment = new AsupanFragment();
             } else if (itemId == R.id.search) {
@@ -73,17 +71,19 @@ public class Dashboard extends AppCompatActivity {
             }
             return true;
         });
-        fab.setOnClickListener(view -> {
-            loadFragment(HomeFragment.newInstance(username));
-        });
+
+        // Set listener untuk FloatingActionButton
+        fab.setOnClickListener(view -> loadFragment(HomeFragment.newInstance(username)));
     }
 
+    // Fungsi untuk memuat fragment ke dalam kontainer
     private void loadFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
     }
 
+    // Fungsi untuk menyembunyikan BottomNavigationView dan FloatingActionButton
     public void hideBottomNavigation() {
         if (bottomNav != null) {
             bottomNav.setVisibility(View.GONE);
@@ -92,6 +92,8 @@ public class Dashboard extends AppCompatActivity {
             fab.setVisibility(View.GONE);
         }
     }
+
+    // Fungsi untuk menampilkan BottomNavigationView dan FloatingActionButton
     public void showBottomNavigation() {
         if (bottomNav != null) {
             bottomNav.setVisibility(View.VISIBLE);
@@ -100,5 +102,4 @@ public class Dashboard extends AppCompatActivity {
             fab.setVisibility(View.VISIBLE);
         }
     }
-
 }

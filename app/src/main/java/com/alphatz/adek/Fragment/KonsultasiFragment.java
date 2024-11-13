@@ -104,18 +104,21 @@ public class KonsultasiFragment extends Fragment {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
+                        // Periksa apakah respons memiliki field "data"
                         if (!response.has("data")) {
-                            showError("Format response tidak valid");
+                            showError("Format response tidak valid: Tidak ada field 'data'");
                             return;
                         }
 
+                        // Ambil array "data" dari respons
                         JSONArray jsonArray = response.getJSONArray("data");
                         konsultanList.clear();
 
+                        // Parsing data konsultan
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject konsultanObj = jsonArray.getJSONObject(i);
                             KonsultasiModel konsultan = new KonsultasiModel(
-                                    konsultanObj.getInt("id_konsultan"),
+                                    konsultanObj.getInt("id_konsultan"), // Menggunakan getString karena id_konsultan adalah string
                                     konsultanObj.getString("email"),
                                     konsultanObj.getString("nama_lengkap"),
                                     konsultanObj.getString("jenis"),
@@ -125,6 +128,7 @@ public class KonsultasiFragment extends Fragment {
                             konsultanList.add(konsultan);
                         }
 
+                        // Update adapter dengan data baru
                         adapter.updateList(konsultanList);
 
                         if (konsultanList.isEmpty()) {
@@ -146,6 +150,8 @@ public class KonsultasiFragment extends Fragment {
 
         requestQueue.add(request);
     }
+
+
 
 
     private void showKonfirmasiDialog(KonsultasiModel konsultan) {

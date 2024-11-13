@@ -52,7 +52,6 @@ public class ProfileFragment extends Fragment {
         return fragment;
     }
 
-    @SuppressLint("MissingInflatedId")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,8 +63,6 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        Log.d(TAG, "onCreateView started");
 
         settings = view.findViewById(R.id.settings);
         beratTextView = view.findViewById(R.id.text_berat);
@@ -88,24 +85,19 @@ public class ProfileFragment extends Fragment {
 
         settings.setOnClickListener(v -> openSettingsFragment());
 
-        Log.d(TAG, "onCreateView completed");
-
         beratTextView.setOnClickListener(v -> {
-            // Create an instance of the UpdateUsia dialog
             UpdateBerat konfirmasiDialog = new UpdateBerat();
             konfirmasiDialog.show(getChildFragmentManager(), "KonfirmasiDialog");
         });
 
         tinggiTextView.setOnClickListener(v -> {
-            // Create an instance of the UpdateTinggi dialog
-            showUpdateTinggi(); // Ganti panggilan ke UpdateTinggi
+            showUpdateTinggi();
         });
 
         return view;
     }
 
     private void showUpdateTinggi() {
-        // Membuat instance baru dari UpdateTinggi
         UpdateTinggi updateTinggiFragment = new UpdateTinggi();
         updateTinggiFragment.show(getChildFragmentManager(), "UpdateTinggiDialog");
     }
@@ -115,7 +107,6 @@ public class ProfileFragment extends Fragment {
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
-                    Log.d(TAG, "Response: " + response);
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (jsonObject.getString("status").equals("success")) {
@@ -127,7 +118,6 @@ public class ProfileFragment extends Fragment {
                             tinggiTextView.setText(tinggi + " cm");
 
                             calculateAndDisplayBMI(berat, tinggi);
-
                         } else {
                             Toast.makeText(getContext(), "Data pengguna tidak ditemukan", Toast.LENGTH_SHORT).show();
                         }
@@ -141,26 +131,19 @@ public class ProfileFragment extends Fragment {
                     Toast.makeText(getContext(), "Error fetching data", Toast.LENGTH_SHORT).show();
                 });
 
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                5000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
         requestQueue.add(stringRequest);
     }
 
     private void calculateAndDisplayBMI(String beratStr, String tinggiStr) {
         try {
             double berat = Double.parseDouble(beratStr);
-            double tinggi = Double.parseDouble(tinggiStr) / 100;
+            double tinggi = Double.parseDouble(tinggiStr) / 100; // Mengubah tinggi ke meter
 
-            double bmi = berat / (tinggi * tinggi);
+            double bmi = berat / (tinggi * tinggi); // Rumus BMI
 
             String bmiText = String.format("%.2f", bmi);
-
             bmiTextView.setText("BMI: " + bmiText);
-
-            linearGauge.setProgressWithAnimation((float) bmi);
+            linearGauge.setProgressWithAnimation((float) bmi); // Menampilkan BMI pada LinearGauge
 
         } catch (NumberFormatException e) {
             Log.e(TAG, "Error parsing berat or tinggi: " + e.getMessage());
@@ -169,7 +152,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void openSettingsFragment() {
-        Log.d(TAG, "Opening SettingsFragment");
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new SettingsFragment());
         transaction.addToBackStack(null);

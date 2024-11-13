@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
        /* ini buat ngambil uname dari db (ngambilnya dari url di login activity (atas sendiri),
         setelah uname didapet, uname kemudian dibawa ke dashboard -> baru ke sini */
         welcome = view.findViewById(R.id.welcome);
-        welcome.setText("Halo, " + username + "! Selamat datang di aplikasi.");
+        welcome.setText("Halo, " + username + "!");
 
         return view;
     }

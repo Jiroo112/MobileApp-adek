@@ -87,15 +87,30 @@
         android:hint="Cari menu..."
         android:padding="16dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Asupan yang dipilih"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"/>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleDetailKalori"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginTop="15dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="300dp"
+            android:layout_marginTop="80dp"
+            android:layout_gravity="center"/>
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -103,6 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone" />
+
     </FrameLayout>
 
 </LinearLayout>
