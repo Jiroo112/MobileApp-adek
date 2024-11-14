@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.alphatz.adek.Model.ResepModel;
+import com.alphatz.adek.Fragment.detail_resep;
 import com.alphatz.adek.R;
 import java.util.List;
 
