@@ -14,10 +14,10 @@ import com.alphatz.adek.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link detail_resep#newInstance} factory method to
+ * Use the {@link DetailResepFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class detail_resep extends Fragment {
+public class DetailResepFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -27,12 +27,12 @@ public class detail_resep extends Fragment {
     private ImageView gambar_resep;
     private TextView judul_resep, deskripsi_resep;
 
-    public detail_resep() {
+    public DetailResepFragment() {
         // Required empty public constructor
     }
 
-    public static detail_resep newInstance(String param1, String param2) {
-        detail_resep fragment = new detail_resep();
+    public static DetailResepFragment newInstance(String param1, String param2) {
+        DetailResepFragment fragment = new DetailResepFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -55,18 +55,12 @@ public class detail_resep extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_detail_resep, container, false);
 
-        // Initialize the views
         gambar_resep = view.findViewById(R.id.gambar_resep);
         judul_resep = view.findViewById(R.id.judul_resep);
         deskripsi_resep = view.findViewById(R.id.deskripsi_resep);
 
-        // Set the content of the views
-        // Assuming mParam1 is the title and mParam2 is the description
         judul_resep.setText(mParam1);
         deskripsi_resep.setText(mParam2);
-
-        // If you have a drawable resource for the image, you can set it like this:
-        // gambar_resep.setImageResource(R.drawable.your_image_resource);
 
         return view;
     }

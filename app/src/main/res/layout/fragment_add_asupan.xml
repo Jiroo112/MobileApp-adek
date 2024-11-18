@@ -128,14 +128,6 @@
 
                 android:background="@drawable/search_background"/>
 
-            <Spinner
-                android:id="@+id/spinner_konsultan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:padding="16dp"
-                android:background="@drawable/search_background"/>
-
         </LinearLayout>
 
     </ScrollView>

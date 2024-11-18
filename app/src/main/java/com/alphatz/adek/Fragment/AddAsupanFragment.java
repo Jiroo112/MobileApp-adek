@@ -30,9 +30,8 @@ import java.util.Map;
 
 public class AddAsupanFragment extends Fragment {
 
-    private EditText editTextNamaMenu, editTextTakaran, editTextKalori, editTextKarbohidrat, editTextLemak, editTextProtein, editTextGula;
+    private EditText editTextNamaMenu, editTextTakaran, editTextKalori, editTextKarbohidrat, editTextLemak, editTextProtein;
     private Spinner spinnerKategori;
-    private Spinner spinnerKonsultan;
     private String URL_POST_MENU = "http://10.0.2.2/ads_mysql/post_menu.php";
 
     @Override
@@ -46,19 +45,12 @@ public class AddAsupanFragment extends Fragment {
         editTextKarbohidrat = view.findViewById(R.id.jumlah_karbohidrat);
         editTextLemak = view.findViewById(R.id.jumlah_lemak);
         editTextProtein = view.findViewById(R.id.jumlah_protein);
-        editTextGula = view.findViewById(R.id.jumlah_gula);
-        //ktgr
+
         spinnerKategori = view.findViewById(R.id.spinner_kategori);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.kategori_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerKategori.setAdapter(adapter);
-        //kons
-        spinnerKonsultan = view.findViewById(R.id.spinner_konsultan);
-        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(getContext(),
-                R.array.konsultan_array, android.R.layout.simple_spinner_item);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerKonsultan.setAdapter(adapter1);
 
         Button btnSimpan = view.findViewById(R.id.btnSimpan);
         btnSimpan.setOnClickListener(new View.OnClickListener() {
@@ -77,13 +69,14 @@ public class AddAsupanFragment extends Fragment {
         String karbohidrat = editTextKarbohidrat.getText().toString().trim();
         String lemak = editTextLemak.getText().toString().trim();
         String protein = editTextProtein.getText().toString().trim();
-        String gula = editTextGula.getText().toString().trim();
+        String kategori = spinnerKategori.getSelectedItem().toString();
 
         if (namaMenu.isEmpty() || takaran.isEmpty() || kalori.isEmpty() ||
-                karbohidrat.isEmpty() || lemak.isEmpty() || protein.isEmpty() || gula.isEmpty()) {
+                karbohidrat.isEmpty() || lemak.isEmpty() || protein.isEmpty()) {
             Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_POST_MENU,
                 new Response.Listener<String>() {
                     @Override
@@ -121,8 +114,7 @@ public class AddAsupanFragment extends Fragment {
                 params.put("lemak", lemak);
                 params.put("kalori", kalori);
                 params.put("satuan", takaran);
-                params.put("kategori", spinnerKategori.getSelectedItem().toString());
-                params.put("id_konsultan", spinnerKonsultan.getSelectedItem().toString());
+                params.put("kategori_menu", kategori);
                 return params;
             }
         };
@@ -136,7 +128,6 @@ public class AddAsupanFragment extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-
     private void clearFields() {
         editTextNamaMenu.setText("");
         editTextTakaran.setText("");
@@ -144,8 +135,8 @@ public class AddAsupanFragment extends Fragment {
         editTextKarbohidrat.setText("");
         editTextLemak.setText("");
         editTextProtein.setText("");
-        editTextGula.setText("");
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

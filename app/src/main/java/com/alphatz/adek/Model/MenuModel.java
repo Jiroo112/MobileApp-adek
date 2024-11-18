@@ -1,6 +1,6 @@
 package com.alphatz.adek.Model;
 
-public class Menu {
+public class MenuModel {
     private int id_menu;
     private String nama_menu;
     private double protein;
@@ -8,7 +8,7 @@ public class Menu {
     private double lemak;
     private double kalori;
 
-    public Menu(int id_menu, String nama_menu, double protein, double karbohidrat, double lemak, double kalori) {
+    public MenuModel(int id_menu, String nama_menu, double protein, double karbohidrat, double lemak, double kalori) {
         this.id_menu = id_menu;
         this.nama_menu = nama_menu;
         this.protein = protein;

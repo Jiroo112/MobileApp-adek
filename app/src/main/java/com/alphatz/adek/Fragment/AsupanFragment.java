@@ -1,5 +1,7 @@
 package com.alphatz.adek.Fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -7,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,11 +27,9 @@ import com.alphatz.adek.Model.AsupanModel;
 import com.alphatz.adek.R;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.alphatz.adek.Fragment.detail_resep;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,9 +52,7 @@ public class AsupanFragment extends Fragment {
     private TextView tabCatatanMinum;
     private TextView buttonTambahMenu;
 
-
     public AsupanFragment() {
-
     }
 
     @Override
@@ -64,15 +61,16 @@ public class AsupanFragment extends Fragment {
         menuList = new ArrayList<>();
         requestQueue = Volley.newRequestQueue(requireContext());
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_asupan, container, false);
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
-
             TextView buttonAddAsupan = view.findViewById(R.id.button_tambah_menu);
             buttonAddAsupan.setOnClickListener(v -> openAddAsupanFragment());
 
@@ -100,7 +98,7 @@ public class AsupanFragment extends Fragment {
                 ((Dashboard) getActivity()).hideBottomNavigation();
             }
 
-            //pakein childparentfragment soalnya ini fragment dalam fragment
+            // Menggunakan fragment transaction untuk mengganti fragment
             FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, new AddAsupanFragment());
             transaction.addToBackStack("AsupanFragment");
@@ -152,7 +150,7 @@ public class AsupanFragment extends Fragment {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null) // simpen ke back stack misap pingin bisa balik ke fragment sebelumnya
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -160,7 +158,20 @@ public class AsupanFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new AsupanAdapter(menuList, menu -> {
             if (menu != null) {
-                AsupanBottomSheet bottomSheet = AsupanBottomSheet.newInstance(menu.getNamaMenu());
+                // Ambil id_user dari SharedPreferences dengan key yang sama seperti di LoginActivity
+                SharedPreferences prefs = requireActivity().getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE);
+                String idUser = prefs.getString("idUser", "");
+
+                // Debug log untuk memeriksa nilai idUser
+                Log.d(TAG, "ID User from SharedPreferences: " + idUser);
+
+                if (idUser.isEmpty()) {
+                    Toast.makeText(requireContext(), "Session tidak valid, silakan login ulang", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Teruskan id_user ke bottom sheet
+                AsupanBottomSheet bottomSheet = AsupanBottomSheet.newInstance(menu.getNamaMenu(), idUser);
                 bottomSheet.show(getParentFragmentManager(), "AsupanBottomSheet");
             }
         });
@@ -181,6 +192,7 @@ public class AsupanFragment extends Fragment {
             public void afterTextChanged(Editable s) {}
         });
     }
+
     private void filterMenu(String query) {
         if (menuList == null) return;
 
@@ -197,6 +209,7 @@ public class AsupanFragment extends Fragment {
             adapter.updateList(filteredList);
         }
     }
+
     private void fetchMenuData() {
         if (!isAdded()) return;
 
@@ -246,6 +259,7 @@ public class AsupanFragment extends Fragment {
             showLoading(false);
         }
     }
+
     private void handleError(VolleyError error) {
         Log.e(TAG, "Volley error: " + error.getMessage());
         showError("Gagal mengambil data. Periksa koneksi internet Anda.");
@@ -259,15 +273,6 @@ public class AsupanFragment extends Fragment {
     }
 
     private void showError(String message) {
-        if (isAdded() && getContext() != null) {
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        }
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (requestQueue != null) {
-            requestQueue.cancelAll(TAG);
-        }
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

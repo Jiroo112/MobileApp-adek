@@ -113,7 +113,7 @@ public class KelenturanFragment extends Fragment {
     }
 
     private void getOlahragaData() {
-        String url = "http://10.0.2.2/ads_mysql/get_only_kelenturan.php";
+        String url = "http://10.0.2.2/ads_mysql/get_only_interval.php";
         progressBar.setVisibility(View.VISIBLE);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,

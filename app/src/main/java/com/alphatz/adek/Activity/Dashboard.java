@@ -20,7 +20,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class Dashboard extends AppCompatActivity {
 
-    private String username;
+    private String namaLengkap;
+    private String idUser;
     private BottomNavigationView bottomNav;
     private FloatingActionButton fab;
 
@@ -33,21 +34,22 @@ public class Dashboard extends AppCompatActivity {
         bottomNav = findViewById(R.id.bottom_navigation);
         fab = findViewById(R.id.fab);
 
-        // Menerima username dari Intent
+        // Menerima nama_lengkap dan idUser dari Intent
         Intent intent = getIntent();
-        username = intent.getStringExtra("username");
+        namaLengkap = intent.getStringExtra("namaLengkap");
+        idUser = intent.getStringExtra("idUser");
 
-        // Pastikan data username diterima
-        if (username != null) {
-            Toast.makeText(this, "Welcome, " + username, Toast.LENGTH_LONG).show();
+        // Pastikan data nama_lengkap diterima
+        if (namaLengkap != null) {
+            Toast.makeText(this, "Welcome, " + namaLengkap, Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "No username received", Toast.LENGTH_SHORT).show();
-            username = "Pengguna"; // Default value jika username null
+            Toast.makeText(this, "No name received", Toast.LENGTH_SHORT).show();
+            namaLengkap = "Pengguna"; // Default value jika nama_lengkap null
         }
 
         // Load default fragment (HomeFragment) hanya sekali saat pertama kali
         if (savedInstanceState == null) {
-            loadFragment(HomeFragment.newInstance(username));
+            loadFragment(HomeFragment.newInstance(namaLengkap));
         }
 
         // Set listener untuk BottomNavigationView
@@ -63,7 +65,7 @@ public class Dashboard extends AppCompatActivity {
             } else if (itemId == R.id.konsultasi) {
                 selectedFragment = new KonsultasiFragment();
             } else if (itemId == R.id.profile) {
-                selectedFragment = ProfileFragment.newInstance(username);
+                selectedFragment = ProfileFragment.newInstance(namaLengkap);
             }
 
             if (selectedFragment != null) {
@@ -73,7 +75,7 @@ public class Dashboard extends AppCompatActivity {
         });
 
         // Set listener untuk FloatingActionButton
-        fab.setOnClickListener(view -> loadFragment(HomeFragment.newInstance(username)));
+        fab.setOnClickListener(view -> loadFragment(HomeFragment.newInstance(namaLengkap)));
     }
 
     // Fungsi untuk memuat fragment ke dalam kontainer

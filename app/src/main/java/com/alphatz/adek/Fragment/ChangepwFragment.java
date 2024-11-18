@@ -48,9 +48,9 @@ public class ChangepwFragment extends Fragment {
         editTextConfirmPassword = view.findViewById(R.id.input_confirm_password);
         buttonUpdatePassword = view.findViewById(R.id.btn_update_password);
 
-        // ngambil email dari SharedPreferences
+        // Mengambil email dari SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("LoginPrefs", getContext().MODE_PRIVATE);
-        userEmail = sharedPreferences.getString("username", null); // Mengambil email dari SharedPreferences
+        userEmail = sharedPreferences.getString("email", null); // Ganti ke "email"
 
         buttonUpdatePassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +67,7 @@ public class ChangepwFragment extends Fragment {
         });
         return view;
     }
+
     private void updatePassword(final String newPassword) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_UPDATE_PASSWORD,
                 new Response.Listener<String>() {
@@ -79,7 +80,7 @@ public class ChangepwFragment extends Fragment {
 
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                             if (success) {
-                                // balik ke ProfileFragment setelah berhasil
+                                // Kembali ke ProfileFragment setelah berhasil
                                 getFragmentManager()
                                         .beginTransaction()
                                         .replace(R.id.fragment_container, new ProfileFragment())
@@ -101,7 +102,7 @@ public class ChangepwFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("username", userEmail); // Menggunakan email yang diambil dari SharedPreferences
+                params.put("email", userEmail); // Menggunakan email
                 params.put("password", newPassword);
                 return params;
             }

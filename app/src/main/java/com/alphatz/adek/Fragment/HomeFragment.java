@@ -14,18 +14,18 @@ public class HomeFragment extends Fragment {
 
     TextView welcome;
 
-    private static final String ARG_USERNAME = "username";
+    private static final String ARG_NAMA_LENGKAP = "nama_lengkap";
 
-    private String username;
+    private String namaLengkap;
 
     public HomeFragment() {
 
     }
 
-    public static HomeFragment newInstance(String username) {
+    public static HomeFragment newInstance(String namaLengkap) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_USERNAME, username);
+        args.putString(ARG_NAMA_LENGKAP, namaLengkap);
         fragment.setArguments(args);
         return fragment;
     }
@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            username = getArguments().getString(ARG_USERNAME, "Pengguna");
+            namaLengkap = getArguments().getString(ARG_NAMA_LENGKAP, "Pengguna");
         }
     }
 
@@ -43,11 +43,9 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-
-       /* ini buat ngambil uname dari db (ngambilnya dari url di login activity (atas sendiri),
-        setelah uname didapet, uname kemudian dibawa ke dashboard -> baru ke sini */
+        // Menampilkan nama lengkap pengguna di welcome message
         welcome = view.findViewById(R.id.welcome);
-        welcome.setText("Halo, " + username + "!");
+        welcome.setText("Halo, " + namaLengkap + "!");
 
         return view;
     }

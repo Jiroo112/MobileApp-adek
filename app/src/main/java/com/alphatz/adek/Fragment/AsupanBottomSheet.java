@@ -28,14 +28,19 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class AsupanBottomSheet extends BottomSheetDialogFragment {
 
     private static final String TAG = "AsupanBottomSheet";
     private static final String ARG_NAMA_MENU = "nama_menu";
+    private static final String ARG_ID_USER = "idUser";
 
+    private String idUser;
     private String idMenu;
     private double baseKalori;
     private double baseProtein;
@@ -45,10 +50,11 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
     private Button tambahButton;
     private RequestQueue requestQueue;
 
-    public static AsupanBottomSheet newInstance(String namaMenu) {
+    public static AsupanBottomSheet newInstance(String namaMenu, String idUser) {
         AsupanBottomSheet fragment = new AsupanBottomSheet();
         Bundle args = new Bundle();
         args.putString(ARG_NAMA_MENU, namaMenu);
+        args.putString(ARG_ID_USER, idUser);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,9 +90,12 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
-        // Get menu data
+        // Get arguments
         if (getArguments() != null) {
             String namaMenu = getArguments().getString(ARG_NAMA_MENU);
+            idUser = getArguments().getString(ARG_ID_USER, "");
+            Log.d(TAG, "idUser di onCreateView: " + idUser);
+
             if (namaMenu != null && !namaMenu.isEmpty()) {
                 fetchMenuDetail(namaMenu);
             }
@@ -159,17 +168,22 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void simpanDetailKalori() {
-        if (idMenu == null || porsiEditText.getText().toString().isEmpty()) {
+        Log.d(TAG, "idMenu: " + idMenu);
+        Log.d(TAG, "porsi: " + porsiEditText.getText().toString());
+        Log.d(TAG, "idUser: " + idUser);
+
+        if (idMenu == null || porsiEditText.getText().toString().isEmpty() || idUser == null || idUser.isEmpty()) {
             Toast.makeText(getContext(), "Data tidak lengkap", Toast.LENGTH_SHORT).show();
             return;
         }
-
         int porsi = Integer.parseInt(porsiEditText.getText().toString());
         double totalKalori = baseKalori * porsi;
 
+        // Tambahkan tanggal hari ini
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
         String url = "http://10.0.2.2/ads_mysql/simpan_detail_kalori.php";
 
-        // Create a string request instead of JSON request
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     try {
@@ -179,7 +193,7 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
 
                         if (success) {
                             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                            dismiss();
+                            getDialog().dismiss();
                         } else {
                             Toast.makeText(getContext(), "Gagal: " + message, Toast.LENGTH_SHORT).show();
                         }
@@ -195,10 +209,12 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
+                params.put("id_user", idUser);
                 params.put("id_menu", idMenu);
+                params.put("tanggal", currentDate);
                 params.put("jumlah", String.valueOf(porsi));
-                params.put("kalori", String.valueOf(baseKalori));
                 params.put("total_kalori", String.valueOf(totalKalori));
+                params.put("total_minum", "0");
                 return params;
             }
         };

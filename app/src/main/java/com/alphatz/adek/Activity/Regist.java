@@ -24,17 +24,17 @@ import java.util.Map;
 
 public class Regist extends AppCompatActivity {
 
-    private EditText editTextEmail, editTextUsername, editTextPassword, editTextRePassword;
+    private EditText editTextNamaLengkap, editTextEmail, editTextPassword, editTextRePassword;
     private Button buttonRegister;
-    private String URL_REGISTER = "http://10.0.2.2/ads_mysql/registrasi.php";
+    private String URL_REGISTER = "http://10.0.2.2/ads_mysql/registrasi_adek.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regist);
 
-        editTextEmail = findViewById(R.id.name_regist);
-        editTextUsername = findViewById(R.id.input_emailRegist);
+        editTextNamaLengkap = findViewById(R.id.name_regist);
+        editTextEmail = findViewById(R.id.input_emailRegist);
         editTextPassword = findViewById(R.id.input_password);
         editTextRePassword = findViewById(R.id.input_repasword_regist);
         buttonRegister = findViewById(R.id.btn_regist);
@@ -42,13 +42,13 @@ public class Regist extends AppCompatActivity {
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String namaLengkap = editTextNamaLengkap.getText().toString();
                 String email = editTextEmail.getText().toString();
-                String username = editTextUsername.getText().toString();
                 String password = editTextPassword.getText().toString();
                 String rePassword = editTextRePassword.getText().toString();
 
-                if (!email.isEmpty() && !username.isEmpty() && !password.isEmpty() && password.equals(rePassword)) {
-                    register(email, username, password);
+                if (!namaLengkap.isEmpty() && !email.isEmpty() && !password.isEmpty() && password.equals(rePassword)) {
+                    register(namaLengkap, email, password);
                 } else {
                     Toast.makeText(Regist.this, "Please fill all fields and make sure passwords match", Toast.LENGTH_SHORT).show();
                 }
@@ -56,7 +56,7 @@ public class Regist extends AppCompatActivity {
         });
     }
 
-    private void register(final String email, final String username, final String password) {
+    private void register(final String namaLengkap, final String email, final String password) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_REGISTER,
                 new Response.Listener<String>() {
                     @Override
@@ -85,8 +85,8 @@ public class Regist extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
+                params.put("nama_lengkap", namaLengkap);
                 params.put("email", email);
-                params.put("username", username);
                 params.put("password", password);
                 params.put("re_password", password);
                 return params;

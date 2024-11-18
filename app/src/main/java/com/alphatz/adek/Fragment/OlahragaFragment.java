@@ -188,7 +188,6 @@ public class OlahragaFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Tampilkan lagi bottom navigation waktu fragment ini dihancurkan
         if (getActivity() instanceof Dashboard) {
             ((Dashboard) getActivity()).showBottomNavigation();
         }

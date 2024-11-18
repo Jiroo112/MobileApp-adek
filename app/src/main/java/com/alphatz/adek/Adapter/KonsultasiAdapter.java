@@ -57,28 +57,24 @@ public class KonsultasiAdapter extends RecyclerView.Adapter<KonsultasiAdapter.Do
     class DoctorViewHolder extends RecyclerView.ViewHolder {
         ImageView doctorImage;
         TextView doctorName;
-        TextView doctorSpecialty;
         Button contactButton;
 
         DoctorViewHolder(View itemView) {
             super(itemView);
             doctorImage = itemView.findViewById(R.id.doctor_image);
             doctorName = itemView.findViewById(R.id.doctor_name);
-            doctorSpecialty = itemView.findViewById(R.id.doctor_specialty);
             contactButton = itemView.findViewById(R.id.contact_button);
         }
 
         void bind(final KonsultasiModel konsultan) {
             doctorName.setText(konsultan.getNamaLengkap());
-            doctorSpecialty.setText(konsultan.getJenis());
 
-            //gambar dokter
+            // glide buat nampilin foto dokter
             if (konsultan.getFotoDokter() != null && !konsultan.getFotoDokter().isEmpty()) {
                 try {
-                    // ngedecode base64 jadi bitmap
+                    // decode base64 ke bitmap
                     byte[] decodedString = Base64.decode(konsultan.getFotoDokter(), Base64.DEFAULT);
 
-                    // glide buat ngubah gambar kosong jadi gambar dr db
                     Glide.with(itemView.getContext())
                             .load(decodedString)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -94,6 +90,7 @@ public class KonsultasiAdapter extends RecyclerView.Adapter<KonsultasiAdapter.Do
             } else {
                 doctorImage.setImageResource(R.drawable.gambar_kosong);
             }
+
             contactButton.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDoctorClick(konsultan);

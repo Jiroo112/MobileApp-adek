@@ -8,9 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +21,7 @@ import com.alphatz.adek.R;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
@@ -56,13 +55,8 @@ public class KonsultasiFragment extends Fragment {
         adapter = new KonsultasiAdapter(konsultanList, konsultan -> showKonfirmasiDialog(konsultan));
         recyclerView.setAdapter(adapter);
 
-        // Initialize Volley request queue
         requestQueue = Volley.newRequestQueue(requireContext());
-
-        // Setup search functionality
         setupSearch();
-
-        // Fetch consultant data from API
         getDokterData();
 
         return view;
@@ -88,8 +82,7 @@ public class KonsultasiFragment extends Fragment {
         String lowerCaseQuery = query.toLowerCase();
 
         for (KonsultasiModel konsultan : konsultanList) {
-            if (konsultan.getNamaLengkap().toLowerCase().contains(lowerCaseQuery) ||
-                    konsultan.getJenis().toLowerCase().contains(lowerCaseQuery)) {
+            if (konsultan.getNamaLengkap().toLowerCase().contains(lowerCaseQuery)) {
                 filteredList.add(konsultan);
             }
         }
@@ -101,63 +94,81 @@ public class KonsultasiFragment extends Fragment {
         String url = "http://10.0.2.2/ads_mysql/get_dokter.php";
         progressBar.setVisibility(View.VISIBLE);
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null,
                 response -> {
+                    progressBar.setVisibility(View.GONE);
                     try {
-                        // Periksa apakah respons memiliki field "data"
+                        //buat debug
+                        Log.d(TAG, "Raw response: " + response.toString());
+
                         if (!response.has("data")) {
                             showError("Format response tidak valid: Tidak ada field 'data'");
                             return;
                         }
 
-                        // Ambil array "data" dari respons
                         JSONArray jsonArray = response.getJSONArray("data");
                         konsultanList.clear();
 
-                        // Parsing data konsultan
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject konsultanObj = jsonArray.getJSONObject(i);
-                            KonsultasiModel konsultan = new KonsultasiModel(
-                                    konsultanObj.getInt("id_konsultan"), // Menggunakan getString karena id_konsultan adalah string
-                                    konsultanObj.getString("email"),
-                                    konsultanObj.getString("nama_lengkap"),
-                                    konsultanObj.getString("jenis"),
-                                    konsultanObj.getString("no_hp"),
-                                    konsultanObj.optString("foto_dokter", null)
-                            );
+
+                            Log.d(TAG, "Processing konsultan: " + konsultanObj.toString());
+
+                            String id = konsultanObj.optString("id_konsultan", "");
+                            String nama = konsultanObj.optString("nama_lengkap", "");
+                            String noHp = konsultanObj.optString("no_hp", "");
+                            String foto = konsultanObj.optString("foto_dokter", null);
+
+                            //validasi data konsultannya
+                            if (id.isEmpty() || nama.isEmpty()) {
+                                Log.e(TAG, "Invalid data for konsultan: " + konsultanObj.toString());
+                                continue;
+                            }
+
+                            KonsultasiModel konsultan = new KonsultasiModel(id, nama, noHp, foto);
                             konsultanList.add(konsultan);
                         }
 
-                        // Update adapter dengan data baru
-                        adapter.updateList(konsultanList);
-
-                        if (konsultanList.isEmpty()) {
-                            showError("Tidak ada data konsultan");
+                        // Update adapter
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                adapter.updateList(konsultanList);
+                                if (konsultanList.isEmpty()) {
+                                    showError("Tidak ada data konsultan");
+                                }
+                            });
                         }
 
                     } catch (JSONException e) {
                         Log.e(TAG, "Error parsing JSON: " + e.getMessage());
-                        showError("Gagal memproses data");
-                    } finally {
-                        progressBar.setVisibility(View.GONE);
+                        showError("Gagal memproses data: " + e.getMessage());
                     }
                 },
                 error -> {
-                    Log.e(TAG, "Volley Error: " + error.getMessage());
-                    showError("Gagal mengambil data konsultan");
                     progressBar.setVisibility(View.GONE);
-                });
+                    Log.e(TAG, "Volley Error: " + error.toString());
+                    showError("Gagal mengambil data: " + error.getMessage());
+                }
+        );
+
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
 
         requestQueue.add(request);
     }
 
-
-
-
     private void showKonfirmasiDialog(KonsultasiModel konsultan) {
+        if (getActivity() == null) return;
+
         Konfirmasi konfirmasiDialog = new Konfirmasi();
         Bundle args = new Bundle();
-        args.putInt("id_konsultan", konsultan.getIdKonsultan());
+        args.putString("id_konsultan", konsultan.getIdKonsultan());
         args.putString("nama_konsultan", konsultan.getNamaLengkap());
         konfirmasiDialog.setArguments(args);
         konfirmasiDialog.show(getChildFragmentManager(), "KonfirmasiDialog");
@@ -165,8 +176,18 @@ public class KonsultasiFragment extends Fragment {
 
     private void showError(String message) {
         if (getContext() != null) {
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            getActivity().runOnUiThread(() ->
+                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show()
+            );
         }
         Log.e(TAG, "Error: " + message);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (requestQueue != null) {
+            requestQueue.cancelAll(TAG);
+        }
     }
 }
