@@ -4,7 +4,7 @@ public class AsupanModel {
     private String namaMenu;
     private String kategori;
 
-    public AsupanModel(String namaMenu) {
+    public AsupanModel(String namaMenu, int kalori, int protein, int karbohidrat, int lemak) {
         this.namaMenu = namaMenu;
     }
 

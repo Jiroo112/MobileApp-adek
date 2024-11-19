@@ -46,7 +46,6 @@ public class ProfileFragment extends Fragment {
     private String baseUrl = "http://10.0.2.2/ads_mysql/profile_adek.php";
 
     public ProfileFragment() {
-        // Required empty public constructor
     }
 
     public static ProfileFragment newInstance(String nama_lengkap) {
@@ -103,7 +102,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getUserDataFromApi() {
-        Log.d(TAG, "Fetching data for nama_lengkap: " + currentNamaLengkap);  // Ubah menjadi currentNamaLengkap
+        Log.d(TAG, "Fetching data for nama_lengkap: " + currentNamaLengkap);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, baseUrl,
                 new Response.Listener<String>() {

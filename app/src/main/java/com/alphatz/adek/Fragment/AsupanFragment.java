@@ -1,7 +1,11 @@
 package com.alphatz.adek.Fragment;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,7 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,10 +33,12 @@ import com.alphatz.adek.Activity.Dashboard;
 import com.alphatz.adek.Adapter.AsupanAdapter;
 import com.alphatz.adek.Model.AsupanModel;
 import com.alphatz.adek.R;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -43,14 +53,18 @@ public class AsupanFragment extends Fragment {
 
     private RequestQueue requestQueue;
     private List<AsupanModel> menuList;
+
     private AsupanAdapter adapter;
     private ProgressBar progressBar;
+    private LinearLayout showDataTotal;
     private RecyclerView recyclerView;
+    private RecyclerView setupRecyclerViewDetail;
     private EditText searchField;
     private TextView tabCariMakanan;
     private TextView tabTerakhirDimakan;
     private TextView tabCatatanMinum;
     private TextView buttonTambahMenu;
+    private TextView tvJumlahMenu, kaloriMenuDetail;
 
     public AsupanFragment() {
     }
@@ -79,6 +93,7 @@ public class AsupanFragment extends Fragment {
             setupSearch();
             setupTabs();
             fetchMenuData();
+            fetchTotalMenuAndCalories();
 
         } catch (Exception e) {
             Log.e(TAG, "Error in onViewCreated: " + e.getMessage());
@@ -113,7 +128,10 @@ public class AsupanFragment extends Fragment {
 
     private void initViews(View view) {
         progressBar = view.findViewById(R.id.progressBar);
+        showDataTotal = view.findViewById(R.id.showDataTotal);
         recyclerView = view.findViewById(R.id.recyclerView);
+        tvJumlahMenu = view.findViewById(R.id.tv_jumlah_menu);
+        kaloriMenuDetail = view.findViewById(R.id.tv_total_kalori);
         searchField = view.findViewById(R.id.search_field);
         buttonTambahMenu = view.findViewById(R.id.button_tambah_menu);
         tabCariMakanan = view.findViewById(R.id.tab_cari_makanan);
@@ -144,9 +162,104 @@ public class AsupanFragment extends Fragment {
 
             replaceFragment(new CatatanMinum());
         });
+
+        showDataTotal.setOnClickListener(v -> {
+            if (!isAdded()) return;
+
+            SharedPreferences prefs = requireActivity().getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE);
+            String idUser = prefs.getString("idUser", "");
+
+            if (idUser.isEmpty()) {
+                showError("User ID not found");
+                return;
+            }
+
+            String url = "http://10.0.2.2/ads_mysql/get_detail_kalori.php?id_user=" + idUser;
+            showLoading(true);
+
+            Log.d(TAG, "Fetching detailed data from URL: " + url);
+
+            JsonObjectRequest request = new JsonObjectRequest(
+                    Request.Method.GET,
+                    url,
+                    null,
+                    response -> {
+                        try {
+                            Log.d(TAG, "Response received: " + response.toString());
+
+                            if (response.getBoolean("success")) {
+                                JSONArray dataArray = response.getJSONArray("data");
+                                StringBuilder dataMessage = new StringBuilder();
+
+                                for (int i = 0; i < dataArray.length(); i++) {
+                                    JSONObject data = dataArray.getJSONObject(i);
+                                    String namaMenu = data.getString("nama_menu");
+                                    int jumlah = data.getInt("jumlah");
+                                    int totalKalori = data.getInt("total_kalori");
+
+                                    dataMessage.append(namaMenu)
+                                            .append("\nJumlah: ").append(jumlah)
+                                            .append("\nKalori: ").append(totalKalori)
+                                            .append("\n\n");
+                                }
+
+                                // Create and show custom dialog
+                                Dialog dialog = new Dialog(requireContext());
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.dialog_detail_info);
+
+                                // Set dialog width to match parent with margins
+                                Window window = dialog.getWindow();
+                                if (window != null) {
+                                    window.setLayout(
+                                            WindowManager.LayoutParams.MATCH_PARENT,
+                                            WindowManager.LayoutParams.WRAP_CONTENT
+                                    );
+                                    // Add margin to dialog
+                                    WindowManager.LayoutParams params = window.getAttributes();
+                                    params.width = getResources().getDisplayMetrics().widthPixels - 64; // 32dp margin each side
+                                    window.setAttributes(params);
+                                }
+
+                                TextView contentView = dialog.findViewById(R.id.dialogContent);
+                                contentView.setText(dataMessage.toString());
+
+                                Button btnOk = dialog.findViewById(R.id.btnOk);
+                                btnOk.setOnClickListener(view -> dialog.dismiss());
+
+                                dialog.show();
+                            } else {
+                                showError("Gagal mendapatkan detail data");
+                            }
+                        } catch (JSONException e) {
+                            Log.e(TAG, "JSON parsing error: " + e.getMessage());
+                            showError("Terjadi kesalahan saat memproses data");
+                        } finally {
+                            showLoading(false);
+                        }
+                    },
+                    error -> {
+                        showLoading(false);
+                        String errorMessage = "";
+                        if (error.networkResponse != null) {
+                            errorMessage = "Status Code: " + error.networkResponse.statusCode;
+                        }
+                        Log.e(TAG, "Request error: " + error.getMessage() + " " + errorMessage);
+                        showError("Gagal mengambil data. Periksa koneksi internet Anda.");
+                    }
+            );
+
+            request.setRetryPolicy(new DefaultRetryPolicy(
+                    30000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+            ));
+
+            requestQueue.add(request);
+        });
     }
 
-    private void replaceFragment(Fragment fragment) {
+        private void replaceFragment(Fragment fragment) {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
@@ -213,7 +326,7 @@ public class AsupanFragment extends Fragment {
     private void fetchMenuData() {
         if (!isAdded()) return;
 
-        String url = "http://10.0.2.2/ads_mysql/get_menu_asupan.php";
+        String url = "http://10.0.2.2/ads_mysql/get_menu_asupan.php";  // Ensure URL is correct
         showLoading(true);
 
         JsonObjectRequest request = new JsonObjectRequest(
@@ -223,6 +336,73 @@ public class AsupanFragment extends Fragment {
                 response -> handleResponse(response),
                 error -> handleError(error)
         );
+
+        requestQueue.add(request);
+    }
+
+    private void fetchTotalMenuAndCalories() {
+        if (!isAdded()) return;
+
+        SharedPreferences prefs = requireActivity().getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE);
+        String idUser = prefs.getString("idUser", "");
+
+        if (idUser.isEmpty()) {
+            showError("User ID not found");
+            return;
+        }
+
+        String url = "http://10.0.2.2/ads_mysql/get_detail_kalorinew.php?id_user=" + idUser;
+        showLoading(true);
+
+        Log.d(TAG, "Fetching data from URL: " + url);
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null,
+                response -> {
+                    try {
+                        // Log response untuk debugging
+                        Log.d(TAG, "Response received: " + response.toString());
+
+                        if (response.getBoolean("success")) {
+                            JSONObject data = response.getJSONObject("data");
+                            // Ubah nama field sesuai dengan response JSON
+                            int totalJumlah = data.getInt("jumlah_menu");
+                            int totalKalori = data.getInt("total_kalori");
+
+                            // Update UI with the totals
+                            if (tvJumlahMenu != null && kaloriMenuDetail != null) {
+                                tvJumlahMenu.setText(String.valueOf(totalJumlah));
+                                kaloriMenuDetail.setText(String.valueOf(totalKalori));
+                            }
+                        } else {
+                            showError("Gagal mendapatkan total menu dan kalori");
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG, "JSON parsing error: " + e.getMessage());
+                        showError("Terjadi kesalahan saat memuat data");
+                    } finally {
+                        showLoading(false);
+                    }
+                },
+                error -> {
+                    showLoading(false);
+                    // Tambahkan detail error untuk debugging
+                    String errorMessage = "";
+                    if (error.networkResponse != null) {
+                        errorMessage = "Status Code: " + error.networkResponse.statusCode;
+                    }
+                    Log.e(TAG, "Request error: " + error.getMessage() + " " + errorMessage);
+                    showError("Gagal mengambil data. Periksa koneksi internet Anda.");
+                }
+        );
+
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                30000, // 30 detik timeout
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
 
         requestQueue.add(request);
     }
@@ -240,7 +420,15 @@ public class AsupanFragment extends Fragment {
 
             for (int i = 0; i < data.length(); i++) {
                 JSONObject menuObj = data.getJSONObject(i);
-                AsupanModel menu = new AsupanModel(menuObj.getString("nama_menu"));
+
+                // Pastikan AsupanModel memiliki semua field yang diperlukan
+                AsupanModel menu = new AsupanModel(
+                        menuObj.getString("nama_menu"),
+                        menuObj.optInt("kalori", 0),  // Default 0 jika tidak ada
+                        menuObj.optInt("protein", 0),
+                        menuObj.optInt("karbohidrat", 0),
+                        menuObj.optInt("lemak", 0)
+                );
                 menuList.add(menu);
             }
 
@@ -260,19 +448,19 @@ public class AsupanFragment extends Fragment {
         }
     }
 
-    private void handleError(VolleyError error) {
-        Log.e(TAG, "Volley error: " + error.getMessage());
-        showError("Gagal mengambil data. Periksa koneksi internet Anda.");
-        showLoading(false);
-    }
-
-    private void showLoading(boolean show) {
+    private void showLoading(boolean isLoading) {
         if (progressBar != null) {
-            progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         }
     }
 
     private void showError(String message) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void handleError(VolleyError error) {
+        showLoading(false);
+        Log.e(TAG, "Request error: " + error.getMessage());
+        showError("Gagal mengambil data. Periksa koneksi internet Anda.");
     }
 }

@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:layout_margin="8dp">
+
+    <!-- Container Detail -->
+    <LinearLayout
+        android:id="@+id/containerDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:padding="8dp">
+
+        <!-- Contoh tampilan detail -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Jumlah Menu :"
+                android:textColor="#555" />
+
+            <TextView
+                android:id="@+id/tv_jumlah_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contoh Menu"
+                android:textColor="#000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Kalori:"
+                android:textColor="#555" />
+
+            <TextView
+                android:id="@+id/tv_total_kalori"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="200"
+                android:textColor="#000" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
