@@ -35,65 +35,241 @@
     <!-- Grid pertama: 3x1 -->
     <GridLayout
         android:id="@+id/gridLayoutTop"
-        android:layout_width="wrap_content"
+        android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="70dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginBottom="50dp"
         android:alignmentMode="alignMargins"
         android:columnCount="3"
-        android:padding="12dp">
+        android:padding="3dp">
 
-        <!-- Baris pertama (3x1) -->
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="gula"
-            android:src="@drawable/gula_dash" />
+        <!-- Kartu Gula -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="110dp"
+            android:layout_height="120dp"
+            app:cardCornerRadius="12dp"
+            android:layout_margin="8dp"
+            app:cardElevation="4dp">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="karbohidrat"
-            android:src="@drawable/karbo_dash" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="lemak"
-            android:src="@drawable/lemak_dash"/>
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/sugar_1"
+                    android:contentDescription="Gula" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Gula"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/persentase_gula"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0%"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/hijau_tua"
+                    android:gravity="center" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Kartu Karbohidrat -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="110dp"
+            android:layout_height="120dp"
+            app:cardCornerRadius="12dp"
+            android:layout_margin="8dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/carb_1"
+                    android:contentDescription="Karbohidrat" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Karbohidrat"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/persentase_karbohidrat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0%"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/hijau_tua"
+                    android:gravity="center" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Kartu Lemak -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="115dp"
+            android:layout_height="120dp"
+            app:cardCornerRadius="12dp"
+            android:layout_margin="8dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/lemak_1"
+                    android:contentDescription="Lemak" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Lemak"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/persentase_lemak"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0%"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/hijau_tua"
+                    android:gravity="center" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
     </GridLayout>
 
     <!-- Grid kedua: 2x1 -->
     <GridLayout
         android:id="@+id/gridLayoutBottom"
-        android:layout_width="wrap_content"
+        android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="70dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="90dp"
         android:alignmentMode="alignMargins"
         android:columnCount="2"
         android:padding="8dp">
 
-        <!-- Baris kedua (2x1) -->
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="protein"
-            android:src="@drawable/protein_dash" />
+        <!-- Kartu Protein -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            app:cardCornerRadius="12dp"
+            android:layout_margin="8dp"
+            app:cardElevation="4dp">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="air"
-            android:src="@drawable/air_dash" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/protein_1"
+                    android:contentDescription="Protein" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Protein"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/persentase_protein"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0%"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/hijau_tua"
+                    android:gravity="center" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Kartu Air -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="225dp"
+            android:layout_height="120dp"
+            app:cardCornerRadius="12dp"
+            android:layout_margin="8dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/water"
+                    android:contentDescription="Air" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Air"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/persentase_air"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0%"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/hijau_tua"
+                    android:gravity="center" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
     </GridLayout>
+
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/tipe_diet_ic"
         android:layout_gravity="center"
-        android:layout_marginTop="180dp">
+        android:layout_marginTop="205dp">
 
     </ImageView>
     <ImageView
@@ -101,7 +277,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/dokter_fav_profil"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="60dp">
+        android:layout_marginBottom="40dp">
 
     </ImageView>
 

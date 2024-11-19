@@ -141,7 +141,7 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
                                 baseKarbohidrat = data.getDouble("karbohidrat");
 
                                 textTitle.setText(data.getString("nama_menu"));
-                                updateNutritionValues(); // Initialize with default porsi
+                                updateNutritionValues();
 
                                 tambahButton.setEnabled(true);
                             } else {
@@ -176,8 +176,12 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
             Toast.makeText(getContext(), "Data tidak lengkap", Toast.LENGTH_SHORT).show();
             return;
         }
+
         int porsi = Integer.parseInt(porsiEditText.getText().toString());
         double totalKalori = baseKalori * porsi;
+        double totalProtein = baseProtein * porsi;
+        double totalKarbohidrat = baseKarbohidrat * porsi;
+        double totalLemak = baseKarbohidrat * porsi; // Sesuaikan jika ada field `baseLemak`
 
         // Tambahkan tanggal hari ini
         String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
@@ -214,13 +218,16 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
                 params.put("tanggal", currentDate);
                 params.put("jumlah", String.valueOf(porsi));
                 params.put("total_kalori", String.valueOf(totalKalori));
-                params.put("total_minum", "0");
+                params.put("total_protein", String.valueOf(totalProtein));
+                params.put("total_karbohidrat", String.valueOf(totalKarbohidrat));
+                params.put("total_lemak", String.valueOf(totalLemak));
                 return params;
             }
         };
 
         requestQueue.add(stringRequest);
     }
+
 
     @Override
     public void onDestroyView() {

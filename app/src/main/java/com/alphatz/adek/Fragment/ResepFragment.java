@@ -53,7 +53,7 @@ public class ResepFragment extends Fragment {
             setupVolley();
             setupSearch();
             setupButtonListeners();
-            getMenuMakanan();
+            fetchMenuMakanan();
             return view;
         } catch (Exception e) {
             Log.e(TAG, "Error in onCreateView: " + e.getMessage());
@@ -146,7 +146,7 @@ public class ResepFragment extends Fragment {
         }
     }
 
-    private void getMenuMakanan() {
+    private void fetchMenuMakanan() {
         if (getContext() == null) return;
 
         String url = "http://10.0.2.2/ads_mysql/get_menu.php";

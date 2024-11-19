@@ -163,6 +163,7 @@ public class AsupanFragment extends Fragment {
             replaceFragment(new CatatanMinum());
         });
 
+
         showDataTotal.setOnClickListener(v -> {
             if (!isAdded()) return;
 
@@ -275,7 +276,7 @@ public class AsupanFragment extends Fragment {
                 SharedPreferences prefs = requireActivity().getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE);
                 String idUser = prefs.getString("idUser", "");
 
-                // Debug log untuk memeriksa nilai idUser
+                // Debug log memeriksa nilai idUser
                 Log.d(TAG, "ID User from SharedPreferences: " + idUser);
 
                 if (idUser.isEmpty()) {
