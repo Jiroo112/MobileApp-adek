@@ -1,29 +1,27 @@
 package com.alphatz.adek.Fragment;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.alphatz.adek.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link DetailResepFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class DetailResepFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_TITLE = "title";
+    private static final String ARG_DESCRIPTION = "description";
+    private static final String ARG_IMAGE_RES_ID = "imageResId";
 
-    private String mParam1;
-    private String mParam2;
+    private String title;
+    private String description;
+    private int imageResId;
+
     private ImageView gambar_resep;
     private TextView judul_resep, deskripsi_resep;
 
@@ -31,11 +29,12 @@ public class DetailResepFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static DetailResepFragment newInstance(String param1, String param2) {
+    public static DetailResepFragment newInstance(String title, String description, int imageResId) {
         DetailResepFragment fragment = new DetailResepFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_TITLE, title);
+        args.putString(ARG_DESCRIPTION, description);
+        args.putInt(ARG_IMAGE_RES_ID, imageResId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,8 +43,9 @@ public class DetailResepFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1, "Default Title"); // Default Title if null
-            mParam2 = getArguments().getString(ARG_PARAM2, "Default Description"); // Default Description if null
+            title = getArguments().getString(ARG_TITLE, "Default Title"); // Default Title if null
+            description = getArguments().getString(ARG_DESCRIPTION, "Default Description"); // Default Description if null
+            imageResId = getArguments().getInt(ARG_IMAGE_RES_ID, R.drawable.default_image); // Default image resource if null
         }
     }
 
@@ -59,8 +59,10 @@ public class DetailResepFragment extends Fragment {
         judul_resep = view.findViewById(R.id.judul_resep);
         deskripsi_resep = view.findViewById(R.id.deskripsi_resep);
 
-        judul_resep.setText(mParam1);
-        deskripsi_resep.setText(mParam2);
+        // Set data ke UI
+        judul_resep.setText(title);
+        deskripsi_resep.setText(description);
+        gambar_resep.setImageResource(imageResId); // Set gambar berdasarkan resource ID
 
         return view;
     }

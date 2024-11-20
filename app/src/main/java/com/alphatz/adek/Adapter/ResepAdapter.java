@@ -15,16 +15,19 @@ public class ResepAdapter extends RecyclerView.Adapter<ResepAdapter.MakananViewH
     private List<ResepModel> menuList;
     private final OnMakananClickListener listener;
 
+    // Interface untuk menangani klik
     public interface OnMakananClickListener {
         void onMakananClick(ResepModel menu);
-        void onDetailButtonClick(ResepModel menu);  // Added new callback for detail button
+        void onDetailButtonClick(ResepModel menu);  // Callback untuk tombol detail
     }
 
+    // Constructor
     public ResepAdapter(List<ResepModel> menuList, OnMakananClickListener listener) {
         this.menuList = menuList;
         this.listener = listener;
     }
 
+    // Update daftar resep
     public void updateList(List<ResepModel> newList) {
         this.menuList = newList;
         notifyDataSetChanged();
@@ -66,12 +69,14 @@ public class ResepAdapter extends RecyclerView.Adapter<ResepAdapter.MakananViewH
                 tvNamaMenu.setText(menu.getNamaMenu() != null ? "Menu: " + menu.getNamaMenu() : "Menu: -");
                 tvKalori.setText("Kalori: " + menu.getKalori());
 
+                // Set listener untuk item klik
                 itemView.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onMakananClick(menu);
                     }
                 });
 
+                // Set listener untuk tombol detail
                 detailButton.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onDetailButtonClick(menu);
