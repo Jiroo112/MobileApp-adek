@@ -17,6 +17,7 @@ public class ResepAdapter extends RecyclerView.Adapter<ResepAdapter.MakananViewH
 
     public interface OnMakananClickListener {
         void onMakananClick(ResepModel menu);
+        void onDetailButtonClick(ResepModel menu);  // Added new callback for detail button
     }
 
     public ResepAdapter(List<ResepModel> menuList, OnMakananClickListener listener) {
@@ -40,7 +41,7 @@ public class ResepAdapter extends RecyclerView.Adapter<ResepAdapter.MakananViewH
     @Override
     public void onBindViewHolder(@NonNull MakananViewHolder holder, int position) {
         ResepModel menu = menuList.get(position);
-        holder.bind(menu);
+        holder.bind(menu, listener);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class ResepAdapter extends RecyclerView.Adapter<ResepAdapter.MakananViewH
         return menuList != null ? menuList.size() : 0;
     }
 
-    class MakananViewHolder extends RecyclerView.ViewHolder {
+    static class MakananViewHolder extends RecyclerView.ViewHolder {
         TextView tvNamaMenu;
         TextView tvKalori;
         Button detailButton;
@@ -60,14 +61,20 @@ public class ResepAdapter extends RecyclerView.Adapter<ResepAdapter.MakananViewH
             detailButton = itemView.findViewById(R.id.detail_button);
         }
 
-        void bind(final ResepModel menu) {
+        void bind(final ResepModel menu, final OnMakananClickListener listener) {
             if (menu != null) {
                 tvNamaMenu.setText(menu.getNamaMenu() != null ? "Menu: " + menu.getNamaMenu() : "Menu: -");
                 tvKalori.setText("Kalori: " + menu.getKalori());
 
-                detailButton.setOnClickListener(v -> {
+                itemView.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onMakananClick(menu);
+                    }
+                });
+
+                detailButton.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onDetailButtonClick(menu);
                     }
                 });
             }

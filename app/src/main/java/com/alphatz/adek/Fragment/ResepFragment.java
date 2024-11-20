@@ -75,12 +75,30 @@ public class ResepFragment extends Fragment {
         }
     }
 
+    // In ResepFragment.java
     private void setupRecyclerView() {
         try {
             recyclerViewMakanan.setLayoutManager(new LinearLayoutManager(getContext()));
-            makananAdapter = new ResepAdapter(new ArrayList<>(), menu -> {
-                if (menu != null) {
-                    showDetailMakanan(menu);
+            makananAdapter = new ResepAdapter(new ArrayList<>(), new ResepAdapter.OnMakananClickListener() {
+                @Override
+                public void onMakananClick(ResepModel menu) {
+                    if (menu != null) {
+                        showDetailMakanan(menu);
+                    }
+                }
+
+                @Override
+                public void onDetailButtonClick(ResepModel menu) {
+                    if (menu != null) {
+                        // Navigate to detail fragment
+                        DetailResepFragment fragmentDetailResep = new DetailResepFragment();
+                        // You might want to pass menu data to the fragment using Bundle
+                        Bundle args = new Bundle();
+                        args.putParcelable("menu", menu);  // Assuming ResepModel is Parcelable
+                        fragmentDetailResep.setArguments(args);
+
+                        safeNavigateToFragment(fragmentDetailResep);
+                    }
                 }
             });
             recyclerViewMakanan.setAdapter(makananAdapter);

@@ -22,6 +22,8 @@ import com.alphatz.adek.Model.ResepModel;
 import com.alphatz.adek.R;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
+import android.os.Bundle;
+import com.alphatz.adek.Fragment.DetailResepFragment;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -50,7 +52,7 @@ public class DessertFragment extends Fragment {
 
         recyclerViewMakanan = view.findViewById(R.id.recyclerView);
         btnMinumanSehat = view.findViewById(R.id.btn_minuman_sehat);
-        btnMakananSehat= view.findViewById(R.id.btn_makanan_sehat);
+        btnMakananSehat = view.findViewById(R.id.btn_makanan_sehat);
         btnFilter = view.findViewById(R.id.btn_filter);
         progressBar = view.findViewById(R.id.progressBar);
         searchField = view.findViewById(R.id.searchField);
@@ -62,6 +64,27 @@ public class DessertFragment extends Fragment {
             public void onMakananClick(ResepModel menu) {
                 if (menu != null) {
                     showDetailMakanan(menu);
+                }
+            }
+
+            @Override
+            public void onDetailButtonClick(ResepModel menu) {
+                if (menu != null) {
+                    DetailResepFragment fragmentDetailResep = new DetailResepFragment();
+
+                    // Optional: Pass data to detail fragment
+                    Bundle args = new Bundle();
+                    args.putString("nama_menu", menu.getNamaMenu());
+                    args.putInt("kalori", menu.getKalori());
+                    fragmentDetailResep.setArguments(args);
+
+                    // Navigate to the detail fragment
+                    if (getParentFragmentManager() != null) {
+                        getParentFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, fragmentDetailResep)
+                                .addToBackStack(null)
+                                .commit();
+                    }
                 }
             }
         });

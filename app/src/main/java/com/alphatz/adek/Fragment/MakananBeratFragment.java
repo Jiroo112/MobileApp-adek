@@ -57,12 +57,34 @@ public class MakananBeratFragment extends Fragment {
         searchField = view.findViewById(R.id.searchField);
 
         // rcv
+        //rcv
         recyclerViewMakanan.setLayoutManager(new LinearLayoutManager(getContext()));
         makananAdapter = new ResepAdapter(menuList, new ResepAdapter.OnMakananClickListener() {
             @Override
             public void onMakananClick(ResepModel menu) {
                 if (menu != null) {
                     showDetailMakanan(menu);
+                }
+            }
+
+            @Override
+            public void onDetailButtonClick(ResepModel menu) {
+                if (menu != null) {
+                    DetailResepFragment fragmentDetailResep = new DetailResepFragment();
+
+                    // Optional: Pass data to detail fragment
+                    Bundle args = new Bundle();
+                    args.putString("nama_menu", menu.getNamaMenu());
+                    args.putInt("kalori", menu.getKalori());
+                    fragmentDetailResep.setArguments(args);
+
+                    // Navigate to the detail fragment
+                    if (getParentFragmentManager() != null) {
+                        getParentFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, fragmentDetailResep)
+                                .addToBackStack(null)
+                                .commit();
+                    }
                 }
             }
         });
