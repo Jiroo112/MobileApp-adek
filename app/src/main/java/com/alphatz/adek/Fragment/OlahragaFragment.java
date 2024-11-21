@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,6 +59,11 @@ public class OlahragaFragment extends Fragment {
 
         // Setup RecyclerView
         recyclerViewOlahraga.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Get the FragmentManager
+        FragmentManager fragmentManager = getParentFragmentManager();
+
+        // Initialize the adapter with the FragmentManager
         olahragaAdapter = new OlahragaAdapter(olahragaList, new OlahragaAdapter.OnOlahragaClickListener() {
             @Override
             public void onOlahragaClick(OlahragaModel olahraga) {
@@ -65,7 +71,8 @@ public class OlahragaFragment extends Fragment {
                     showDetailOlahraga(olahraga);
                 }
             }
-        });
+        }, fragmentManager); // Pass the FragmentManager
+
         recyclerViewOlahraga.setAdapter(olahragaAdapter);
         requestQueue = Volley.newRequestQueue(requireContext());
         setupSearch();
@@ -74,7 +81,6 @@ public class OlahragaFragment extends Fragment {
 
         return view;
     }
-
     private void setupButtonListeners() {
         btnKekuatan.setOnClickListener(v -> navigateToFragment(new KekuatanFragment()));
         btnKelenturan.setOnClickListener(v -> navigateToFragment(new KelenturanFragment()));
