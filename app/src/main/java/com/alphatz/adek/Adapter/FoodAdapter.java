@@ -10,31 +10,54 @@ import com.alphatz.adek.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
-    private List<FoodItem> foodItems = new ArrayList<>();
+public class FoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int VIEW_TYPE_HEADER = 0;
+    private static final int VIEW_TYPE_ITEM = 1;
 
-    public void setFoodItems(List<FoodItem> items) {
+    private List<Object> foodItems = new ArrayList<>(); // Use Object to hold both headers and items
+
+    public void setFoodItems(List<Object> items) {
         this.foodItems = items;
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_makanan, parent, false);
-        return new FoodViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_HEADER) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_date_header, parent, false);
+            return new HeaderViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_makanan, parent, false);
+            return new FoodViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
-        FoodItem item = foodItems.get(position);
-        holder.bind(item);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof HeaderViewHolder) {
+            String date = (String) foodItems.get(position); // Assuming headers are strings
+            ((HeaderViewHolder) holder).bind(date);
+        } else if (holder instanceof FoodViewHolder) {
+            FoodItem item = (FoodItem) foodItems.get(position);
+            ((FoodViewHolder) holder).bind(item);
+        }
     }
 
     @Override
     public int getItemCount() {
         return foodItems.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (foodItems.get(position) instanceof String) {
+            return VIEW_TYPE_HEADER; // Header view type
+        } else {
+            return VIEW_TYPE_ITEM; // Food item view type
+        }
     }
 
     static class FoodViewHolder extends RecyclerView.ViewHolder {
@@ -50,6 +73,19 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         void bind(FoodItem item) {
             tvNamaMenu.setText(item.getNama());
             tvKalori.setText(String.format("%d kcal • %s", item.getKalori(), item.getTakaran()));
+        }
+    }
+
+    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        private final TextView tvDateHeader;
+
+        HeaderViewHolder(View itemView) {
+            super(itemView);
+            tvDateHeader = itemView.findViewById(R.id.text_date);
+        }
+
+        void bind(String date) {
+            tvDateHeader.setText(date);
         }
     }
 

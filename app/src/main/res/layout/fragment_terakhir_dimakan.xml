@@ -76,15 +76,6 @@
             android:padding="16dp">
 
             <!-- First Date Group -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="  15 November 2024"
-                android:background="@drawable/button_filter"
-                android:backgroundTint="@color/hijau_navy"
-                android:textSize="16sp"
-                android:textColor="#000000"
-                android:paddingVertical="8dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -101,18 +92,11 @@
             </LinearLayout>
 
             <!-- Second Date Group -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="  11 November 2024"
-                android:background="@drawable/button_filter"
-                android:backgroundTint="@color/hijau_navy"
-                android:textSize="16sp"
-                android:textColor="#000000"
-                android:paddingVertical="8dp" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:paddingTop="10dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
