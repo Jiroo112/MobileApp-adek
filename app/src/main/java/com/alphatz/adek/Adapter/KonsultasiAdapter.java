@@ -68,11 +68,8 @@ public class KonsultasiAdapter extends RecyclerView.Adapter<KonsultasiAdapter.Do
 
         void bind(final KonsultasiModel konsultan) {
             doctorName.setText(konsultan.getNamaLengkap());
-
-            // glide buat nampilin foto dokter
             if (konsultan.getFotoDokter() != null && !konsultan.getFotoDokter().isEmpty()) {
                 try {
-                    // decode base64 ke bitmap
                     byte[] decodedString = Base64.decode(konsultan.getFotoDokter(), Base64.DEFAULT);
 
                     Glide.with(itemView.getContext())

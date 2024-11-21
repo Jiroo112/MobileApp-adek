@@ -82,7 +82,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchTotalsData() {
-
         if (!isAdded()) return;
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE);
@@ -106,33 +105,125 @@ public class HomeFragment extends Fragment {
                         if (response.getBoolean("success")) {
                             JSONObject data = response.getJSONObject("data");
 
-                            // Ambil data dari respons
-                            double totalGula = data.getDouble("total_gula");
-                            double totalMinum = data.getDouble("total_minum");
-                            double totalKarbohidrat = data.getDouble("total_karbohidrat");
-                            double totalLemak = data.getDouble("total_lemak");
-                            double totalProtein = data.getDouble("total_protein");
+                            // Convert string values to double where needed
+                            double totalGula = parseDoubleValue(data.getString("total_gula"));
+                            double totalMinum = parseDoubleValue(data.getString("total_minum"));
+                            double totalKarbohidrat = parseDoubleValue(data.getString("total_karbohidrat"));
+                            double totalLemak = parseDoubleValue(data.getString("total_lemak"));
+                            double totalProtein = parseDoubleValue(data.getString("total_protein"));
 
-                            // Konversi ke persentase (contoh: asumsikan nilai maksimum 100 per komponen)
-                            double gulaPercentage = (totalGula / 100) * 100;
-                            double airPercentage = (totalMinum / 100) * 100;
-                            double karbohidratPercentage = (totalKarbohidrat / 100) * 100;
-                            double lemakPercentage = (totalLemak / 100) * 100;
-                            double proteinPercentage = (totalProtein / 100) * 100;
+                            String tipeDiet = data.getString("tipe_diet").toLowerCase();
+                            double beratBadan = parseDoubleValue(data.getString("berat_badan"));
+                            double tinggiBadan = parseDoubleValue(data.getString("tinggi_badan")); // dalam cm
 
-                            // Tampilkan di TextView dalam format persentase
-                            persentaseGula.setText(String.format("%.1f%%", gulaPercentage));
-                            persentaseAir.setText(String.format("%.1f%%", airPercentage));
-                            persentaseKarbohidrat.setText(String.format("%.1f%%", karbohidratPercentage));
-                            persentaseLemak.setText(String.format("%.1f%%", lemakPercentage));
-                            persentaseProtein.setText(String.format("%.1f%%", proteinPercentage));
+                            // Hitung BMI
+                            double tinggiMeter = tinggiBadan / 100;
+                            double bmi = beratBadan / (tinggiMeter * tinggiMeter);
+                            Log.d(TAG, "BMI: " + bmi);
+
+                            // Hitung BMR (Basal Metabolic Rate) menggunakan formula Harris-Benedict
+                            boolean isOverweight = bmi >= 25;
+                            double bmr;
+
+                            // BMR berbeda untuk overweight dan normal weight
+                            if (isOverweight) {
+                                // Modifikasi formula untuk overweight
+                                bmr = 10 * beratBadan + 6.25 * tinggiBadan - 5 * 25 + 5;
+                            } else {
+                                // Formula standar
+                                bmr = 10 * beratBadan + 6.25 * tinggiBadan - 5 * 25 + 5;
+                            }
+
+                            // Hitung kebutuhan kalori harian berdasarkan tipe diet
+                            double kaloriHarian;
+                            switch (tipeDiet) {
+                                case "mengurangi berat badan":
+                                    kaloriHarian = bmr * 0.8; // Deficit 20%
+                                    break;
+                                case "menambah berat badan":
+                                    kaloriHarian = bmr * 1.2; // Surplus 20%
+                                    break;
+                                case "menjaga berat badan":
+                                    kaloriHarian = bmr * 1.0; // Maintenance
+                                    break;
+                                default:
+                                    throw new IllegalStateException("Tipe diet tidak valid: " + tipeDiet);
+                            }
+
+                            // Hitung target nutrisi berdasarkan kalori harian
+                            // Distribusi makronutrien berdasarkan tipe diet
+                            double proteinTarget, karbohidratTarget, lemakTarget, gulaTarget, airTarget;
+
+                            switch (tipeDiet) {
+                                case "mengurangi berat badan":
+                                    // High protein, moderate fat, lower carb
+                                    proteinTarget = (kaloriHarian * 0.35) / 4; // 35% dari kalori (4 kal/g)
+                                    lemakTarget = (kaloriHarian * 0.25) / 9;   // 25% dari kalori (9 kal/g)
+                                    karbohidratTarget = (kaloriHarian * 0.40) / 4; // 40% dari kalori (4 kal/g)
+                                    gulaTarget = karbohidratTarget * 0.1; // 10% dari karbohidrat
+                                    airTarget = beratBadan * 35; // 35ml per kg berat badan
+                                    break;
+
+                                case "menambah berat badan":
+                                    // High carb, high protein, moderate fat
+                                    proteinTarget = (kaloriHarian * 0.30) / 4; // 30% dari kalori
+                                    lemakTarget = (kaloriHarian * 0.25) / 9;   // 25% dari kalori
+                                    karbohidratTarget = (kaloriHarian * 0.45) / 4; // 45% dari kalori
+                                    gulaTarget = karbohidratTarget * 0.15; // 15% dari karbohidrat
+                                    airTarget = beratBadan * 40; // 40ml per kg berat badan
+                                    break;
+
+                                case "menjaga berat badan":
+                                    // Balanced distribution
+                                    proteinTarget = (kaloriHarian * 0.30) / 4; // 30% dari kalori
+                                    lemakTarget = (kaloriHarian * 0.30) / 9;   // 30% dari kalori
+                                    karbohidratTarget = (kaloriHarian * 0.40) / 4; // 40% dari kalori
+                                    gulaTarget = karbohidratTarget * 0.12; // 12% dari karbohidrat
+                                    airTarget = beratBadan * 30; // 30ml per kg berat badan
+                                    break;
+
+                                default:
+                                    throw new IllegalStateException("Tipe diet tidak valid");
+                            }
+
+                            // Faktor aktivitas tambahan berdasarkan BMI
+                            if (bmi < 18.5) { // Underweight
+                                proteinTarget *= 1.2;
+                                karbohidratTarget *= 1.1;
+                            } else if (bmi > 25) { // Overweight
+                                lemakTarget *= 0.9;
+                                gulaTarget *= 0.8;
+                            }
+
+                            // Konversi nilai ke persentase pencapaian
+                            double proteinPercentage = (totalProtein / proteinTarget) * 100;
+                            double lemakPercentage = (totalLemak / lemakTarget) * 100;
+                            double karbohidratPercentage = (totalKarbohidrat / karbohidratTarget) * 100;
+                            double gulaPercentage = (totalGula / gulaTarget) * 100;
+                            double airPercentage = (totalMinum / airTarget) * 100;
+
+                            // Log target values for debugging
+                            Log.d(TAG, String.format("Targets - Protein: %.1f, Lemak: %.1f, Karbo: %.1f, Gula: %.1f, Air: %.1f",
+                                    proteinTarget, lemakTarget, karbohidratTarget, gulaTarget, airTarget));
+
+                            // Update UI on main thread
+                            requireActivity().runOnUiThread(() -> {
+                                persentaseProtein.setText(String.format("%.1f%%", proteinPercentage));
+                                persentaseLemak.setText(String.format("%.1f%%", lemakPercentage));
+                                persentaseKarbohidrat.setText(String.format("%.1f%%", karbohidratPercentage));
+                                persentaseGula.setText(String.format("%.1f%%", gulaPercentage));
+                                persentaseAir.setText(String.format("%.1f%%", airPercentage));
+
+                                // Optional: Add target values in the UI
+                                // Example: persentaseProtein.setHint(String.format("Target: %.1fg", proteinTarget));
+                            });
 
                         } else {
                             showError("Data tidak ditemukan.");
                         }
-                    } catch (JSONException e) {
-                        Log.e(TAG, "JSON parsing error: " + e.getMessage());
-                        showError("Kesalahan memproses data.");
+                    } catch (JSONException | IllegalStateException e) {
+                        Log.e(TAG, "Error: " + e.getMessage());
+                        showError("Kesalahan memproses data: " + e.getMessage());
                     }
                 },
                 error -> {
@@ -153,7 +244,15 @@ public class HomeFragment extends Fragment {
         requestQueue.add(request);
     }
 
-
+    // Helper method to safely parse string values to double
+    private double parseDoubleValue(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "Error parsing value: " + value);
+            return 0.0;
+        }
+    }
     private void showError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }

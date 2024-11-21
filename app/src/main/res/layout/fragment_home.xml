@@ -174,8 +174,8 @@
         android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="90dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="80dp"
         android:alignmentMode="alignMargins"
         android:columnCount="2"
         android:padding="8dp">
@@ -223,7 +223,7 @@
 
         <!-- Kartu Air -->
         <androidx.cardview.widget.CardView
-            android:layout_width="225dp"
+            android:layout_width="230dp"
             android:layout_height="120dp"
             app:cardCornerRadius="12dp"
             android:layout_margin="8dp"
@@ -263,23 +263,35 @@
         </androidx.cardview.widget.CardView>
     </GridLayout>
 
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/tipe_diet_ic"
-        android:layout_gravity="center"
-        android:layout_marginTop="205dp">
-
-    </ImageView>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/dokter_fav_profil"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="40dp">
+        android:layout_marginBottom="40dp"/>
 
-    </ImageView>
+        <androidx.cardview.widget.CardView
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="185dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="16dp">
 
+                <TextView
+                    android:id="@+id/tvTipeDiet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipe Diet"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 </FrameLayout>
