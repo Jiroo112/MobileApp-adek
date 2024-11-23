@@ -31,7 +31,7 @@ public class ChangepwFragment extends Fragment {
 
     private EditText editTextNewPassword, editTextConfirmPassword;
     private Button buttonUpdatePassword;
-    private String URL_UPDATE_PASSWORD = "http://10.0.2.2/ads_mysql/updatepassword.php";
+    private String URL_UPDATE_PASSWORD = "http://10.0.2.2/ads_mysql/account/updatepassword.php";
     private String userEmail; // Menyimpan email pengguna
 
     public ChangepwFragment() {

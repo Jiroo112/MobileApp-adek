@@ -20,9 +20,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"/>
 
-    <!-- Ringkasan Total Menu dan Kalori -->
-
-    <!-- Tab Layout - Cari Makanan / Terakhir Dimakan / Catatan Minum -->
+    <!-- Tab Layout -->
     <LinearLayout
         android:id="@+id/linear_layout_tabs"
         android:layout_width="match_parent"
@@ -155,8 +153,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -172,5 +169,4 @@
             android:visibility="gone" />
 
     </FrameLayout>
-
 </LinearLayout>

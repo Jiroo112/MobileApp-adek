@@ -4,8 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF"
-    tools:context=".Fragment.TerakhirDimakan">
+    android:padding="16dp"
+    android:fillViewport="true"
+    tools:context=".Fragment.AsupanFragment">
 
     <!-- Title -->
     <TextView
@@ -17,7 +18,9 @@
         android:textStyle="bold"
         android:textColor="#555"
         android:layout_gravity="center"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="20dp"/>
+
+    <!-- Ringkasan Total Menu dan Kalori -->
 
     <!-- Tab Layout - Cari Makanan / Terakhir Dimakan / Catatan Minum -->
     <LinearLayout
@@ -25,7 +28,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="20dp"
         android:gravity="center">
 
         <!-- "Cari Makanan" Tab -->
@@ -38,7 +40,7 @@
             android:textColor="#555"
             android:textSize="16sp"
             android:background="?attr/selectableItemBackground"
-            android:clickable="true" />
+            android:clickable="true"/>
 
         <!-- "Terakhir Dimakan" Tab -->
         <TextView
@@ -50,7 +52,7 @@
             android:textColor="#555"
             android:textSize="16sp"
             android:background="?attr/selectableItemBackground"
-            android:clickable="true" />
+            android:clickable="true"/>
 
         <!-- "Catatan Minum" Tab -->
         <TextView
@@ -62,54 +64,23 @@
             android:textColor="#555"
             android:textSize="16sp"
             android:background="?attr/selectableItemBackground"
-            android:clickable="true" />
+            android:clickable="true"/>
     </LinearLayout>
 
-    <androidx.core.widget.NestedScrollView
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_food_history"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:clipToPadding="false" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- First Date Group -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view_food_history"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:clipToPadding="false" />
-
-            </LinearLayout>
-
-            <!-- Second Date Group -->
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:paddingTop="10dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view_food_history_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:clipToPadding="false" />
-
-            </LinearLayout>
-
-            <!-- Add more food groups if needed -->
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

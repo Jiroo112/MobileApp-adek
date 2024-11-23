@@ -23,6 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Porsi"
+            android:textStyle="bold"
             android:layout_gravity="center_vertical"/>
 
         <EditText
@@ -57,12 +58,25 @@
         android:id="@+id/text_karbo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/text_lemak"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/text_gula"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"/>
 
     <Button
         android:id="@+id/button_tambahkan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_filter"
         android:text="TAMBAHKAN"/>
 
 </LinearLayout>

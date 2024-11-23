@@ -175,7 +175,7 @@ public class AsupanFragment extends Fragment {
                 return;
             }
 
-            String url = "http://10.0.2.2/ads_mysql/get_detail_kalori.php?id_user=" + idUser;
+            String url = "http://10.0.2.2/ads_mysql/asupan/get_detail_kalori.php?id_user=" + idUser;
             showLoading(true);
 
             Log.d(TAG, "Fetching detailed data from URL: " + url);
@@ -327,7 +327,7 @@ public class AsupanFragment extends Fragment {
     private void fetchMenuData() {
         if (!isAdded()) return;
 
-        String url = "http://10.0.2.2/ads_mysql/get_menu_asupan.php";  // Ensure URL is correct
+        String url = "http://10.0.2.2/ads_mysql/asupan/get_menu_asupan.php";
         showLoading(true);
 
         JsonObjectRequest request = new JsonObjectRequest(
@@ -352,7 +352,7 @@ public class AsupanFragment extends Fragment {
             return;
         }
 
-        String url = "http://10.0.2.2/ads_mysql/get_detail_kalorinew.php?id_user=" + idUser;
+        String url = "http://10.0.2.2/ads_mysql/asupan/get_detail_kalorinew.php?id_user=" + idUser;
         showLoading(true);
 
         Log.d(TAG, "Fetching data from URL: " + url);

@@ -1,7 +1,8 @@
 package com.alphatz.adek.Activity;
 
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,6 +21,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class Dashboard extends AppCompatActivity {
 
+    private static final String PREF_NAME = "LoginPrefs";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_NAMA_LENGKAP = "namaLengkap";
+    private static final String KEY_ID_USER = "idUser";
+
     private String namaLengkap;
     private String idUser;
     private BottomNavigationView bottomNav;
@@ -34,18 +40,24 @@ public class Dashboard extends AppCompatActivity {
         bottomNav = findViewById(R.id.bottom_navigation);
         fab = findViewById(R.id.fab);
 
-        // Menerima nama_lengkap dan idUser dari Intent
-        Intent intent = getIntent();
-        namaLengkap = intent.getStringExtra("namaLengkap");
-        idUser = intent.getStringExtra("idUser");
+        // Mengambil data dari SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        String email = sharedPreferences.getString(KEY_EMAIL, "");
+        namaLengkap = sharedPreferences.getString(KEY_NAMA_LENGKAP, "");
+        idUser = sharedPreferences.getString(KEY_ID_USER, "");
 
-        // Pastikan data nama_lengkap diterima
-        if (namaLengkap != null) {
-            Toast.makeText(this, "Welcome, " + namaLengkap, Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "No name received", Toast.LENGTH_SHORT).show();
-            namaLengkap = "Pengguna"; // Default value jika nama_lengkap null
+        // Debugging untuk memastikan data terambil
+        Log.d("DashboardActivity", "Loaded from SharedPreferences: email=" + email + ", namaLengkap=" + namaLengkap + ", idUser=" + idUser);
+
+        // Validasi data
+        if (namaLengkap == null || namaLengkap.isEmpty()) {
+            Toast.makeText(this, "Data tidak ditemukan, silakan login ulang.", Toast.LENGTH_SHORT).show();
+            finish(); // Tutup Dashboard jika data tidak valid
+            return;
         }
+
+        // Tampilkan pesan selamat datang
+        Toast.makeText(this, "Welcome, " + namaLengkap, Toast.LENGTH_LONG).show();
 
         // Load default fragment (HomeFragment) hanya sekali saat pertama kali
         if (savedInstanceState == null) {
@@ -57,7 +69,6 @@ public class Dashboard extends AppCompatActivity {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
 
-            // Logika if-else untuk memilih fragment berdasarkan item yang diklik
             if (itemId == R.id.asupan) {
                 selectedFragment = new AsupanFragment();
             } else if (itemId == R.id.search) {

@@ -167,7 +167,7 @@ public class ResepFragment extends Fragment {
     private void fetchMenuMakanan() {
         if (getContext() == null) return;
 
-        String url = "http://10.0.2.2/ads_mysql/get_menu.php";
+        String url = "http://10.0.2.2/ads_mysql/search/get_menu.php";
         progressBar.setVisibility(View.VISIBLE);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,

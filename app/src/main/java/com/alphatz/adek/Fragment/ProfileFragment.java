@@ -1,6 +1,9 @@
 package com.alphatz.adek.Fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -34,8 +38,10 @@ import java.util.Map;
 public class ProfileFragment extends Fragment {
 
     private static final String TAG = "ProfileFragment";
+    private static final int REQUEST_CODE_PICK_IMAGE = 1;
     private ImageView tipe_diet;
     private ImageView settings;
+    private ImageView fotoProfil;
     private TextView beratTextView;
     private TextView tinggiTextView;
     private TextView bmiTextView;
@@ -43,7 +49,8 @@ public class ProfileFragment extends Fragment {
     private LinearGauge linearGauge;
     private String currentNamaLengkap;
     private RequestQueue requestQueue;
-    private String baseUrl = "http://10.0.2.2/ads_mysql/profile_adek.php";
+
+    private String baseUrl = "http://10.0.2.2/ads_mysql/account/profile_adek.php";
 
     public ProfileFragment() {
     }
@@ -66,6 +73,17 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            // Dapatkan URI file yang dipilih
+            Uri imageUri = data.getData();
+
+            Toast.makeText(getContext(), "Gambar dipilih: " + imageUri.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,17 +91,17 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         settings = view.findViewById(R.id.settings);
+
         beratTextView = view.findViewById(R.id.text_berat);
         tinggiTextView = view.findViewById(R.id.text_tinggi);
         bmiTextView = view.findViewById(R.id.text_bmi);
         txt_nama_lengkap = view.findViewById(R.id.txt_username);
         linearGauge = view.findViewById(R.id.linearGauge);
-
+        fotoProfil = view.findViewById(R.id.addFoto);
         beratTextView.setText("Loading...");
         tinggiTextView.setText("Loading...");
         bmiTextView.setText("Loading...");
 
-        // Set nama_lengkap dan langsung ambil data
         txt_nama_lengkap.setText(currentNamaLengkap);  // Ubah menjadi currentNamaLengkap
         getUserDataFromApi();
 
@@ -97,6 +115,15 @@ public class ProfileFragment extends Fragment {
         tinggiTextView.setOnClickListener(v -> {
             showUpdateTinggi();
         });
+
+        fotoProfil.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(intent, "Pilih Foto"), REQUEST_CODE_PICK_IMAGE);
+        });
+
+
 
         return view;
     }

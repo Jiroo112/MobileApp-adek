@@ -12,11 +12,23 @@
         android:src="@drawable/bunga_profil"/>
 
     <ImageView
+        android:id="@+id/foto_profil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
         android:layout_marginTop="100dp"
-        android:src="@drawable/ic_profil"/>
+        android:src="@drawable/ic_profil"
+        android:clickable="true"/>
+
+    <ImageView
+        android:id="@+id/addFoto"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:clickable="true"
+        android:background="@drawable/add"
+        android:layout_gravity="center"
+        android:layout_marginBottom="170dp"
+        android:layout_marginLeft="40dp"/>
 
     <TextView
         android:id="@+id/txt_username"
@@ -24,7 +36,7 @@
         android:layout_height="wrap_content"
         android:text="username"
         android:layout_gravity="center|center_horizontal"
-        android:layout_marginBottom="150dp"
+        android:layout_marginBottom="140dp"
         android:textSize="20sp"
         android:textStyle="bold"/>
 

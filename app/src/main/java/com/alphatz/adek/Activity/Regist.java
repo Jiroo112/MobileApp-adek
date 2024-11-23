@@ -26,7 +26,7 @@ public class Regist extends AppCompatActivity {
 
     private EditText editTextNamaLengkap, editTextEmail, editTextPassword, editTextRePassword;
     private Button buttonRegister;
-    private String URL_REGISTER = "http://10.0.2.2/ads_mysql/registrasi_adek.php";
+    private String URL_REGISTER = "http://10.0.2.2/ads_mysql/account/registrasi_adek.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

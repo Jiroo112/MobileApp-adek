@@ -134,7 +134,7 @@ public class MinumanSehatFragment extends Fragment {
     }
 
     private void getMenuMakanan() {
-        String url = "http://10.0.2.2/ads_mysql/get_only_minuman.php";
+        String url = "http://10.0.2.2/ads_mysql/search/get_only_minuman.php";
         progressBar.setVisibility(View.VISIBLE);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,

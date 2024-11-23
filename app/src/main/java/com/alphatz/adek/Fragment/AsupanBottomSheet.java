@@ -1,5 +1,6 @@
 package com.alphatz.adek.Fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -45,7 +46,9 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
     private double baseKalori;
     private double baseProtein;
     private double baseKarbohidrat;
-    private TextView textTitle, textKalori, textProtein, textKarbohidrat;
+    private double baseLemak;
+    private double baseGula;
+    private TextView textTitle, textKalori, textProtein, textKarbohidrat, textLemak, textGula;
     private EditText porsiEditText;
     private Button tambahButton;
     private RequestQueue requestQueue;
@@ -59,6 +62,7 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
         return fragment;
     }
 
+    @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,14 +73,14 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
         textKalori = view.findViewById(R.id.text_kalori);
         textProtein = view.findViewById(R.id.text_protein);
         textKarbohidrat = view.findViewById(R.id.text_karbo);
+        textLemak = view.findViewById(R.id.text_lemak);
+        textGula = view.findViewById(R.id.text_gula);
         porsiEditText = view.findViewById(R.id.edit_porsi);
         tambahButton = view.findViewById(R.id.button_tambahkan);
 
-        // Initialize request queue
         requestQueue = Volley.newRequestQueue(requireContext());
 
-        // Setup porsi EditText
-        porsiEditText.setText("1"); // Default value
+        porsiEditText.setText("1");
         porsiEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -90,7 +94,6 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
-        // Get arguments
         if (getArguments() != null) {
             String namaMenu = getArguments().getString(ARG_NAMA_MENU);
             idUser = getArguments().getString(ARG_ID_USER, "");
@@ -114,10 +117,14 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
             double totalKalori = baseKalori * porsi;
             double totalProtein = baseProtein * porsi;
             double totalKarbohidrat = baseKarbohidrat * porsi;
+            double totalLemak = baseLemak * porsi;
+            double totalGula = baseGula * porsi;
 
             textKalori.setText(String.format("Kalori: %.1f", totalKalori));
             textProtein.setText(String.format("Protein: %.1f", totalProtein));
             textKarbohidrat.setText(String.format("Karbohidrat: %.1f", totalKarbohidrat));
+            textLemak.setText(String.format("Lemak: %.1f", totalLemak));
+            textGula.setText(String.format("Gula: %.1f", totalGula));
 
             tambahButton.setEnabled(true);
         } catch (NumberFormatException e) {
@@ -128,7 +135,7 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
     private void fetchMenuDetail(String namaMenu) {
         try {
             String encodedNamaMenu = URLEncoder.encode(namaMenu, "UTF-8");
-            String url = "http://10.0.2.2/ads_mysql/bot_sheet_asupan.php?nama_menu=" + encodedNamaMenu;
+            String url = "http://10.0.2.2/ads_mysql/asupan/bot_sheet_asupan.php?nama_menu=" + encodedNamaMenu;
 
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                     response -> {
@@ -139,6 +146,9 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
                                 baseKalori = data.getDouble("kalori");
                                 baseProtein = data.getDouble("protein");
                                 baseKarbohidrat = data.getDouble("karbohidrat");
+                                baseLemak= data.getDouble("lemak");
+                                baseGula = data.getDouble("gula");
+
 
                                 textTitle.setText(data.getString("nama_menu"));
                                 updateNutritionValues();
@@ -181,12 +191,13 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
         double totalKalori = baseKalori * porsi;
         double totalProtein = baseProtein * porsi;
         double totalKarbohidrat = baseKarbohidrat * porsi;
-        double totalLemak = baseKarbohidrat * porsi; // Sesuaikan jika ada field `baseLemak`
+        double totalLemak = baseKarbohidrat * porsi;
+        double totalGula = baseGula * porsi;
 
         // Tambahkan tanggal hari ini
         String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-        String url = "http://10.0.2.2/ads_mysql/simpan_detail_kalori.php";
+        String url = "http://10.0.2.2/ads_mysql/asupan/simpan_detail_kalori.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
