@@ -55,13 +55,10 @@ public class TerakhirDimakan extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_terakhir_dimakan, container, false);
 
-        // Initialize components
         initializeViews(view);
 
-        // Set up RecyclerView
         setupRecyclerView();
 
-        // Set up tabs
         setupTabs();
 
         return view;
