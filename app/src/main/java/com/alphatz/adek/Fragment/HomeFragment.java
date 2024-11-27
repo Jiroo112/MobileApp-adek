@@ -231,7 +231,8 @@ public class HomeFragment extends Fragment {
                             ? "Status Code: " + error.networkResponse.statusCode
                             : "Kesalahan jaringan.";
                     Log.e(TAG, "Request error: " + error.getMessage() + " " + errorMessage);
-                    showError("Gagal mengambil data. Periksa koneksi Anda.");
+                    showError("Gagal mengambil data. Periksa" +
+                            " koneksi Anda.");
                 }
         );
 

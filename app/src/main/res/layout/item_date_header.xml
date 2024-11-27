@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:padding="8dp"
     android:orientation="horizontal"
-    android:background="#F3F3F3">
+    android:background="#90EE90">
 
     <TextView
         android:id="@+id/text_date"

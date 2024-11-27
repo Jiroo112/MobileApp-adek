@@ -1,5 +1,8 @@
 package com.alphatz.adek.Adapter;
 
+import static android.graphics.Color.parseColor;
+
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,6 +89,7 @@ public class FoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         void bind(String date) {
             tvDateHeader.setText(date);
+            tvDateHeader.setTextColor(parseColor("#32CD32"));
         }
     }
 
