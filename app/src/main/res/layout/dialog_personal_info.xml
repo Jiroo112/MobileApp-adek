@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Informasi Personal"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="8dp" />
+
+    <EditText
+        android:id="@+id/input_tanggal_lahir"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tanggal Lahir"
+        android:padding="8dp" />
+
+    <EditText
+        android:id="@+id/input_tinggi_badan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tinggi Badan"
+
+        android:padding="8dp" />
+
+    <EditText
+        android:id="@+id/input_berat_badan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Berat Badan"
+
+        android:padding="8dp" />
+
+    <Spinner
+        android:id="@+id/spinner_gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/gender_options"
+        android:padding="8dp" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_diet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radio_diet_lose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Menurunkan Berat Badan" />
+
+        <RadioButton
+            android:id="@+id/radio_diet_gain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Menambah Berat Badan" />
+
+        <RadioButton
+            android:id="@+id/radio_diet_maintain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Menjaga Berat Badan" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:paddingTop="16dp">
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Batal" />
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Simpan"
+            android:layout_marginStart="16dp" />
+    </LinearLayout>
+</LinearLayout>
