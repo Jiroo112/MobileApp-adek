@@ -34,11 +34,11 @@ public class LoginActivity extends AppCompatActivity {
     String URL_LOGIN = "http://10.0.2.2/ads_mysql/account/login_adek.php";
 
     SharedPreferences sharedPreferences;
-    private static final String PREF_NAME = "LoginPrefs";
+    public static final String PREF_NAME = "LoginPrefs";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
     private static final String KEY_NAMA_LENGKAP = "namaLengkap";
-    private static final String KEY_ID_USER = "idUser";
+    public static final String KEY_ID_USER = "idUser";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
