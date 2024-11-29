@@ -83,10 +83,12 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
         porsiEditText.setText("1");
         porsiEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -120,6 +122,7 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
             double totalLemak = baseLemak * porsi;
             double totalGula = baseGula * porsi;
 
+
             textKalori.setText(String.format("Kalori: %.1f", totalKalori));
             textProtein.setText(String.format("Protein: %.1f", totalProtein));
             textKarbohidrat.setText(String.format("Karbohidrat: %.1f", totalKarbohidrat));
@@ -146,7 +149,7 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
                                 baseKalori = data.getDouble("kalori");
                                 baseProtein = data.getDouble("protein");
                                 baseKarbohidrat = data.getDouble("karbohidrat");
-                                baseLemak= data.getDouble("lemak");
+                                baseLemak = data.getDouble("lemak");
                                 baseGula = data.getDouble("gula");
 
 
@@ -191,10 +194,9 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
         double totalKalori = baseKalori * porsi;
         double totalProtein = baseProtein * porsi;
         double totalKarbohidrat = baseKarbohidrat * porsi;
-        double totalLemak = baseKarbohidrat * porsi;
-        double totalGula = baseGula * porsi;
+        double totalLemak = baseLemak * porsi;
+        double totalGula = baseGula * porsi; // Tambahkan ini
 
-        // Tambahkan tanggal hari ini
         String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
         String url = "http://10.0.2.2/ads_mysql/asupan/simpan_detail_kalori.php";
@@ -232,13 +234,13 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
                 params.put("total_protein", String.valueOf(totalProtein));
                 params.put("total_karbohidrat", String.valueOf(totalKarbohidrat));
                 params.put("total_lemak", String.valueOf(totalLemak));
+                params.put("total_gula", String.valueOf(totalGula)); // Tambahkan ini
                 return params;
             }
         };
 
         requestQueue.add(stringRequest);
     }
-
 
     @Override
     public void onDestroyView() {

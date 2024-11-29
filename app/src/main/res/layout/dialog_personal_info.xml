@@ -1,93 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
-
-    <TextView
-        android:id="@+id/dialog_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Informasi Personal"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:paddingBottom="8dp" />
-
-    <EditText
-        android:id="@+id/input_tanggal_lahir"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Tanggal Lahir"
-        android:padding="8dp" />
-
-    <EditText
-        android:id="@+id/input_tinggi_badan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Tinggi Badan"
-
-        android:padding="8dp" />
-
-    <EditText
-        android:id="@+id/input_berat_badan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Berat Badan"
-
-        android:padding="8dp" />
-
-    <Spinner
-        android:id="@+id/spinner_gender"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/gender_options"
-        android:padding="8dp" />
-
-    <RadioGroup
-        android:id="@+id/radio_group_diet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <RadioButton
-            android:id="@+id/radio_diet_lose"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Menurunkan Berat Badan" />
-
-        <RadioButton
-            android:id="@+id/radio_diet_gain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Menambah Berat Badan" />
-
-        <RadioButton
-            android:id="@+id/radio_diet_maintain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Menjaga Berat Badan" />
-    </RadioGroup>
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end"
-        android:paddingTop="16dp">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <Button
-            android:id="@+id/button_cancel"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Batal" />
+            android:text="Informasi Personal"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="8dp" />
 
-        <Button
-            android:id="@+id/button_save"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/input_tanggal_lahir"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Simpan"
-            android:layout_marginStart="16dp" />
+            android:hint="Tanggal Lahir"
+            android:background="@drawable/button_background"
+            android:padding="12dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/input_tinggi_badan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:hint="Tinggi Badan"
+            android:padding="12dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/input_berat_badan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:hint="Berat Badan"
+            android:padding="12dp"
+            android:layout_marginTop="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinner_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/gender_options"
+            android:padding="8dp"
+            android:layout_marginTop="14dp"/>
+
+        <RadioGroup
+            android:id="@+id/radio_group_diet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <RadioButton
+                android:id="@+id/radio_diet_lose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mengurangi berat badan"
+                android:layout_marginTop="6dp"/>
+
+            <RadioButton
+                android:id="@+id/radio_diet_gain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Menambah Berat Badan"
+                android:layout_marginTop="10dp"/>
+
+            <RadioButton
+                android:id="@+id/radio_diet_maintain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mempertahankan Berat Badan"
+                android:layout_marginTop="10dp"/>
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:paddingTop="16dp">
+
+            <Button
+                android:id="@+id/button_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_button"
+                android:text="Batal" />
+
+            <Button
+                android:id="@+id/button_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Simpan"
+                android:background="@drawable/custom_button"
+                android:layout_marginStart="16dp" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</androidx.cardview.widget.CardView>

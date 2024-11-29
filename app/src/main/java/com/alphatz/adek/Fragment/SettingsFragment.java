@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -18,10 +19,10 @@ import com.alphatz.adek.R;
 
 public class SettingsFragment extends Fragment {
 
-    private static final String PREF_NAME = "LoginPrefs"; // Sama dengan di LoginActivity
+    private static final String PREF_NAME = "LoginPrefs";
 
     public SettingsFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
@@ -31,6 +32,8 @@ public class SettingsFragment extends Fragment {
 
         TextView tvGantiPassword = view.findViewById(R.id.tv_changepw);
         TextView tvLogout = view.findViewById(R.id.logout_tv);
+        LinearLayout layoutProfile = view.findViewById(R.id.layout_profile);
+        TextView tvProfile = view.findViewById(R.id.text_profile);
 
         // Klik untuk Ganti Password
         tvGantiPassword.setOnClickListener(new View.OnClickListener() {
@@ -39,6 +42,30 @@ public class SettingsFragment extends Fragment {
                 Fragment changepwFragment = new ChangepwFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, changepwFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        tvProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment DetailProfileFragment = new DetailProfileFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, DetailProfileFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+
+        // Klik untuk membuka Detail Profil
+        layoutProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment detailProfileFragment = new DetailProfileFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, detailProfileFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -71,7 +98,7 @@ public class SettingsFragment extends Fragment {
                             getActivity().finish();
                         }
                     })
-                    .setNegativeButton("Tidak", null) // Jika "Tidak" ditekan, dialog akan ditutup
+                    .setNegativeButton("Tidak", null)
                     .show();
         }
     }

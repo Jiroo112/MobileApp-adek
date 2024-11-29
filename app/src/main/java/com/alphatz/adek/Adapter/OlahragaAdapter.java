@@ -1,25 +1,28 @@
 package com.alphatz.adek.Adapter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager; // Make sure to import this
-import androidx.fragment.app.FragmentTransaction; // Make sure to import this
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alphatz.adek.Model.OlahragaModel;
 import com.alphatz.adek.R;
-import com.alphatz.adek.Fragment.DetailOlahragaFragment; // Import your DetailOlahragaFragment class
+import com.alphatz.adek.Fragment.DetailOlahragaFragment;
+
 import java.util.List;
 
 public class OlahragaAdapter extends RecyclerView.Adapter<OlahragaAdapter.OlahragaViewHolder> {
     private List<OlahragaModel> olahragaList;
     private final OnOlahragaClickListener listener;
-    private final FragmentManager fragmentManager; // Add FragmentManager reference
+    private final FragmentManager fragmentManager;
 
     public interface OnOlahragaClickListener {
         void onOlahragaClick(OlahragaModel olahraga);
@@ -28,7 +31,7 @@ public class OlahragaAdapter extends RecyclerView.Adapter<OlahragaAdapter.Olahra
     public OlahragaAdapter(List<OlahragaModel> olahragaList, OnOlahragaClickListener listener, FragmentManager fragmentManager) {
         this.olahragaList = olahragaList;
         this.listener = listener;
-        this.fragmentManager = fragmentManager; // Initialize the FragmentManager
+        this.fragmentManager = fragmentManager;
     }
 
     public void updateList(List<OlahragaModel> newList) {
@@ -39,8 +42,9 @@ public class OlahragaAdapter extends RecyclerView.Adapter<OlahragaAdapter.Olahra
     @NonNull
     @Override
     public OlahragaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Consider changing this to an Olahraga-specific layout if it exists
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_resep, parent, false);
+                .inflate(R.layout.item_olahraga, parent, false);
         return new OlahragaViewHolder(view);
     }
 
@@ -57,43 +61,46 @@ public class OlahragaAdapter extends RecyclerView.Adapter<OlahragaAdapter.Olahra
 
     class OlahragaViewHolder extends RecyclerView.ViewHolder {
         TextView tvNamaOlahraga;
-        TextView tvKalori;
-        Button detailButton;
+        TextView tvDeskripsi;
+        ImageView ivOlahraga;
 
         OlahragaViewHolder(View itemView) {
             super(itemView);
-            tvNamaOlahraga = itemView.findViewById(R.id.tv_nama_menu);
-            tvKalori = itemView.findViewById(R.id.tv_kalori);
-            detailButton = itemView.findViewById(R.id.detail_button);
+            // Ensure these IDs match your actual layout
+            tvNamaOlahraga = itemView.findViewById(R.id.tv_nama_olahraga);
+            tvDeskripsi = itemView.findViewById(R.id.tv_deskripsi_olahraga);
+            ivOlahraga = itemView.findViewById(R.id.iv_olahraga);
         }
 
         void bind(final OlahragaModel olahraga) {
             if (olahraga != null) {
-                tvNamaOlahraga.setText(olahraga.getNamaOlahraga() != null ?
-                        "Olahraga: " + olahraga.getNamaOlahraga() : "Olahraga: -");
-                tvKalori.setText("Kalori: " + olahraga.getKalori());
+                tvNamaOlahraga.setText(olahraga.getNamaOlahraga());
+                tvDeskripsi.setText(olahraga.getDeskripsi());
 
-                detailButton.setOnClickListener(v -> {
-                    // Check if listener is not null (if you still need it for other purposes)
+                // Set image with null check
+                if (olahraga.getGambar() != null && olahraga.getGambar().length > 0) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(olahraga.getGambar(), 0, olahraga.getGambar().length);
+                    ivOlahraga.setImageBitmap(bitmap);
+                } else {
+                    ivOlahraga.setImageResource(R.drawable.button_filter);
+                }
+
+                // OnClickListener to navigate to detail
+                itemView.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onOlahragaClick(olahraga);
                     }
 
-                    // Start a transaction to switch to DetailOlahragaFragment
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                    // Create an instance of DetailOlahragaFragment
                     DetailOlahragaFragment detailFragment = new DetailOlahragaFragment();
 
-                    // Pass data to the new fragment using a Bundle
                     Bundle bundle = new Bundle();
-                    bundle.putParcelable("key", olahraga); // Use putParcelable for Parcelable
+                    bundle.putParcelable("olahraga_key", olahraga);
                     detailFragment.setArguments(bundle);
 
-                    // Replace the current fragment with DetailOlahragaFragment
-                    fragmentTransaction.replace(R.id.fragment_container, detailFragment); // Replace 'fragment_container' with your actual container ID
-                    fragmentTransaction.addToBackStack(null); // Optional: Add the transaction to the back stack
-                    fragmentTransaction.commit(); // Commit the transaction
+                    fragmentTransaction.replace(R.id.fragment_container, detailFragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
                 });
             }
         }

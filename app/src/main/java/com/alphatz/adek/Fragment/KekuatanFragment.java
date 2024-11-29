@@ -3,6 +3,7 @@ package com.alphatz.adek.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,7 +87,7 @@ public class KekuatanFragment extends Fragment {
 
     private void setupButtonListeners() {
         btnKekuatan.setOnClickListener(v -> navigateToFragment(new KekuatanFragment()));
-        btnKelenturan.setOnClickListener(v -> navigateToFragment(new KelenturanFragment()));
+        btnKelenturan.setOnClickListener(v -> navigateToFragment(new KardioFragment()));
         btnFilter.setOnClickListener(v -> navigateToFragment(new OlahragaFragment()));
     }
 
@@ -134,13 +135,41 @@ public class KekuatanFragment extends Fragment {
                         olahragaList.clear();
 
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject olahragaObj = jsonArray.getJSONObject(i);
-                            OlahragaModel olahraga = new OlahragaModel(
-                                    olahragaObj.getString("nama_olahraga"),
-                                    olahragaObj.getInt("kalori")
-                            );
-                            olahragaList.add(olahraga);
+                            try {
+                                JSONObject olahragaObj = jsonArray.getJSONObject(i);
+
+                                // Extract values with null checks and default values
+                                String namaOlahraga = olahragaObj.optString("nama_olahraga", "");
+                                String deskripsi = olahragaObj.optString("deskripsi", "");
+
+                                // Convert base64 image to byte array safely
+                                byte[] imageBytes = null;
+                                if (olahragaObj.has("gambar") && !olahragaObj.isNull("gambar")) {
+                                    try {
+                                        String base64Image = olahragaObj.getString("gambar");
+                                        if (!base64Image.isEmpty()) {
+                                            imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
+                                        }
+                                    } catch (IllegalArgumentException e) {
+                                        // Log error or handle invalid base64 string
+                                        Log.e("OlahragaParser", "Invalid base64 image string", e);
+                                    }
+                                }
+
+                                // Create OlahragaModel with corrected constructor
+                                OlahragaModel olahraga = new OlahragaModel(
+                                        namaOlahraga,
+                                        deskripsi,
+                                        imageBytes
+                                );
+
+                                olahragaList.add(olahraga);
+                            } catch (JSONException e) {
+                                // Log the error and continue processing other items
+                                Log.e("OlahragaParser", "Error parsing JSON object", e);
+                            }
                         }
+
 
                         olahragaAdapter.updateList(olahragaList);
 
@@ -173,7 +202,7 @@ public class KekuatanFragment extends Fragment {
         try {
             String message = String.format("Olahraga : %s\nKalori yang terbakar: %d",
                     olahraga.getNamaOlahraga(),
-                    olahraga.getKalori());
+                    olahraga.getDeskripsi());
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e(TAG, "Error showing detail: " + e.getMessage());

@@ -2,39 +2,58 @@ package com.alphatz.adek.Model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import androidx.annotation.NonNull;
 
 public class OlahragaModel implements Parcelable {
     private String namaOlahraga;
-    private int kalori;
+    private String deskripsi;
+    private byte[] gambar;
 
-    // Constructor
-    public OlahragaModel(String namaOlahraga, int kalori) {
-        this.namaOlahraga = namaOlahraga != null ? namaOlahraga : "";
-        this.kalori = kalori;
+    // Primary constructor
+    public OlahragaModel(@NonNull String namaOlahraga, @NonNull String deskripsi, byte[] gambar) {
+        this.namaOlahraga = namaOlahraga;
+        this.deskripsi = deskripsi;
+        this.gambar = gambar;
     }
 
-    // Getters
+    // Getters with improved null handling
+    @NonNull
     public String getNamaOlahraga() {
         return namaOlahraga != null ? namaOlahraga : "";
     }
 
-    public int getKalori() {
-        return kalori;
+    @NonNull
+    public String getDeskripsi() {
+        return deskripsi != null ? deskripsi : "";
     }
 
-    // Setters
-    public void setNamaOlahraga(String namaOlahraga) {
-        this.namaOlahraga = namaOlahraga != null ? namaOlahraga : "";
+    public byte[] getGambar() {
+        return gambar;
     }
 
-    public void setKalori(int kalori) {
-        this.kalori = kalori;
+    // Setters with null protection
+    public void setNamaOlahraga(@NonNull String namaOlahraga) {
+        this.namaOlahraga = namaOlahraga;
     }
 
-    // Parcelable implementation
+    public void setDeskripsi(@NonNull String deskripsi) {
+        this.deskripsi = deskripsi;
+    }
+
+    public void setGambar(byte[] gambar) {
+        this.gambar = gambar;
+    }
+
+    // Parcelable implementation (remains the same as in original code)
     protected OlahragaModel(Parcel in) {
         namaOlahraga = in.readString();
-        kalori = in.readInt();
+        deskripsi = in.readString();
+
+        int gambarLength = in.readInt();
+        if (gambarLength > 0) {
+            gambar = new byte[gambarLength];
+            in.readByteArray(gambar);
+        }
     }
 
     public static final Creator<OlahragaModel> CREATOR = new Creator<OlahragaModel>() {
@@ -57,6 +76,13 @@ public class OlahragaModel implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(namaOlahraga);
-        dest.writeInt(kalori);
+        dest.writeString(deskripsi);
+
+        if (gambar != null) {
+            dest.writeInt(gambar.length);
+            dest.writeByteArray(gambar);
+        } else {
+            dest.writeInt(0);
+        }
     }
 }

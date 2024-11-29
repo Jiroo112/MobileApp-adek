@@ -3,6 +3,7 @@ package com.alphatz.adek.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,62 +49,37 @@ public class ResepFragment extends Fragment {
                              Bundle savedInstanceState) {
         try {
             View view = inflater.inflate(R.layout.fragment_resep, container, false);
-            initializeViews(view);
-            setupRecyclerView();
-            setupVolley();
-            setupSearch();
-            setupButtonListeners();
-            fetchMenuMakanan();
-            return view;
-        } catch (Exception e) {
-            Log.e(TAG, "Error in onCreateView: " + e.getMessage());
-            return null;
-        }
-    }
 
-    private void initializeViews(View view) {
-        try {
+            // Initialize views
             recyclerViewMakanan = view.findViewById(R.id.recyclerView);
             btnMinumanSehat = view.findViewById(R.id.btn_minuman_sehat);
             btnDessert = view.findViewById(R.id.btn_desert);
             btnMakananBerat = view.findViewById(R.id.btn_makanan_sehat);
             progressBar = view.findViewById(R.id.progressBar);
             searchField = view.findViewById(R.id.searchField);
-        } catch (Exception e) {
-            Log.e(TAG, "Error initializing views: " + e.getMessage());
-            throw e;
-        }
-    }
 
-    // In ResepFragment.java
-    private void setupRecyclerView() {
-        try {
+            // Setup RecyclerView
             recyclerViewMakanan.setLayoutManager(new LinearLayoutManager(getContext()));
-            makananAdapter = new ResepAdapter(new ArrayList<>(), new ResepAdapter.OnMakananClickListener() {
+            makananAdapter = new ResepAdapter(menuList, new ResepAdapter.OnMakananClickListener() {
                 @Override
                 public void onMakananClick(ResepModel menu) {
                     if (menu != null) {
-                        showDetailMakanan(menu);
+                        navigateToDetail(menu);
                     }
                 }
-
-                @Override
-                public void onDetailButtonClick(ResepModel menu) {
-                    if (menu != null) {
-                        // Navigate to detail fragment
-                        DetailResepFragment fragmentDetailResep = new DetailResepFragment();
-                        // You might want to pass menu data to the fragment using Bundle
-                        Bundle args = new Bundle();
-                        args.putParcelable("menu", menu);  // Assuming ResepModel is Parcelable
-                        fragmentDetailResep.setArguments(args);
-
-                        safeNavigateToFragment(fragmentDetailResep);
-                    }
-                }
-            });
+            }, getParentFragmentManager()); // Passing FragmentManager
             recyclerViewMakanan.setAdapter(makananAdapter);
+
+            // Setup functionality
+            setupVolley();
+            setupSearch();
+            setupButtonListeners();
+            fetchMenuMakanan();
+
+            return view;
         } catch (Exception e) {
-            Log.e(TAG, "Error setting up RecyclerView: " + e.getMessage());
+            Log.e(TAG, "Error in onCreateView: " + e.getMessage());
+            return null;
         }
     }
 
@@ -117,9 +93,9 @@ public class ResepFragment extends Fragment {
 
     private void setupButtonListeners() {
         try {
-            btnMinumanSehat.setOnClickListener(v -> safeNavigateToFragment(new MinumanSehatFragment()));
-            btnMakananBerat.setOnClickListener(v -> safeNavigateToFragment(new MakananBeratFragment()));
-            btnDessert.setOnClickListener(v -> safeNavigateToFragment(new DessertFragment()));
+            btnMinumanSehat.setOnClickListener(v -> navigateToFragment(new MinumanSehatFragment()));
+            btnMakananBerat.setOnClickListener(v -> navigateToFragment(new MakananBeratFragment()));
+            btnDessert.setOnClickListener(v -> navigateToFragment(new DessertFragment()));
         } catch (Exception e) {
             Log.e(TAG, "Error setting up button listeners: " + e.getMessage());
         }
@@ -184,17 +160,23 @@ public class ResepFragment extends Fragment {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject makananObj = jsonArray.getJSONObject(i);
                             if (makananObj != null) {
+                                byte[] imageBytes = null;
+                                if (makananObj.has("gambar") && !makananObj.isNull("gambar")) {
+                                    String base64Image = makananObj.getString("gambar");
+                                    imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
+                                }
+
                                 ResepModel makanan = new ResepModel(
+                                        makananObj.optInt("id", 0),
                                         makananObj.optString("nama_menu", ""),
-                                        makananObj.optInt("kalori", 0)
+                                        makananObj.optInt("kalori", 0),
+                                        imageBytes
                                 );
                                 menuList.add(makanan);
                             }
                         }
 
-                        if (makananAdapter != null) {
-                            makananAdapter.updateList(menuList);
-                        }
+                        makananAdapter.updateList(menuList);
 
                         if (menuList.isEmpty()) {
                             showError("Tidak ada data makanan");
@@ -204,17 +186,13 @@ public class ResepFragment extends Fragment {
                         Log.e(TAG, "Error parsing JSON: " + e.getMessage());
                         showError("Gagal memproses data");
                     } finally {
-                        if (progressBar != null) {
-                            progressBar.setVisibility(View.GONE);
-                        }
+                        progressBar.setVisibility(View.GONE);
                     }
                 },
                 error -> {
                     Log.e(TAG, "Volley Error: " + (error.getMessage() != null ? error.getMessage() : "Unknown error"));
                     showError("Gagal mengambil data makanan");
-                    if (progressBar != null) {
-                        progressBar.setVisibility(View.GONE);
-                    }
+                    progressBar.setVisibility(View.GONE);
                 });
 
         request.setRetryPolicy(new DefaultRetryPolicy(
@@ -225,52 +203,39 @@ public class ResepFragment extends Fragment {
         requestQueue.add(request);
     }
 
-    private void showDetailMakanan(ResepModel menu) {
-        try {
-            if (getContext() == null || menu == null) return;
+    private void navigateToDetail(ResepModel menu) {
+        if (menu == null) return;
 
-            String message = String.format("Menu: %s\nKalori: %d",
-                    menu.getNamaMenu(),
-                    menu.getKalori());
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Log.e(TAG, "Error showing detail: " + e.getMessage());
-        }
+        DetailResepFragment detailFragment = new DetailResepFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("resep_key", menu); // Assuming ResepModel implements Parcelable
+        detailFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, detailFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
-    private void safeNavigateToFragment(Fragment fragment) {
-        try {
-            if (getActivity() == null) return;
-
-            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
-        } catch (Exception e) {
-            Log.e(TAG, "Error navigating to fragment: " + e.getMessage());
-        }
+    private void navigateToFragment(Fragment fragment) {
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void showError(String message) {
-        try {
-            if (getContext() != null) {
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-            }
-            Log.e(TAG, "Error: " + message);
-        } catch (Exception e) {
-            Log.e(TAG, "Error showing error message: " + e.getMessage());
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
+        Log.e(TAG, "Error: " + message);
     }
 
     @Override
     public void onDestroy() {
-        try {
-            super.onDestroy();
-            if (getActivity() instanceof Dashboard) {
-                ((Dashboard) getActivity()).showBottomNavigation();
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error in onDestroy: " + e.getMessage());
+        super.onDestroy();
+        if (getActivity() instanceof Dashboard) {
+            ((Dashboard) getActivity()).showBottomNavigation();
         }
     }
 }

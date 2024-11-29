@@ -21,14 +21,14 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_nama_menu"
+                android:id="@+id/tv_nama_olahraga"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/tv_kalori"
+                android:id="@+id/tv_deskripsi_olahraga"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -36,7 +36,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/iv_menu"
+            android:id="@+id/iv_olahraga"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:scaleType="centerCrop"

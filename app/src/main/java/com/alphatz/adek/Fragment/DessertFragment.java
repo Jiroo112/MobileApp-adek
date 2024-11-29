@@ -3,6 +3,7 @@ package com.alphatz.adek.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DessertFragment extends Fragment {
-    private static final String TAG = "MakananBeratFragment";
+    private static final String TAG = "DessertFragment";
     private RequestQueue requestQueue;
     private List<ResepModel> menuList = new ArrayList<>();
     private ResepAdapter makananAdapter;
@@ -57,37 +58,16 @@ public class DessertFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         searchField = view.findViewById(R.id.searchField);
 
-        //rcv
+        // RecyclerView setup
         recyclerViewMakanan.setLayoutManager(new LinearLayoutManager(getContext()));
         makananAdapter = new ResepAdapter(menuList, new ResepAdapter.OnMakananClickListener() {
             @Override
             public void onMakananClick(ResepModel menu) {
                 if (menu != null) {
-                    showDetailMakanan(menu);
+                    navigateToDetail(menu);
                 }
             }
-
-            @Override
-            public void onDetailButtonClick(ResepModel menu) {
-                if (menu != null) {
-                    DetailResepFragment fragmentDetailResep = new DetailResepFragment();
-
-                    // Optional: Pass data to detail fragment
-                    Bundle args = new Bundle();
-                    args.putString("nama_menu", menu.getNamaMenu());
-                    args.putInt("kalori", menu.getKalori());
-                    fragmentDetailResep.setArguments(args);
-
-                    // Navigate to the detail fragment
-                    if (getParentFragmentManager() != null) {
-                        getParentFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, fragmentDetailResep)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                }
-            }
-        });
+        }, getParentFragmentManager()); // Passing FragmentManager
         recyclerViewMakanan.setAdapter(makananAdapter);
 
         requestQueue = Volley.newRequestQueue(requireContext());
@@ -149,11 +129,22 @@ public class DessertFragment extends Fragment {
 
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject makananObj = jsonArray.getJSONObject(i);
-                            ResepModel makanan = new ResepModel(
-                                    makananObj.getString("nama_menu"),
-                                    makananObj.getInt("kalori")
-                            );
-                            menuList.add(makanan);
+                            if (makananObj != null) {
+                                // Convert base64 image to byte array
+                                byte[] imageBytes = null;
+                                if (makananObj.has("gambar") && !makananObj.isNull("gambar")) {
+                                    String base64Image = makananObj.getString("gambar");
+                                    imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
+                                }
+
+                                ResepModel makanan = new ResepModel(
+                                        makananObj.optInt("id", 0),
+                                        makananObj.optString("nama_menu", ""),
+                                        makananObj.optInt("kalori", 0),
+                                        imageBytes
+                                );
+                                menuList.add(makanan);
+                            }
                         }
 
                         makananAdapter.updateList(menuList);
@@ -175,23 +166,22 @@ public class DessertFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                 });
 
-        request.setRetryPolicy(new DefaultRetryPolicy(
-                30000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
         requestQueue.add(request);
     }
 
-    private void showDetailMakanan(ResepModel menu) {
-        try {
-            String message = String.format("Menu: %s\nKalori: %d",
-                    menu.getNamaMenu(),
-                    menu.getKalori());
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Log.e(TAG, "Error showing detail: " + e.getMessage());
-        }
+    private void navigateToDetail(ResepModel menu) {
+        DetailResepFragment detailFragment = new DetailResepFragment();
+
+        // Pass data to the detail fragment
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("resep_key", menu); // Assuming ResepModel implements Parcelable
+        detailFragment.setArguments(bundle);
+
+        // Navigate to the detail fragment
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, detailFragment); // Replace with your container ID
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void navigateToFragment(Fragment fragment) {
@@ -207,10 +197,11 @@ public class DessertFragment extends Fragment {
         }
         Log.e(TAG, "Error: " + message);
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // nampilin lagi bottom navigation waktu fragment nya di destroy
+        // Show bottom navigation when the fragment is destroyed
         if (getActivity() instanceof Dashboard) {
             ((Dashboard) getActivity()).showBottomNavigation();
         }

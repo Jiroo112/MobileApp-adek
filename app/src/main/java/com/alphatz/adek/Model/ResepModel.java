@@ -1,92 +1,77 @@
-package com.alphatz.adek.Model;
+    package com.alphatz.adek.Model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+    import android.os.Parcel;
+    import android.os.Parcelable;
 
-import com.alphatz.adek.R;
+    public class ResepModel implements Parcelable {
+        private int id;
+        private String namaMenu;
+        private int kalori;
+        private byte[] gambar; // For storing image as byte array
 
-public class ResepModel implements Parcelable {
-    private String namaMenu;
-    private String deskripsi; // Tambahkan deskripsi
-    private int kalori;
-    private int imageResId; // Tambahkan ID sumber gambar
+        public ResepModel() {}
 
-    // Constructor dengan semua parameter
-    public ResepModel(String namaMenu, String deskripsi, int kalori, int imageResId) {
-        this.namaMenu = namaMenu != null ? namaMenu : "";
-        this.deskripsi = deskripsi != null ? deskripsi : ""; // Inisialisasi deskripsi
-        this.kalori = kalori;
-        this.imageResId = imageResId; // Inisialisasi ID gambar
-    }
+        public ResepModel(int id, String namaMenu, int kalori, byte[] gambar) {
+            this.id = id;
+            this.namaMenu = namaMenu;
+            this.kalori = kalori;
+            this.gambar = gambar;
+        }
 
-    // Constructor dengan dua parameter
-    public ResepModel(String namaMenu, int kalori) {
-        this(namaMenu, "", kalori, R.drawable.default_image); // Ganti R.drawable.default_image dengan ID gambar default
-    }
+        // Getters and Setters
+        public int getId() { return id; }
+        public void setId(int id) { this.id = id; }
 
-    // Getters and Setters
-    public String getNamaMenu() {
-        return namaMenu != null ? namaMenu : "";
-    }
+        public String getNamaMenu() { return namaMenu; }
+        public void setNamaMenu(String namaMenu) { this.namaMenu = namaMenu; }
 
-    public void setNamaMenu(String namaMenu) {
-        this.namaMenu = namaMenu != null ? namaMenu : "";
-    }
+        public int getKalori() { return kalori; }
+        public void setKalori(int kalori) { this.kalori = kalori; }
 
-    public String getDeskripsi() {
-        return deskripsi != null ? deskripsi : ""; // Tambahkan getter untuk deskripsi
-    }
+        public byte[] getGambar() { return gambar; }
+        public void setGambar(byte[] gambar) { this.gambar = gambar; }
 
-    public void setDeskripsi(String deskripsi) {
-        this.deskripsi = deskripsi != null ? deskripsi : ""; // Tambahkan setter untuk deskripsi
-    }
+        // Parcelable implementation
+        protected ResepModel(Parcel in) {
+            id = in.readInt();
+            namaMenu = in.readString();
+            kalori = in.readInt();
 
-    public int getKalori() {
-        return kalori;
-    }
+            int gambarLength = in.readInt();
+            if (gambarLength > 0) {
+                gambar = new byte[gambarLength];
+                in.readByteArray(gambar);
+            }
+        }
 
-    public void setKalori(int kalori) {
-        this.kalori = kalori;
-    }
+        public static final Creator<ResepModel> CREATOR = new Creator<ResepModel>() {
+            @Override
+            public ResepModel createFromParcel(Parcel in) {
+                return new ResepModel(in);
+            }
 
-    public int getImageResId() {
-        return imageResId; // Tambahkan getter untuk ID gambar
-    }
+            @Override
+            public ResepModel[] newArray(int size) {
+                return new ResepModel[size];
+            }
+        };
 
-    public void setImageResId(int imageResId) {
-        this.imageResId = imageResId; // Tambahkan setter untuk ID gambar
-    }
-
-    // Parcelable implementation
-    protected ResepModel(Parcel in) {
-        namaMenu = in.readString();
-        deskripsi = in.readString(); // Baca deskripsi dari Parcel
-        kalori = in.readInt();
-        imageResId = in.readInt(); // Baca ID gambar dari Parcel
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(namaMenu);
-        dest.writeString(deskripsi); // Tulis deskripsi ke Parcel
-        dest.writeInt(kalori);
-        dest.writeInt(imageResId); // Tulis ID gambar ke Parcel
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<ResepModel> CREATOR = new Creator<ResepModel>() {
         @Override
-        public ResepModel createFromParcel(Parcel in) {
-            return new ResepModel(in);
+        public int describeContents() {
+            return 0;
         }
 
         @Override
-        public ResepModel[] newArray(int size) {
-            return new ResepModel[size];
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(id);
+            dest.writeString(namaMenu);
+            dest.writeInt(kalori);
+
+            if (gambar != null) {
+                dest.writeInt(gambar.length);
+                dest.writeByteArray(gambar);
+            } else {
+                dest.writeInt(0);
+            }
         }
-    };
-}
+    }

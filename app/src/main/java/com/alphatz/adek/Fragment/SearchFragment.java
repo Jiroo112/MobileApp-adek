@@ -138,7 +138,7 @@ public class SearchFragment extends Fragment {
         }
 
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new KelenturanFragment());
+        transaction.replace(R.id.fragment_container, new KardioFragment());
         transaction.addToBackStack("SearchFragment");
         transaction.commit();
     }

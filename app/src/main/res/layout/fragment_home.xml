@@ -182,7 +182,7 @@
 
         <!-- Kartu Protein -->
         <androidx.cardview.widget.CardView
-            android:layout_width="120dp"
+            android:layout_width="110dp"
             android:layout_height="120dp"
             app:cardCornerRadius="12dp"
             android:layout_margin="8dp"
@@ -223,7 +223,7 @@
 
         <!-- Kartu Air -->
         <androidx.cardview.widget.CardView
-            android:layout_width="230dp"
+            android:layout_width="240dp"
             android:layout_height="120dp"
             app:cardCornerRadius="12dp"
             android:layout_margin="8dp"
@@ -275,7 +275,7 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="16dp"
             android:layout_gravity="center"
-            android:layout_marginTop="185dp">
+            android:layout_marginTop="210dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -287,10 +287,11 @@
                 <TextView
                     android:id="@+id/tvTipeDiet"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:text="Tipe Diet"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:clickable="true"/>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
