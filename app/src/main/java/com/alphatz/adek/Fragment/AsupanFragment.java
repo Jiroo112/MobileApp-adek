@@ -368,7 +368,6 @@ public class AsupanFragment extends Fragment {
 
                         if (response.getBoolean("success")) {
                             JSONObject data = response.getJSONObject("data");
-                            // Ubah nama field sesuai dengan response JSON
                             int totalJumlah = data.getInt("jumlah_menu");
                             int totalKalori = data.getInt("total_kalori");
 
@@ -400,7 +399,7 @@ public class AsupanFragment extends Fragment {
         );
 
         request.setRetryPolicy(new DefaultRetryPolicy(
-                30000, // 30 detik timeout
+                30000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         ));

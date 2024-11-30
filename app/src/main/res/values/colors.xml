@@ -19,4 +19,5 @@
     <color name="dot_orange">#FFA500</color>
     <color name="dot_dark_orange">#FF8C00</color>
     <color name="dot_red">#FF4500</color>
+    <color name="warning_red">#FF0000</color>
 </resources>

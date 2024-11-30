@@ -18,26 +18,49 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.alphatz.adek.Activity.Dashboard;
+import com.alphatz.adek.Adapter.ArtikelAdapter;
+import com.alphatz.adek.Model.ArtikelModel;
 import com.alphatz.adek.R;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
-public class SearchFragment extends Fragment {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class SearchFragment extends Fragment implements ArtikelAdapter.OnArtikelClickListener {
+    // UI Components
     private ImageView makananBerat, minumanSehat, desert;
     private ImageView kelenturan, kekuatan, interval;
     private ImageView tampilkanLebih;
     private ImageView cardViewImage1, cardViewImage2;
     private TextView selengkapnya_resep, selengkapnya_olahraga;
 
+    // Artikel RecyclerView Components
+    private RecyclerView recyclerViewArtikel;
+    private ArtikelAdapter artikelAdapter;
+    private List<ArtikelModel> artikelList;
+
+    // Image Rotation
     private Handler handler = new Handler();
-    private final int[] artikelImages = {R.drawable.gambar_kosong, R.drawable.gambar_kosong}; // Array gambar untuk artikel
+    private final int[] artikelImages = {R.drawable.gambar_kosong, R.drawable.gambar_kosong};
     private int currentImageIndex = 0;
 
-    private final int[] cardViewImages = {R.drawable.sandwich_bayam, R.drawable.dada_ayam}; // Array gambar untuk CardView
+    private final int[] cardViewImages = {R.drawable.sandwich_bayam, R.drawable.dada_ayam};
     private int currentCardViewImageIndex = 0;
     private boolean isImage1Visible = true;
 
     public SearchFragment() {
+        // Required empty public constructor
     }
 
     @Override
@@ -50,7 +73,24 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Inisialisasi view
+        // Initialize all views
+        initializeViews(view);
+
+        // Setup click listeners
+        setupClickListeners();
+
+        // Setup artikel recycler view
+        setupArtikelRecyclerView();
+
+        // Fetch artikel data
+        fetchArtikelData();
+
+        // Start image rotations
+        startCardViewImageRotation();
+    }
+
+    private void initializeViews(View view) {
+        // Initialize all UI components (similar to previous implementation)
         makananBerat = view.findViewById(R.id.makanan_berat);
         minumanSehat = view.findViewById(R.id.minuman_sehat);
         selengkapnya_olahraga = view.findViewById(R.id.selengkapnya_olahraga);
@@ -59,63 +99,89 @@ public class SearchFragment extends Fragment {
         kelenturan = view.findViewById(R.id.kardio);
         kekuatan = view.findViewById(R.id.kekuatan);
         interval = view.findViewById(R.id.interval);
-        tampilkanLebih = view.findViewById(R.id.tampilkan_lebih);
+//        tampilkanLebih = view.findViewById(R.id.tampilkan_lebih);
         cardViewImage1 = view.findViewById(R.id.imageView1);
         cardViewImage2 = view.findViewById(R.id.imageView2);
 
+        // Artikel RecyclerView
+        recyclerViewArtikel = view.findViewById(R.id.recyclerViewArtikel);
+    }
+
+    private void setupClickListeners() {
         makananBerat.setOnClickListener(v -> openMakananBeratFragment());
         minumanSehat.setOnClickListener(v -> openMinumanSehatFragment());
         desert.setOnClickListener(v -> openDessertFragment());
         kelenturan.setOnClickListener(v -> openKelenturanFragment());
         kekuatan.setOnClickListener(v -> openKekuatanFragment());
-//        interval.setOnClickListener(v -> openIntervalFragment());
 
-        TextView textSelengkapnyaResep = view.findViewById(R.id.selengkapnya_resep);
-        TextView textSelengkapnyaOlahraga = view.findViewById(R.id.selengkapnya_olahraga);
-        textSelengkapnyaResep.setOnClickListener(v -> openResepFragment());
-        textSelengkapnyaOlahraga.setOnClickListener(v -> openOlahragaFragment());
-
-        setupArtikelInfo(view, R.id.artikel1, "Meningkatkan Laju Metabolisme", "Kesehatan", "60", "120");
-        setupArtikelInfo(view, R.id.artikel2, "Panduan Makanan Sehat", "Gaya Hidup", "45", "100");
-
-        startCardViewImageRotation();
+        selengkapnya_resep.setOnClickListener(v -> openResepFragment());
+        selengkapnya_olahraga.setOnClickListener(v -> openOlahragaFragment());
     }
 
-    // method untuk membuka fragment tapi ngilangin nav bar yg ada dibawah ( nge hide )
-    private void openMakananBeratFragment() {
-        if (getActivity() instanceof Dashboard) {
-            ((Dashboard) getActivity()).hideBottomNavigation(); //hide
-        }
+    private void setupArtikelRecyclerView() {
+        recyclerViewArtikel.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
+        );
 
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new MakananBeratFragment());
-        transaction.addToBackStack("SearchFragment");
-        transaction.commit();
+        artikelList = new ArrayList<>();
+        artikelAdapter = new ArtikelAdapter(
+                artikelList,
+                this,
+                getParentFragmentManager()
+        );
+
+        recyclerViewArtikel.setAdapter(artikelAdapter);
     }
 
-    private void openMinumanSehatFragment() {
-        if (getActivity() instanceof Dashboard) {
-            ((Dashboard) getActivity()).hideBottomNavigation(); // Sembunyikan nav bottom
-        }
+    private void fetchArtikelData() {
+        String url = "http://10.0.2.2/ads_mysql/search/get_artikel.php";
 
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new MinumanSehatFragment());
-        transaction.addToBackStack("SearchFragment");
-        transaction.commit();
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        if ("success".equals(jsonResponse.getString("status"))) {
+                            JSONArray artikelArray = jsonResponse.getJSONArray("data");
+
+                            for (int i = 0; i < artikelArray.length(); i++) {
+                                JSONObject artikel = artikelArray.getJSONObject(i);
+
+                                String judul = artikel.getString("judulArtikel");
+                                String kategori = artikel.getString("kategori");
+
+                                byte[] gambarBytes = artikel.isNull("gambar")
+                                        ? null
+                                        : android.util.Base64.decode(
+                                        artikel.getString("gambar"),
+                                        android.util.Base64.DEFAULT
+                                );
+
+                                ArtikelModel artikelModel = new ArtikelModel(judul, kategori, gambarBytes);
+                                artikelList.add(artikelModel);
+                            }
+
+                            artikelAdapter.notifyDataSetChanged();
+                        }
+                    } catch (JSONException e) {
+                        Log.e("SearchFragment", "JSON Parsing Error: " + e.getMessage());
+                    }
+                },
+                error -> {
+                    Log.e("SearchFragment", "Volley Error: " + error.toString());
+                    Toast.makeText(getContext(), "Error fetching articles", Toast.LENGTH_SHORT).show();
+                }
+        );
+
+        RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
+        requestQueue.add(stringRequest);
     }
 
-    private void openDessertFragment() {
-        if (getActivity() instanceof Dashboard) {
-            ((Dashboard) getActivity()).hideBottomNavigation(); // Sembunyikan nav bottom
-        }
-
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new DessertFragment());
-        transaction.addToBackStack("SearchFragment");
-        transaction.commit();
+    @Override
+    public void onArtikelClick(ArtikelModel artikel) {
+        // Optional additional handling if needed
     }
 
-//    private void openKardioFragment(){
+    //    private void openKardioFragment(){
 //        if (getActivity() instanceof  Dashboard){
 //            ((Dashboard) getActivity()).hideBottomNavigation();
 //        }
@@ -178,33 +244,40 @@ public class SearchFragment extends Fragment {
         Toast.makeText(getActivity(), roastMessage, Toast.LENGTH_SHORT).show();
     }
 
-    private void setupArtikelInfo(View parentView, int artikelLayoutId, String judul, String kategori, String likeCount, String viewCount) {
-        View artikelView = parentView.findViewById(artikelLayoutId);
+    // method untuk membuka fragment tapi ngilangin nav bar yg ada dibawah ( nge hide )
+    private void openMakananBeratFragment() {
+        if (getActivity() instanceof Dashboard) {
+            ((Dashboard) getActivity()).hideBottomNavigation(); //hide
+        }
 
-        TextView judulArtikel = artikelView.findViewById(R.id.judulArtikel);
-        ImageView gambarArtikel = artikelView.findViewById(R.id.gambarArtikel);
-        TextView kategoriArtikel = artikelView.findViewById(R.id.kategoriArtikel);
-        TextView likeCountArtikel = artikelView.findViewById(R.id.likeCountArtikel);
-        TextView viewCountArtikel = artikelView.findViewById(R.id.viewCountArtikel);
-
-        judulArtikel.setText(judul);
-        kategoriArtikel.setText(kategori);
-        likeCountArtikel.setText(likeCount);
-        viewCountArtikel.setText(viewCount);
-
-        gambarArtikel.setImageResource(artikelImages[currentImageIndex]);
-
-        Runnable imageChanger = new Runnable() {
-            @Override
-            public void run() {
-                currentImageIndex = (currentImageIndex + 1) % artikelImages.length;
-                gambarArtikel.setImageResource(artikelImages[currentImageIndex]);
-                handler.postDelayed(this, 5000);
-            }
-        };
-
-        handler.post(imageChanger);
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new MakananBeratFragment());
+        transaction.addToBackStack("SearchFragment");
+        transaction.commit();
     }
+
+    private void openMinumanSehatFragment() {
+        if (getActivity() instanceof Dashboard) {
+            ((Dashboard) getActivity()).hideBottomNavigation(); // Sembunyikan nav bottom
+        }
+
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new MinumanSehatFragment());
+        transaction.addToBackStack("SearchFragment");
+        transaction.commit();
+    }
+
+    private void openDessertFragment() {
+        if (getActivity() instanceof Dashboard) {
+            ((Dashboard) getActivity()).hideBottomNavigation(); // Sembunyikan nav bottom
+        }
+
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new DessertFragment());
+        transaction.addToBackStack("SearchFragment");
+        transaction.commit();
+    }
+
 
     private void startCardViewImageRotation() {
         Runnable imageChanger = new Runnable() {

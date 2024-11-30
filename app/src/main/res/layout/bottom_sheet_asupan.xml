@@ -1,82 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:background="#F5F5F5"
     android:padding="16dp">
-
-    <TextView
-        android:id="@+id/text_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
+        android:background="@drawable/bg_card"
+        android:padding="16dp"
+        android:elevation="4dp"
         android:layout_marginBottom="16dp">
 
+        <!-- Title Section -->
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Porsi"
-            android:textStyle="bold"
-            android:layout_gravity="center_vertical"/>
-
-        <EditText
-            android:id="@+id/edit_porsi"
+            android:id="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:inputType="number"
-            android:minHeight="48dp"/>
+            android:textSize="22sp"
+            android:textColor="#333333"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp"
+            android:text="Judul Menu"/>
+
+        <!-- Porsi Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Porsi"
+                android:textSize="16sp"
+                android:textColor="#555555"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="sans-serif-medium"/>
+
+            <EditText
+                android:id="@+id/edit_porsi"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_edittext"
+                android:hint="Masukkan porsi"
+                android:padding="12dp"
+                android:inputType="number"/>
+        </LinearLayout>
+
+        <!-- Nutrisi Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nutrisi"
+            android:textSize="18sp"
+            android:textColor="#333333"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Nutrisi Details -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/text_kalori"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Kalori: 200 kkal"
+                android:textSize="16sp"
+                android:textColor="#555555"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/text_protein"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Protein: 10 g"
+                android:textSize="16sp"
+                android:textColor="#555555"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/text_karbo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Karbohidrat: 30 g"
+                android:textSize="16sp"
+                android:textColor="#555555"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/text_lemak"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lemak: 5 g"
+                android:textSize="16sp"
+                android:textColor="#555555"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/text_gula"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gula: 12 g"
+                android:textSize="16sp"
+                android:textColor="#555555"/>
+        </LinearLayout>
+
+        <!-- Button -->
+        <Button
+            android:id="@+id/button_tambahkan"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:backgroundTint="#4CAF50"
+            android:text="TAMBAHKAN"
+            android:textAllCaps="true"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"/>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Nutrisi"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp"/>
-
-    <TextView
-        android:id="@+id/text_kalori"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"/>
-
-    <TextView
-        android:id="@+id/text_protein"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"/>
-
-    <TextView
-        android:id="@+id/text_karbo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"/>
-
-    <TextView
-        android:id="@+id/text_lemak"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"/>
-
-    <TextView
-        android:id="@+id/text_gula"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"/>
-
-    <Button
-        android:id="@+id/button_tambahkan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_filter"
-        android:text="TAMBAHKAN"/>
-
-</LinearLayout>
+</ScrollView>

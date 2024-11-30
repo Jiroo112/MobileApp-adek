@@ -2,6 +2,7 @@ package com.alphatz.adek.Fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.alphatz.adek.R;
@@ -134,11 +136,11 @@ public class HomeFragment extends Fragment {
 
                             // Update UI
                             requireActivity().runOnUiThread(() -> {
-                                persentaseProtein.setText(String.format("%.1f%%", proteinPercentage));
-                                persentaseLemak.setText(String.format("%.1f%%", lemakPercentage));
-                                persentaseKarbohidrat.setText(String.format("%.1f%%", karbohidratPercentage));
-                                persentaseGula.setText(String.format("%.1f%%", gulaPercentage));
-                                persentaseAir.setText(String.format("%.1f%%", airPercentage));
+                                updateNutrientTextView(persentaseProtein, proteinPercentage);
+                                updateNutrientTextView(persentaseLemak, lemakPercentage);
+                                updateNutrientTextView(persentaseKarbohidrat, karbohidratPercentage);
+                                updateNutrientTextView(persentaseGula, gulaPercentage);
+                                updateNutrientTextView(persentaseAir, airPercentage);
                             });
 
                         } else {
@@ -162,6 +164,34 @@ public class HomeFragment extends Fragment {
         ));
 
         requestQueue.add(request);
+    }
+
+    private void updateNutrientTextView(TextView textView, double percentage) {
+        textView.setText(String.format("%.1f%%", percentage));
+
+        if (percentage > 100) {
+            // Exceeded target
+            textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.warning_red));
+
+            // Create a drawable with a warning icon (circle with exclamation mark)
+            Drawable warningIcon = ContextCompat.getDrawable(requireContext(), R.drawable.warning_icon);
+            if (warningIcon != null) {
+                // Apply tint if needed (optional, since the icon is already red)
+                warningIcon.setTint(ContextCompat.getColor(requireContext(), R.color.warning_red));
+
+                // Adjust the size of the icon to match the TextView's line height
+                int iconSize = textView.getLineHeight();
+                warningIcon.setBounds(0, 0, iconSize, iconSize);
+
+                // Set the warning icon to the end of the TextView
+                textView.setCompoundDrawables(null, null, warningIcon, null);
+                textView.setCompoundDrawablePadding(8); // Padding between text and icon
+            }
+        } else {
+            // Within target
+            textView.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black));
+            textView.setCompoundDrawables(null, null, null, null);
+        }
     }
 
     private double hitungKaloriHarian(String tipeDiet, double beratBadan, double tinggiBadan, double bmi) {
