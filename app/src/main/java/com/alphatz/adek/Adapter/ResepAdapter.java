@@ -1,5 +1,6 @@
 package com.alphatz.adek.Adapter;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alphatz.adek.Activity.Dashboard;
 import com.alphatz.adek.Model.ResepModel;
 import com.alphatz.adek.R;
 import com.alphatz.adek.Fragment.DetailResepFragment; // Import the fragment class
@@ -62,6 +64,7 @@ public class ResepAdapter extends RecyclerView.Adapter<ResepAdapter.ResepViewHol
         TextView tvNamaMenu, tvKalori;
         ImageView ivMenu;
 
+        // Add constructor to initialize the views
         ResepViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNamaMenu = itemView.findViewById(R.id.tv_nama_menu);
@@ -74,29 +77,33 @@ public class ResepAdapter extends RecyclerView.Adapter<ResepAdapter.ResepViewHol
             tvKalori.setText(String.format("%d Kalori", menu.getKalori()));
 
             // Set image if available
-            if (menu.getGambar() != null) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(menu.getGambar(), 0, menu.getGambar().length);
+            if (menu.getImageBytes() != null) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(menu.getImageBytes(), 0, menu.getImageBytes().length);
                 ivMenu.setImageBitmap(bitmap);
             } else {
                 ivMenu.setImageResource(R.drawable.button_filter); // Default image
             }
 
-            // Set click listener for fragment transaction
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onMakananClick(menu);
                 }
 
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                DetailResepFragment detailFragment = new DetailResepFragment();
+                // Ensure the RecyclerView context is correct
+                Context context = itemView.getContext();
+                if (context instanceof Dashboard) {
+                    Dashboard activity = (Dashboard) context;
+                    FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
 
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("resep_key", menu); // Pass the selected ResepModel
-                detailFragment.setArguments(bundle);
+                    DetailResepFragment detailFragment = new DetailResepFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("resep_key", menu);
+                    detailFragment.setArguments(bundle);
 
-                fragmentTransaction.replace(R.id.fragment_container, detailFragment); // Replace with your fragment container ID
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                    fragmentTransaction.replace(R.id.fragment_container, detailFragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
             });
         }
     }

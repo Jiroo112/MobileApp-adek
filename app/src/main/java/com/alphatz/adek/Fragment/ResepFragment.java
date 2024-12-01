@@ -1,5 +1,7 @@
 package com.alphatz.adek.Fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,10 +41,19 @@ public class ResepFragment extends Fragment {
     private RequestQueue requestQueue;
     private List<ResepModel> menuList = new ArrayList<>();
     private ResepAdapter makananAdapter;
+    private static final String ARG_NAMA_MENU = "nama_menu";
     private ProgressBar progressBar;
     private RecyclerView recyclerViewMakanan;
     private EditText searchField;
     private Button btnMinumanSehat, btnDessert, btnMakananBerat;
+
+    public static ResepFragment newInstance (String namaMenu){
+        ResepFragment fragment = new ResepFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_NAMA_MENU, namaMenu);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -208,7 +219,7 @@ public class ResepFragment extends Fragment {
 
         DetailResepFragment detailFragment = new DetailResepFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("resep_key", menu); // Assuming ResepModel implements Parcelable
+        bundle.putParcelable("resep_key", menu);
         detailFragment.setArguments(bundle);
 
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
@@ -216,6 +227,7 @@ public class ResepFragment extends Fragment {
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
 
     private void navigateToFragment(Fragment fragment) {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
