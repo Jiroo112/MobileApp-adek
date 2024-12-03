@@ -2,6 +2,8 @@ package com.alphatz.adek.Fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,8 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -152,14 +158,14 @@ public class ResepFragment extends Fragment {
     }
 
     private void fetchMenuMakanan() {
-        if (getContext() == null) return;
-
         String url = "http://10.0.2.2/ads_mysql/search/get_menu.php";
         progressBar.setVisibility(View.VISIBLE);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
+                        Log.d(TAG, "Full JSON Response: " + response.toString());
+
                         if (response == null || !response.has("data")) {
                             showError("Format response tidak valid");
                             return;
@@ -170,20 +176,29 @@ public class ResepFragment extends Fragment {
 
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject makananObj = jsonArray.getJSONObject(i);
-                            if (makananObj != null) {
-                                byte[] imageBytes = null;
-                                if (makananObj.has("gambar") && !makananObj.isNull("gambar")) {
-                                    String base64Image = makananObj.getString("gambar");
-                                    imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
-                                }
 
-                                ResepModel makanan = new ResepModel(
-                                        makananObj.optInt("id", 0),
-                                        makananObj.optString("nama_menu", ""),
-                                        makananObj.optInt("kalori", 0),
-                                        imageBytes
-                                );
-                                menuList.add(makanan);
+                            String resep = makananObj.optString("resep", "");
+                            Log.d(TAG, "Resep Raw: " + resep);
+
+                            byte[] imageBytes = null;
+                            if (makananObj.has("gambar") && !makananObj.isNull("gambar")) {
+                                String base64Image = makananObj.getString("gambar");
+                                imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
+                            }
+
+                            ResepModel makanan = new ResepModel(
+                                    makananObj.optInt("id_menu", 0),
+                                    makananObj.optString("nama_menu", ""),
+                                    makananObj.optInt("kalori", 0),
+                                    imageBytes,
+                                    "" //resep kosong
+                            );
+
+                            menuList.add(makanan);
+
+                            // Simpan resep ke list lokal
+                            if (!resep.isEmpty()) {
+                                Log.d(TAG, "Resep saved: " + resep);
                             }
                         }
 
@@ -214,20 +229,29 @@ public class ResepFragment extends Fragment {
         requestQueue.add(request);
     }
 
+
     private void navigateToDetail(ResepModel menu) {
         if (menu == null) return;
 
-        DetailResepFragment detailFragment = new DetailResepFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("resep_key", menu);
-        detailFragment.setArguments(bundle);
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(requireContext());
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_detail_resep, null);
 
-        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, detailFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        builder.setView(dialogView);
+
+        TextView titleText = dialogView.findViewById(R.id.title_resep);
+        TextView kaloriText = dialogView.findViewById(R.id.kalori_resep);
+        TextView detailResep = dialogView.findViewById(R.id.detail_resep);
+        ImageView imageResep = dialogView.findViewById(R.id.image_resep);
+        Button closeButton = dialogView.findViewById(R.id.btn_close);
+
+        titleText.setText(menu.getNamaMenu());
+        kaloriText.setText(String.format("%d Kalori", menu.getKalori()));
+
+        closeButton.setOnClickListener(v -> builder.create().dismiss());
+
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+        dialog.show();
     }
-
 
     private void navigateToFragment(Fragment fragment) {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();

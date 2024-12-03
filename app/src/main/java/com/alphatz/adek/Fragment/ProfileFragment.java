@@ -30,6 +30,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,6 +49,7 @@ public class ProfileFragment extends Fragment {
     private TextView tinggiTextView;
     private TextView bmiTextView;
     private TextView txt_nama_lengkap;
+    private TextView textUsia;
     private LinearGauge linearGauge;
     private String currentNamaLengkap;
     private RequestQueue requestQueue;
@@ -92,6 +96,7 @@ public class ProfileFragment extends Fragment {
 
         settings = view.findViewById(R.id.settings);
 
+        textUsia = view.findViewById(R.id.text_usia);
         beratTextView = view.findViewById(R.id.text_berat);
         tinggiTextView = view.findViewById(R.id.text_tinggi);
         bmiTextView = view.findViewById(R.id.text_bmi);
@@ -102,7 +107,7 @@ public class ProfileFragment extends Fragment {
         tinggiTextView.setText("Loading...");
         bmiTextView.setText("Loading...");
 
-        txt_nama_lengkap.setText(currentNamaLengkap);  // Ubah menjadi currentNamaLengkap
+        txt_nama_lengkap.setText(currentNamaLengkap);
         getUserDataFromApi();
 
         settings.setOnClickListener(v -> openSettingsFragment());
@@ -127,7 +132,6 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
-
     private void getUserDataFromApi() {
         Log.d(TAG, "Fetching data for nama_lengkap: " + currentNamaLengkap);
 
@@ -142,11 +146,13 @@ public class ProfileFragment extends Fragment {
                                 JSONObject data = jsonObject.getJSONObject("data");
                                 String berat = data.getString("berat_badan");
                                 String tinggi = data.getString("tinggi_badan");
+                                String tanggalLahir = data.getString("tanggal_lahir");
 
                                 beratTextView.setText(berat + " kg");
                                 tinggiTextView.setText(tinggi + " cm");
 
                                 calculateAndDisplayBMI(berat, tinggi);
+                                calculateAndDisplayAge(tanggalLahir);
                             } else {
                                 String message = jsonObject.getString("message");
                                 Log.e(TAG, "API Error: " + message);
@@ -190,6 +196,21 @@ public class ProfileFragment extends Fragment {
         requestQueue.add(stringRequest);
     }
 
+    private void calculateAndDisplayAge(String tanggalLahir) {
+        try {
+            // Format tanggal lahir
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate birthDate = LocalDate.parse(tanggalLahir, formatter);
+            LocalDate today = LocalDate.now();
+
+            // Hitung usia
+            int age = Period.between(birthDate, today).getYears();
+            textUsia.setText(age + " tahun");
+        } catch (Exception e) {
+            Log.e(TAG, "Error parsing tanggal_lahir: " + e.getMessage());
+            textUsia.setText("Error calculating age");
+        }
+    }
     private void calculateAndDisplayBMI(String beratStr, String tinggiStr) {
         try {
             double berat = Double.parseDouble(beratStr);

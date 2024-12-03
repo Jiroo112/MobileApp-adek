@@ -11,18 +11,17 @@ public class ResepModel implements Parcelable {
     private String gambar;
     private byte[] imageBytes;
 
-    // Default constructor (for frameworks or ORM)
+    // constructor kosong, untuk inisialisasi default
     public ResepModel() {
-        // Default values
         this.idMenu = "";
         this.namaMenu = "";
         this.kalori = 0;
-        this.resep = "";
+        this.resep = getResep();
         this.gambar = "";
         this.imageBytes = null;
     }
 
-    // Full constructor
+    // constructor lengkap, buat semua data
     public ResepModel(String idMenu, String namaMenu, int kalori, String resep, String gambar, byte[] imageBytes) {
         this.idMenu = idMenu;
         this.namaMenu = namaMenu;
@@ -32,17 +31,16 @@ public class ResepModel implements Parcelable {
         this.imageBytes = imageBytes;
     }
 
-    // Constructor for list loading
-    public ResepModel(int id, String namaMenu, int kalori, byte[] imageBytes) {
+    // constructor buat load list aja
+    public ResepModel(int id, String namaMenu, int kalori, byte[] imageBytes, String resep) {
         this.idMenu = String.valueOf(id);
         this.namaMenu = namaMenu;
         this.kalori = kalori;
         this.imageBytes = imageBytes;
-        this.resep = "";
+        this.resep = resep;
         this.gambar = "";
     }
-
-    // Parcelable constructor
+    // constructor buat parcelable, baca data dari Parcel
     protected ResepModel(Parcel in) {
         idMenu = in.readString();
         namaMenu = in.readString();
@@ -50,17 +48,15 @@ public class ResepModel implements Parcelable {
         resep = in.readString();
         gambar = in.readString();
 
-        // Read byte array for image
+        // baca byte array image, kalau ada
         int length = in.readInt();
-        if (length > 0) {
-            imageBytes = new byte[length];
+        imageBytes = length > 0 ? new byte[length] : null;
+        if (imageBytes != null) {
             in.readByteArray(imageBytes);
-        } else {
-            imageBytes = null;
         }
     }
 
-    // Parcelable Creator
+    // creator parcelable, standar Android
     public static final Creator<ResepModel> CREATOR = new Creator<ResepModel>() {
         @Override
         public ResepModel createFromParcel(Parcel in) {
@@ -73,7 +69,7 @@ public class ResepModel implements Parcelable {
         }
     };
 
-    // Getters and Setters
+    // getter & setter
     public String getIdMenu() {
         return idMenu;
     }
@@ -122,7 +118,7 @@ public class ResepModel implements Parcelable {
         this.imageBytes = imageBytes;
     }
 
-    // Parcelable implementation
+    // buat parcelable, serialize data ke Parcel
     @Override
     public int describeContents() {
         return 0;
@@ -136,7 +132,7 @@ public class ResepModel implements Parcelable {
         dest.writeString(resep);
         dest.writeString(gambar);
 
-        // Write imageBytes
+        // tulis byte array kalau ada
         if (imageBytes != null) {
             dest.writeInt(imageBytes.length);
             dest.writeByteArray(imageBytes);
@@ -151,7 +147,7 @@ public class ResepModel implements Parcelable {
                 "idMenu='" + idMenu + '\'' +
                 ", namaMenu='" + namaMenu + '\'' +
                 ", kalori=" + kalori +
-                ", resep='" + resep + '\'' +
+                ", resep='" + (resep != null ? resep : "NULL") + '\'' +
                 ", gambar='" + gambar + '\'' +
                 ", imageBytes=" + (imageBytes != null ? imageBytes.length + " bytes" : "null") +
                 '}';

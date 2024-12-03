@@ -45,8 +45,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AsupanFragment extends Fragment {
     private static final String TAG = "AsupanFragment";
@@ -352,6 +356,9 @@ public class AsupanFragment extends Fragment {
             return;
         }
 
+        // Periksa dan lakukan reset jika tanggal berubah
+        checkAndResetDataIfNewDay(prefs);
+
         String url = "http://10.0.2.2/ads_mysql/asupan/get_detail_kalorinew.php?id_user=" + idUser;
         showLoading(true);
 
@@ -388,12 +395,7 @@ public class AsupanFragment extends Fragment {
                 },
                 error -> {
                     showLoading(false);
-                    // Tambahkan detail error untuk debugging
-                    String errorMessage = "";
-                    if (error.networkResponse != null) {
-                        errorMessage = "Status Code: " + error.networkResponse.statusCode;
-                    }
-                    Log.e(TAG, "Request error: " + error.getMessage() + " " + errorMessage);
+                    Log.e(TAG, "Request error: " + error.getMessage());
                     showError("Gagal mengambil data. Periksa koneksi internet Anda.");
                 }
         );
@@ -406,6 +408,52 @@ public class AsupanFragment extends Fragment {
 
         requestQueue.add(request);
     }
+
+    private void checkAndResetDataIfNewDay(SharedPreferences prefs) {
+        // Ambil tanggal terakhir dari SharedPreferences
+        String lastResetDate = prefs.getString("lastResetDate", "");
+
+        // Format tanggal
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String currentDate = dateFormat.format(getResetTime());
+
+        // Jika tanggal berbeda, lakukan reset
+        if (!lastResetDate.equals(currentDate)) {
+            resetData(prefs, currentDate);
+        }
+    }
+
+    private Date getResetTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 3); // Set pukul 03.00 pagi
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        // Jika waktu saat ini sebelum pukul 03.00 pagi, gunakan tanggal kemarin
+        if (Calendar.getInstance().before(calendar)) {
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
+        }
+
+        return calendar.getTime();
+    }
+
+    private void resetData(SharedPreferences prefs, String currentDate) {
+        // Hapus atau reset data di UI
+        if (tvJumlahMenu != null) {
+            tvJumlahMenu.setText("0");
+        }
+        if (kaloriMenuDetail != null) {
+            kaloriMenuDetail.setText("0");
+        }
+
+        // Simpan tanggal reset terbaru ke SharedPreferences
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("lastResetDate", currentDate);
+        editor.apply();
+
+        Log.d(TAG, "Data berhasil direset pada: " + currentDate);
+    }
+
 
     private void handleResponse(JSONObject response) {
         try {

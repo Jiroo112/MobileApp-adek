@@ -62,7 +62,7 @@ public class MakananBeratFragment extends Fragment {
             @Override
             public void onMakananClick(ResepModel menu) {
                 if (menu != null) {
-                    navigateToDetail(menu);
+//                    navigateToDetail(menu);
                 }
             }
         }, getParentFragmentManager()); // Passing FragmentManager
@@ -139,7 +139,8 @@ public class MakananBeratFragment extends Fragment {
                                         makananObj.optInt("id", 0),
                                         makananObj.optString("nama_menu", ""),
                                         makananObj.optInt("kalori", 0),
-                                        imageBytes
+                                        imageBytes,
+                                        makananObj.optString("resep","")
                                 );
                                 menuList.add(makanan);
                             }
@@ -172,20 +173,20 @@ public class MakananBeratFragment extends Fragment {
         requestQueue.add(request);
     }
 
-    private void navigateToDetail(ResepModel menu) {
-        DetailResepFragment detailFragment = new DetailResepFragment();
-
-        // Pass data to the detail fragment
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("resep_key", menu); // Assuming ResepModel implements Parcelable
-        detailFragment.setArguments(bundle);
-
-        // Navigate to the detail fragment
-        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, detailFragment); // Replace with your container ID
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
+//    private void navigateToDetail(ResepModel menu) {
+//        DetailResepFragment detailFragment = new DetailResepFragment();
+//
+//        // Pass data to the detail fragment
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable("resep_key", menu); // Assuming ResepModel implements Parcelable
+//        detailFragment.setArguments(bundle);
+//
+//        // Navigate to the detail fragment
+//        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+//        transaction.replace(R.id.fragment_container, detailFragment); // Replace with your container ID
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+//    }
 
     private void navigateToFragment(Fragment fragment) {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
