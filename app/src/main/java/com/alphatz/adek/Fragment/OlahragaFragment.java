@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -69,7 +71,7 @@ public class OlahragaFragment extends Fragment {
             @Override
             public void onOlahragaClick(OlahragaModel olahraga) {
                 if (olahraga != null) {
-                    showDetailOlahraga(olahraga);
+                    navigateToDetail(olahraga);
                 }
             }
         }, fragmentManager); // Pass the FragmentManager
@@ -142,14 +144,14 @@ public class OlahragaFragment extends Fragment {
                                 // Convert base64 image to byte array safely
                                 byte[] imageBytes = null;
                                 if (olahragaObj.has("gambar") && !olahragaObj.isNull("gambar")) {
-                                    try {
-                                        String base64Image = olahragaObj.getString("gambar");
-                                        if (!base64Image.isEmpty()) {
+                                    String base64Image = olahragaObj.optString("gambar", null);
+                                    if (base64Image != null && !base64Image.isEmpty()) {
+                                        try {
                                             imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
+                                        } catch (IllegalArgumentException e) {
+                                            // Log error or handle invalid base64 string
+                                            Log.e("OlahragaParser", "Invalid base64 image string", e);
                                         }
-                                    } catch (IllegalArgumentException e) {
-                                        // Log error or handle invalid base64 string
-                                        Log.e("OlahragaParser", "Invalid base64 image string", e);
                                     }
                                 }
 
@@ -191,6 +193,27 @@ public class OlahragaFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         requestQueue.add(request);
+    }
+
+    private void navigateToDetail(OlahragaModel olahraga){
+        if (olahraga == null) return;
+
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(requireContext());
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_detail_olahraga, null);
+
+        builder.setView(dialogView);
+
+        TextView titleText = dialogView.findViewById(R.id.title_olahraga);
+        TextView detailOlahraga = dialogView.findViewById(R.id.detail_olahraga);
+        ImageView imageResep = dialogView.findViewById(R.id.image_olahraga);
+        Button closeButton = dialogView.findViewById(R.id.btn_close);
+
+        titleText.setText(olahraga.getNamaOlahraga());
+
+        closeButton.setOnClickListener(v -> builder.create().dismiss());
+
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void showDetailOlahraga(OlahragaModel olahraga) {

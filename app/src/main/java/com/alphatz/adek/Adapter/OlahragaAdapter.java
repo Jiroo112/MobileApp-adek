@@ -1,14 +1,17 @@
 package com.alphatz.adek.Adapter;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
@@ -90,19 +93,49 @@ public class OlahragaAdapter extends RecyclerView.Adapter<OlahragaAdapter.Olahra
                     if (listener != null) {
                         listener.onOlahragaClick(olahraga);
                     }
-
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    DetailOlahragaFragment detailFragment = new DetailOlahragaFragment();
-
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("olahraga_key", olahraga);
-                    detailFragment.setArguments(bundle);
-
-                    fragmentTransaction.replace(R.id.fragment_container, detailFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                    showDialog(itemView.getContext(), olahraga); // Pass context and olahraga
                 });
             }
+        }
+    }
+    private void showDialog(Context context, OlahragaModel olahraga) {
+        if (!(context instanceof FragmentActivity)) return;
+
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_olahraga, null);
+        builder.setView(dialogView);
+
+        // Initialize views
+        TextView titleText = dialogView.findViewById(R.id.title_olahraga);
+        TextView deskripsiText = dialogView.findViewById(R.id.detail_olahraga);
+        ImageView imageOlahraga = dialogView.findViewById(R.id.image_olahraga);
+        Button closeButton = dialogView.findViewById(R.id.btn_close);
+
+        // Set title (exercise name)
+        titleText.setText(olahraga.getNamaOlahraga());
+
+        // Set description
+        String deskripsi = olahraga.getDeskripsi();
+        if (deskripsi == null || deskripsi.isEmpty()) {
+            deskripsi = "Deskripsi tidak tersedia.";
+        }
+        deskripsiText.setText(deskripsi);
+
+        // Set image if available
+        byte[] gambarBytes = olahraga.getGambar();
+        if (gambarBytes != null && gambarBytes.length > 0) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(gambarBytes, 0, gambarBytes.length);
+            imageOlahraga.setImageBitmap(bitmap);
+        } else {
+            imageOlahraga.setImageResource(R.drawable.button_filter);
+        }
+
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+        closeButton.setOnClickListener(view -> dialog.dismiss());
+        dialog.show();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 }

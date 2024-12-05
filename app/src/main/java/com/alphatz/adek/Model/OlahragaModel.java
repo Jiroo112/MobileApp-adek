@@ -85,4 +85,5 @@ public class OlahragaModel implements Parcelable {
             dest.writeInt(0);
         }
     }
+
 }
