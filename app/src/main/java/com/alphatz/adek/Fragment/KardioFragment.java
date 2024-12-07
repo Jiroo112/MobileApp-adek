@@ -142,26 +142,15 @@ public class KardioFragment extends Fragment {
                                 // Extract values with null checks and default values
                                 String namaOlahraga = olahragaObj.optString("nama_olahraga", "");
                                 String deskripsi = olahragaObj.optString("deskripsi", "");
-
-                                // Convert base64 image to byte array safely
-                                byte[] imageBytes = null;
-                                if (olahragaObj.has("gambar") && !olahragaObj.isNull("gambar")) {
-                                    try {
-                                        String base64Image = olahragaObj.getString("gambar");
-                                        if (!base64Image.isEmpty()) {
-                                            imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
-                                        }
-                                    } catch (IllegalArgumentException e) {
-                                        // Log error or handle invalid base64 string
-                                        Log.e("OlahragaParser", "Invalid base64 image string", e);
-                                    }
-                                }
+                                String gambarUrl = olahragaObj.optString("gambar", "");
+                                String caraOlahraga = olahragaObj.optString("cara_olahraga","");// Directly get the URL
 
                                 // Create OlahragaModel with corrected constructor
                                 OlahragaModel olahraga = new OlahragaModel(
                                         namaOlahraga,
                                         deskripsi,
-                                        imageBytes
+                                        gambarUrl,
+                                        caraOlahraga// Pass URL directly to the model
                                 );
 
                                 olahragaList.add(olahraga);
@@ -197,6 +186,7 @@ public class KardioFragment extends Fragment {
 
         requestQueue.add(request);
     }
+
 
     private void showDetailOlahraga(OlahragaModel olahraga) {
         try {

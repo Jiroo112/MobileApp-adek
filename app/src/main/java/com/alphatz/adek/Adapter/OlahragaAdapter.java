@@ -1,24 +1,22 @@
 package com.alphatz.adek.Adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alphatz.adek.Model.OlahragaModel;
 import com.alphatz.adek.R;
-import com.alphatz.adek.Fragment.DetailOlahragaFragment;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -45,7 +43,6 @@ public class OlahragaAdapter extends RecyclerView.Adapter<OlahragaAdapter.Olahra
     @NonNull
     @Override
     public OlahragaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Consider changing this to an Olahraga-specific layout if it exists
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_olahraga, parent, false);
         return new OlahragaViewHolder(view);
@@ -69,10 +66,19 @@ public class OlahragaAdapter extends RecyclerView.Adapter<OlahragaAdapter.Olahra
 
         OlahragaViewHolder(View itemView) {
             super(itemView);
-            // Ensure these IDs match your actual layout
             tvNamaOlahraga = itemView.findViewById(R.id.tv_nama_olahraga);
             tvDeskripsi = itemView.findViewById(R.id.tv_deskripsi_olahraga);
             ivOlahraga = itemView.findViewById(R.id.iv_olahraga);
+
+            // Set the click listener here once
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    OlahragaModel olahraga = olahragaList.get(position);
+                    listener.onOlahragaClick(olahraga);
+                    showDialog(itemView.getContext(), olahraga);
+                }
+            });
         }
 
         void bind(final OlahragaModel olahraga) {
@@ -80,24 +86,26 @@ public class OlahragaAdapter extends RecyclerView.Adapter<OlahragaAdapter.Olahra
                 tvNamaOlahraga.setText(olahraga.getNamaOlahraga());
                 tvDeskripsi.setText(olahraga.getDeskripsi());
 
-                // Set image with null check
-                if (olahraga.getGambar() != null && olahraga.getGambar().length > 0) {
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(olahraga.getGambar(), 0, olahraga.getGambar().length);
-                    ivOlahraga.setImageBitmap(bitmap);
-                } else {
-                    ivOlahraga.setImageResource(R.drawable.button_filter);
+                // Log the URL for debugging
+                Log.d("OlahragaAdapter", "Loading image URL: " + olahraga.getGambarUrl());
+
+                // Normalize and load image
+                String imageUrl = olahraga.getGambarUrl();
+                if (imageUrl != null && !imageUrl.startsWith("http")) {
+                    String baseUrl = "https://adek-app.my.id/";
+                    imageUrl = baseUrl + imageUrl;
                 }
 
-                // OnClickListener to navigate to detail
-                itemView.setOnClickListener(v -> {
-                    if (listener != null) {
-                        listener.onOlahragaClick(olahraga);
-                    }
-                    showDialog(itemView.getContext(), olahraga); // Pass context and olahraga
-                });
+                Glide.with(itemView.getContext())
+                        .load(imageUrl)
+                        .placeholder(R.drawable.button_filter)
+                        .error(R.drawable.button_filter)
+                        .into(ivOlahraga);
             }
         }
     }
+
+
     private void showDialog(Context context, OlahragaModel olahraga) {
         if (!(context instanceof FragmentActivity)) return;
 
@@ -115,20 +123,18 @@ public class OlahragaAdapter extends RecyclerView.Adapter<OlahragaAdapter.Olahra
         titleText.setText(olahraga.getNamaOlahraga());
 
         // Set description
-        String deskripsi = olahraga.getDeskripsi();
+        String deskripsi = olahraga.getCaraOlahraga();
         if (deskripsi == null || deskripsi.isEmpty()) {
-            deskripsi = "Deskripsi tidak tersedia.";
+            deskripsi = "Tunggu ya, Bentarlagi cara olahraganya akan diupdate";
         }
         deskripsiText.setText(deskripsi);
 
-        // Set image if available
-        byte[] gambarBytes = olahraga.getGambar();
-        if (gambarBytes != null && gambarBytes.length > 0) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(gambarBytes, 0, gambarBytes.length);
-            imageOlahraga.setImageBitmap(bitmap);
-        } else {
-            imageOlahraga.setImageResource(R.drawable.button_filter);
-        }
+        // Load image using Glide
+        Glide.with(context)
+                .load(olahraga.getGambarUrl())
+                .placeholder(R.drawable.button_filter) // Placeholder image
+                .error(R.drawable.button_filter) // Error image
+                .into(imageOlahraga);
 
         androidx.appcompat.app.AlertDialog dialog = builder.create();
         closeButton.setOnClickListener(view -> dialog.dismiss());

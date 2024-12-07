@@ -7,16 +7,18 @@ import androidx.annotation.NonNull;
 public class OlahragaModel implements Parcelable {
     private String namaOlahraga;
     private String deskripsi;
-    private byte[] gambar;
+    private String gambarUrl;
+    private String caraOlahraga;// Store URL as String instead of byte[]
 
     // Primary constructor
-    public OlahragaModel(@NonNull String namaOlahraga, @NonNull String deskripsi, byte[] gambar) {
+    public OlahragaModel(@NonNull String namaOlahraga, @NonNull String deskripsi, @NonNull String gambarUrl, @NonNull String caraOlahraga) {
         this.namaOlahraga = namaOlahraga;
         this.deskripsi = deskripsi;
-        this.gambar = gambar;
+        this.gambarUrl = gambarUrl;
+        this.caraOlahraga = caraOlahraga;
     }
 
-    // Getters with improved null handling
+    // Getters with null handling
     @NonNull
     public String getNamaOlahraga() {
         return namaOlahraga != null ? namaOlahraga : "";
@@ -27,8 +29,14 @@ public class OlahragaModel implements Parcelable {
         return deskripsi != null ? deskripsi : "";
     }
 
-    public byte[] getGambar() {
-        return gambar;
+    @NonNull
+    public String getCaraOlahraga(){
+        return caraOlahraga != null ? caraOlahraga : "";
+    }
+
+    @NonNull
+    public String getGambarUrl() {
+        return gambarUrl != null ? gambarUrl : "";
     }
 
     // Setters with null protection
@@ -40,20 +48,19 @@ public class OlahragaModel implements Parcelable {
         this.deskripsi = deskripsi;
     }
 
-    public void setGambar(byte[] gambar) {
-        this.gambar = gambar;
+    public void setCaraOlahraga(@NonNull String caraOlahraga){
+        this.caraOlahraga = caraOlahraga;
     }
 
-    // Parcelable implementation (remains the same as in original code)
+    public void setGambarUrl(@NonNull String gambarUrl) {
+        this.gambarUrl = gambarUrl;
+    }
+
+    // Parcelable implementation
     protected OlahragaModel(Parcel in) {
         namaOlahraga = in.readString();
         deskripsi = in.readString();
-
-        int gambarLength = in.readInt();
-        if (gambarLength > 0) {
-            gambar = new byte[gambarLength];
-            in.readByteArray(gambar);
-        }
+        gambarUrl = in.readString(); // Read the URL as String
     }
 
     public static final Creator<OlahragaModel> CREATOR = new Creator<OlahragaModel>() {
@@ -77,13 +84,6 @@ public class OlahragaModel implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(namaOlahraga);
         dest.writeString(deskripsi);
-
-        if (gambar != null) {
-            dest.writeInt(gambar.length);
-            dest.writeByteArray(gambar);
-        } else {
-            dest.writeInt(0);
-        }
+        dest.writeString(gambarUrl); // Write the URL as String
     }
-
 }

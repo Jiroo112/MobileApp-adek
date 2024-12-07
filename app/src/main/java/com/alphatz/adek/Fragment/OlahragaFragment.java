@@ -140,26 +140,18 @@ public class OlahragaFragment extends Fragment {
                                 // Extract values with null checks and default values
                                 String namaOlahraga = olahragaObj.optString("nama_olahraga", "");
                                 String deskripsi = olahragaObj.optString("deskripsi", "");
+                                String gambarPath = olahragaObj.optString("gambar", "");
+                                String caraOlahraga = olahragaObj.optString("cara_olahraga","");
 
-                                // Convert base64 image to byte array safely
-                                byte[] imageBytes = null;
-                                if (olahragaObj.has("gambar") && !olahragaObj.isNull("gambar")) {
-                                    String base64Image = olahragaObj.optString("gambar", null);
-                                    if (base64Image != null && !base64Image.isEmpty()) {
-                                        try {
-                                            imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
-                                        } catch (IllegalArgumentException e) {
-                                            // Log error or handle invalid base64 string
-                                            Log.e("OlahragaParser", "Invalid base64 image string", e);
-                                        }
-                                    }
-                                }
+                                // Prepend base URL to gambar path
+                                String gambarUrl = "https://adek-app.my.id/Images/" + gambarPath;
 
-                                // Create OlahragaModel with corrected constructor
+                                // Create OlahragaModel with URL instead of byte array
                                 OlahragaModel olahraga = new OlahragaModel(
                                         namaOlahraga,
                                         deskripsi,
-                                        imageBytes
+                                        gambarUrl,
+                                        caraOlahraga// Use URL instead of byte array
                                 );
 
                                 olahragaList.add(olahraga);
@@ -168,6 +160,7 @@ public class OlahragaFragment extends Fragment {
                                 Log.e("OlahragaParser", "Error parsing JSON object", e);
                             }
                         }
+
                         olahragaAdapter.updateList(olahragaList);
 
                         if (olahragaList.isEmpty()) {
@@ -195,6 +188,7 @@ public class OlahragaFragment extends Fragment {
         requestQueue.add(request);
     }
 
+
     private void navigateToDetail(OlahragaModel olahraga){
         if (olahraga == null) return;
 
@@ -213,18 +207,6 @@ public class OlahragaFragment extends Fragment {
         closeButton.setOnClickListener(v -> builder.create().dismiss());
 
         androidx.appcompat.app.AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void showDetailOlahraga(OlahragaModel olahraga) {
-        try {
-            String message = String.format("Olahraga : %s\nKalori yang terbakar: %d",
-                    olahraga.getNamaOlahraga(),
-                    olahraga.getDeskripsi());
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Log.e(TAG, "Error showing detail: " + e.getMessage());
-        }
     }
 
     private void navigateToFragment(Fragment fragment) {
