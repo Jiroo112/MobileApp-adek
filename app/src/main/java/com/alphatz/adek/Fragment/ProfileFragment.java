@@ -3,8 +3,11 @@ package com.alphatz.adek.Fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +41,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
 public class ProfileFragment extends Fragment {
 
     private static final String TAG = "ProfileFragment";
@@ -53,6 +57,7 @@ public class ProfileFragment extends Fragment {
     private LinearGauge linearGauge;
     private String currentNamaLengkap;
     private RequestQueue requestQueue;
+    private Bitmap foto_profile;
 
     private String baseUrl = "http://10.0.2.2/ads_mysql/account/profile_adek.php";
 
@@ -102,7 +107,7 @@ public class ProfileFragment extends Fragment {
         bmiTextView = view.findViewById(R.id.text_bmi);
         txt_nama_lengkap = view.findViewById(R.id.txt_username);
         linearGauge = view.findViewById(R.id.linearGauge);
-        fotoProfil = view.findViewById(R.id.addFoto);
+        fotoProfil = view.findViewById(R.id.foto_profil);
         beratTextView.setText("Loading...");
         tinggiTextView.setText("Loading...");
         bmiTextView.setText("Loading...");
@@ -121,17 +126,9 @@ public class ProfileFragment extends Fragment {
             showUpdateTinggi();
         });
 
-        fotoProfil.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("image/*");
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            startActivityForResult(Intent.createChooser(intent, "Pilih Foto"), REQUEST_CODE_PICK_IMAGE);
-        });
-
-
-
         return view;
     }
+
     private void getUserDataFromApi() {
         Log.d(TAG, "Fetching data for nama_lengkap: " + currentNamaLengkap);
 
@@ -148,11 +145,39 @@ public class ProfileFragment extends Fragment {
                                 String tinggi = data.getString("tinggi_badan");
                                 String tanggalLahir = data.getString("tanggal_lahir");
 
+                                // Set data ke TextView
                                 beratTextView.setText(berat + " kg");
                                 tinggiTextView.setText(tinggi + " cm");
 
+                                // Hitung dan tampilkan BMI dan usia
                                 calculateAndDisplayBMI(berat, tinggi);
                                 calculateAndDisplayAge(tanggalLahir);
+
+                                if (data.has("gambar") && !data.isNull("gambar")) {
+                                    String gambarBase64 = data.getString("gambar"); // Ambil data gambar dalam base64
+                                    if (!gambarBase64.isEmpty()) {
+                                        try {
+                                            // Decode Base64 menjadi bitmap
+                                            byte[] decodedString = Base64.decode(gambarBase64, Base64.DEFAULT);
+                                            Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+                                            // Pasang bitmap ke ImageView
+                                            foto_profile = decodedBitmap;
+                                            fotoProfil.setImageBitmap(decodedBitmap);
+
+                                            Log.d(TAG, "Gambar berhasil didecode dan ditampilkan.");
+                                        } catch (IllegalArgumentException e) {
+                                            Log.e(TAG, "Error decoding Base64 image: " + e.getMessage());
+                                            fotoProfil.setImageResource(R.drawable.ic_profil); // Gunakan gambar default
+                                        }
+                                    } else {
+                                        Log.d(TAG, "Data gambar kosong. Menggunakan gambar default.");
+                                        fotoProfil.setImageResource(R.drawable.ic_profil);
+                                    }
+                                } else {
+                                    Log.d(TAG, "Field gambar tidak ada atau null. Menggunakan gambar default.");
+                                    fotoProfil.setImageResource(R.drawable.ic_profil);
+                                }
                             } else {
                                 String message = jsonObject.getString("message");
                                 Log.e(TAG, "API Error: " + message);
@@ -208,9 +233,10 @@ public class ProfileFragment extends Fragment {
             textUsia.setText(age + " tahun");
         } catch (Exception e) {
             Log.e(TAG, "Error parsing tanggal_lahir: " + e.getMessage());
-            textUsia.setText("Error calculating age");
+            textUsia.setText("Error menghitung tahun");
         }
     }
+
     private void calculateAndDisplayBMI(String beratStr, String tinggiStr) {
         try {
             double berat = Double.parseDouble(beratStr);
@@ -220,6 +246,12 @@ public class ProfileFragment extends Fragment {
 
             String bmiText = String.format("%.2f", bmi);
             bmiTextView.setText("BMI: " + bmiText);
+
+            // Simpan BMI ke SharedPreferences
+            requireContext().getSharedPreferences("UserPrefs", Activity.MODE_PRIVATE)
+                    .edit()
+                    .putString("BMI", bmiText)
+                    .apply();
 
             float bmiFinal = (float) bmi;
             if (bmiFinal < 0) bmiFinal = 0;

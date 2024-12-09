@@ -156,7 +156,7 @@ public class TerakhirDimakan extends Fragment {
 
                             FoodHistoryItem makanan = new FoodHistoryItem(
                                     item.getString("tanggal"),
-                                    item.getString("menu_name"),
+                                    item.getString("nama_menu"),
                                     item.getInt("total_kalori"),
                                     "Jumlah: " + item.getInt("jumlah")
                             );

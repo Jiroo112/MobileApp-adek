@@ -10,9 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +28,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -38,9 +42,9 @@ public class MakananBeratFragment extends Fragment {
     private static final String TAG = "MakananBeratFragment";
     private RequestQueue requestQueue;
     private List<ResepModel> menuList = new ArrayList<>();
-    private ResepAdapter makananAdapter;
+    private ResepAdapter resepAdapter;
     private ProgressBar progressBar;
-    private RecyclerView recyclerViewMakanan;
+    private RecyclerView recyclerViewResep;
     private EditText searchField;
     private Button btnMinumanSehat, btnDessert, btnFilter;
 
@@ -49,32 +53,38 @@ public class MakananBeratFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_makanan_berat, container, false);
 
-        recyclerViewMakanan = view.findViewById(R.id.recyclerView);
+        recyclerViewResep = view.findViewById(R.id.recyclerView);
         btnMinumanSehat = view.findViewById(R.id.btn_minuman_sehat);
         btnDessert = view.findViewById(R.id.btn_desert);
         btnFilter = view.findViewById(R.id.btn_filter);
         progressBar = view.findViewById(R.id.progressBar);
         searchField = view.findViewById(R.id.searchField);
 
-        // RecyclerView setup
-        recyclerViewMakanan.setLayoutManager(new LinearLayoutManager(getContext()));
-        makananAdapter = new ResepAdapter(menuList, new ResepAdapter.OnMakananClickListener() {
+        // Setup RecyclerView
+        recyclerViewResep.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Get the FragmentManager
+        FragmentManager fragmentManager = getParentFragmentManager();
+
+        // Initialize the adapter with the FragmentManager
+        resepAdapter = new ResepAdapter(menuList, new ResepAdapter.OnResepClickListener() {
             @Override
-            public void onMakananClick(ResepModel menu) {
-                if (menu != null) {
-//                    navigateToDetail(menu);
+            public void onResepClick(ResepModel resep) {
+                if (resep != null) {
+                    navigateToDetail(resep);
                 }
             }
-        }, getParentFragmentManager()); // Passing FragmentManager
-        recyclerViewMakanan.setAdapter(makananAdapter);
+        }, fragmentManager);
 
+        recyclerViewResep.setAdapter(resepAdapter);
         requestQueue = Volley.newRequestQueue(requireContext());
         setupSearch();
         setupButtonListeners();
-        getMenuMakanan();
+        getResepData();
 
         return view;
     }
+
 
     private void setupButtonListeners() {
         btnMinumanSehat.setOnClickListener(v -> navigateToFragment(new MinumanSehatFragment()));
@@ -107,10 +117,10 @@ public class MakananBeratFragment extends Fragment {
             }
         }
 
-        makananAdapter.updateList(filteredList);
+        resepAdapter.updateList(filteredList);
     }
 
-    private void getMenuMakanan() {
+    private void getResepData() {
         String url = "http://10.0.2.2/ads_mysql/search/get_only_makanan.php";
         progressBar.setVisibility(View.VISIBLE);
 
@@ -126,30 +136,39 @@ public class MakananBeratFragment extends Fragment {
                         menuList.clear();
 
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject makananObj = jsonArray.getJSONObject(i);
-                            if (makananObj != null) {
-                                // Convert base64 image to byte array
-                                byte[] imageBytes = null;
-                                if (makananObj.has("gambar") && !makananObj.isNull("gambar")) {
-                                    String base64Image = makananObj.getString("gambar");
-                                    imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
-                                }
+                            try {
+                                JSONObject resepObj = jsonArray.getJSONObject(i);
 
-                                ResepModel makanan = new ResepModel(
-                                        makananObj.optInt("id", 0),
-                                        makananObj.optString("nama_menu", ""),
-                                        makananObj.optInt("kalori", 0),
-                                        imageBytes,
-                                        makananObj.optString("resep","")
+                                // Extract values with null checks and default values
+                                String namaMenu = resepObj.optString("nama_menu", "");
+                                int kalori = resepObj.optInt("kalori", 0);
+                                String gambarPath = resepObj.optString("gambar", "");
+                                String resep = resepObj.optString("resep", "");
+
+                                // Prepend base URL to gambar path
+                                String gambarUrl = "https://adek-app.my.id/Images/" + gambarPath;
+
+                                // Create ResepModel with URL instead of byte array
+                                ResepModel menu = new ResepModel(
+                                        resepObj.optString("id_menu", ""),
+                                        namaMenu,
+                                        kalori,
+                                        resep,
+                                        gambarUrl,
+                                        null
                                 );
-                                menuList.add(makanan);
+
+                                menuList.add(menu);
+                            } catch (JSONException e) {
+                                // Log the error and continue processing other items
+                                Log.e("ResepParser", "Error parsing JSON object", e);
                             }
                         }
 
-                        makananAdapter.updateList(menuList);
+                        resepAdapter.updateList(menuList);
 
                         if (menuList.isEmpty()) {
-                            showError("Tidak ada data makanan");
+                            showError("Tidak ada data menu");
                         }
 
                     } catch (JSONException e) {
@@ -161,7 +180,7 @@ public class MakananBeratFragment extends Fragment {
                 },
                 error -> {
                     Log.e(TAG, "Volley Error: " + error.getMessage());
-                    showError("Gagal mengambil data makanan");
+                    showError("Gagal mengambil data menu");
                     progressBar.setVisibility(View.GONE);
                 });
 
@@ -173,20 +192,27 @@ public class MakananBeratFragment extends Fragment {
         requestQueue.add(request);
     }
 
-//    private void navigateToDetail(ResepModel menu) {
-//        DetailResepFragment detailFragment = new DetailResepFragment();
-//
-//        // Pass data to the detail fragment
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable("resep_key", menu); // Assuming ResepModel implements Parcelable
-//        detailFragment.setArguments(bundle);
-//
-//        // Navigate to the detail fragment
-//        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-//        transaction.replace(R.id.fragment_container, detailFragment); // Replace with your container ID
-//        transaction.addToBackStack(null);
-//        transaction.commit();
-//    }
+    private void navigateToDetail(ResepModel resep) {
+        if (resep == null) return;
+
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(requireContext());
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_detail_resep, null);
+
+        builder.setView(dialogView);
+
+        TextView titleText = dialogView.findViewById(R.id.title_resep);
+        TextView detailResep = dialogView.findViewById(R.id.detail_resep);
+        ImageView imageResep = dialogView.findViewById(R.id.image_resep);
+        Button closeButton = dialogView.findViewById(R.id.btn_close);
+
+        titleText.setText(resep.getNamaMenu());
+        detailResep.setText(resep.getResep());
+
+        closeButton.setOnClickListener(v -> builder.create().dismiss());
+
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
     private void navigateToFragment(Fragment fragment) {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
@@ -201,10 +227,10 @@ public class MakananBeratFragment extends Fragment {
         }
         Log.e(TAG, "Error: " + message);
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // nampilin lagi bottom navigation waktu fragment nya di destroy
         if (getActivity() instanceof Dashboard) {
             ((Dashboard) getActivity()).showBottomNavigation();
         }

@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,11 +36,16 @@ import java.util.Map;
 public class DetailProfileFragment extends Fragment {
     private static final String TAG = "DetailProfileFragment";
     private static final String URL_PROFILE = "http://10.0.2.2/ads_mysql/account/get_profile.php";
+    private static final String URL_UPDATE_PROFILE = "http://10.0.2.2/ads_mysql/account/update_profile.php";
 
     // TextViews untuk profil
     private TextView tvName, tvTipeDiet, tvGender, tvBirthDate,
-            tvEmail, tvHeight, tvWeight, tvNoTelepon;
+            tvEmail, tvHeight, tvWeight, tvNoTelepon, tvBmi;
     private ImageView profileImage;
+
+    // EditTexts untuk edit profil
+    private EditText etName, etTipeDiet, etGender, etBirthDate, etEmail, etHeight, etWeight, etNoTelepon;
+    private Button btnEditProfile;
 
     private SharedPreferences sharedPreferences;
     private static final String PREF_NAME = "LoginPrefs";
@@ -48,42 +55,41 @@ public class DetailProfileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Pastikan menggunakan layout yang benar
         View view = inflater.inflate(R.layout.fragment_detail_profile, container, false);
 
-        // Inisialisasi SharedPreferences dengan pengecekan null
         Context context = getContext();
         if (context != null) {
             sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         }
 
-        // Inisialisasi RequestQueue
         requestQueue = Volley.newRequestQueue(requireContext());
-
-        // Inisialisasi Views
         initializeViews(view);
-
-        // Ambil dan tampilkan profil
         fetchProfileData();
 
         return view;
     }
 
     private void initializeViews(View view) {
-        // Pastikan ID view sesuai dengan layout
         profileImage = view.findViewById(R.id.profileImage);
         tvName = view.findViewById(R.id.tvName);
         tvTipeDiet = view.findViewById(R.id.tv_tipediet);
-        tvGender = view.findViewById(R.id.tvGender);
-        tvBirthDate = view.findViewById(R.id.tvBirthDate);
-        tvEmail = view.findViewById(R.id.tvEmail);
-        tvHeight = view.findViewById(R.id.tvHeight);
-        tvWeight = view.findViewById(R.id.tvWeight);
-        tvNoTelepon = view.findViewById(R.id.tvNoTelepon);
+        tvBmi = view.findViewById(R.id.tvBmi);
+
+        // Initialize EditTexts and Button
+        etName = view.findViewById(R.id.etName);
+        etTipeDiet = view.findViewById(R.id.etTipeDiet);
+        etBirthDate = view.findViewById(R.id.etBirthDate);
+        etEmail = view.findViewById(R.id.etEmail);
+        etHeight = view.findViewById(R.id.etHeight);
+        etWeight = view.findViewById(R.id.etWeight);
+
+        btnEditProfile = view.findViewById(R.id.btnEditProfile);
+
+        // Set onClickListener for button
+        btnEditProfile.setOnClickListener(v -> updateProfileData());
     }
 
     private void fetchProfileData() {
-        // Tambahkan pengecekan null untuk SharedPreferences
         if (sharedPreferences == null) {
             Toast.makeText(requireContext(), "Gagal mengakses preferensi", Toast.LENGTH_SHORT).show();
             return;
@@ -104,11 +110,8 @@ public class DetailProfileFragment extends Fragment {
                         String status = jsonResponse.getString("status");
 
                         if (status.equals("success")) {
-                            // Tambahkan pengecekan null untuk objek data
                             if (!jsonResponse.isNull("data")) {
                                 JSONObject userData = jsonResponse.getJSONObject("data");
-
-                                // Update UI dengan data profil
                                 updateUIWithProfileData(userData);
                             } else {
                                 Toast.makeText(requireContext(), "Data kosong", Toast.LENGTH_SHORT).show();
@@ -130,7 +133,6 @@ public class DetailProfileFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("id_user", idUser);
-                Log.d(TAG, "Sending params: " + params);
                 return params;
             }
 
@@ -142,24 +144,94 @@ public class DetailProfileFragment extends Fragment {
             }
         };
 
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                10000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        ));
-
         requestQueue.add(stringRequest);
     }
 
     private void updateUIWithProfileData(JSONObject userData) throws JSONException {
-        // Metode terpisah untuk update UI dengan penanganan null
         tvName.setText(userData.optString("nama_lengkap", "Tidak diketahui"));
+        etName.setText(userData.optString("nama_lengkap", ""));
+
         tvTipeDiet.setText(userData.optString("tipe_diet", "Tidak diketahui"));
+        etTipeDiet.setText(userData.optString("tipe_diet", ""));
+
         tvGender.setText(userData.optString("gender", "Tidak diketahui"));
+        etGender.setText(userData.optString("gender", ""));
+
         tvBirthDate.setText(userData.optString("tanggal_lahir", "Tidak diketahui"));
+        etBirthDate.setText(userData.optString("tanggal_lahir", ""));
+
         tvEmail.setText(userData.optString("email", "Tidak diketahui"));
+        etEmail.setText(userData.optString("email", ""));
+
         tvHeight.setText(userData.optString("tinggi_badan", "0") + " cm");
+        etHeight.setText(userData.optString("tinggi_badan", ""));
+
         tvWeight.setText(userData.optString("berat_badan", "0") + " kg");
-        tvNoTelepon.setText(userData.optString("no_hp", "Tidak diketahui"));
+        etWeight.setText(userData.optString("berat_badan", ""));
+
+        tvNoTelepon.setText(userData.optString("no_hp", "-"));
+        etNoTelepon.setText(userData.optString("no_hp", ""));
+
+        // Perhitungan BMI
+        calculateAndDisplayBMI(userData);
+    }
+
+    private void calculateAndDisplayBMI(JSONObject userData) throws JSONException {
+        String heightStr = userData.optString("tinggi_badan", "0");
+        String weightStr = userData.optString("berat_badan", "0");
+
+        if (!heightStr.equals("0") && !weightStr.equals("0")) {
+            double height = Double.parseDouble(heightStr) / 100; // Konversi ke meter
+            double weight = Double.parseDouble(weightStr);
+            double bmi = weight / (height * height); // Rumus BMI
+
+            // Set BMI ke TextView
+            tvBmi.setText(String.format("BMI: %.2f", bmi));
+        } else {
+            tvBmi.setText("BMI: Tidak tersedia");
+        }
+    }
+
+    private void updateProfileData() {
+        String idUser = sharedPreferences.getString(KEY_ID_USER, "");
+
+        if (idUser.isEmpty()) {
+            Toast.makeText(requireContext(), "ID Pengguna tidak ditemukan", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_UPDATE_PROFILE,
+                response -> {
+                    Log.d(TAG, "Update Response: " + response);
+                    Toast.makeText(requireContext(), "Profil berhasil diperbarui", Toast.LENGTH_SHORT).show();
+                },
+                error -> {
+                    Log.e(TAG, "Volley error: " + (error.getMessage() != null ? error.getMessage() : "Unknown error"), error);
+                    Toast.makeText(requireContext(), "Gagal memperbarui profil", Toast.LENGTH_SHORT).show();
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("id_user", idUser);
+                params.put("nama_lengkap", etName.getText().toString());
+                params.put("tipe_diet", etTipeDiet.getText().toString());
+                params.put("gender", etGender.getText().toString());
+                params.put("tanggal_lahir", etBirthDate.getText().toString());
+                params.put("email", etEmail.getText().toString());
+                params.put("tinggi_badan", etHeight.getText().toString());
+                params.put("berat_badan", etWeight.getText().toString());
+                params.put("no_hp", etNoTelepon.getText().toString());
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
+                return headers;
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 }

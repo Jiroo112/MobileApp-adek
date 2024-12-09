@@ -1,13 +1,8 @@
 package com.alphatz.adek.Fragment;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +13,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,127 +40,92 @@ public class ResepFragment extends Fragment {
     private static final String TAG = "ResepFragment";
     private RequestQueue requestQueue;
     private List<ResepModel> menuList = new ArrayList<>();
-    private ResepAdapter makananAdapter;
-    private static final String ARG_NAMA_MENU = "nama_menu";
+    private ResepAdapter resepAdapter;
     private ProgressBar progressBar;
-    private RecyclerView recyclerViewMakanan;
+    private RecyclerView recyclerViewResep;
     private EditText searchField;
     private Button btnMinumanSehat, btnDessert, btnMakananBerat;
-
-    public static ResepFragment newInstance (String namaMenu){
-        ResepFragment fragment = new ResepFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_NAMA_MENU, namaMenu);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        try {
-            View view = inflater.inflate(R.layout.fragment_resep, container, false);
+        View view = inflater.inflate(R.layout.fragment_resep, container, false);
 
-            // Initialize views
-            recyclerViewMakanan = view.findViewById(R.id.recyclerView);
-            btnMinumanSehat = view.findViewById(R.id.btn_minuman_sehat);
-            btnDessert = view.findViewById(R.id.btn_desert);
-            btnMakananBerat = view.findViewById(R.id.btn_makanan_sehat);
-            progressBar = view.findViewById(R.id.progressBar);
-            searchField = view.findViewById(R.id.searchField);
+        // Initialize views
+        recyclerViewResep = view.findViewById(R.id.recyclerView);
+        btnMakananBerat = view.findViewById(R.id.btn_makanan_sehat);
+        btnMinumanSehat = view.findViewById(R.id.btn_minuman_sehat);
+        btnDessert = view.findViewById(R.id.btn_desert);
+        progressBar = view.findViewById(R.id.progressBar);
+        searchField = view.findViewById(R.id.searchField);
 
-            // Setup RecyclerView
-            recyclerViewMakanan.setLayoutManager(new LinearLayoutManager(getContext()));
-            makananAdapter = new ResepAdapter(menuList, new ResepAdapter.OnMakananClickListener() {
-                @Override
-                public void onMakananClick(ResepModel menu) {
-                    if (menu != null) {
-                        navigateToDetail(menu);
-                    }
+        // Setup RecyclerView
+        recyclerViewResep.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Get the FragmentManager
+        FragmentManager fragmentManager = getParentFragmentManager();
+
+        // Initialize the adapter with the FragmentManager
+        resepAdapter = new ResepAdapter(menuList, new ResepAdapter.OnResepClickListener() {
+            @Override
+            public void onResepClick(ResepModel resep) {
+                if (resep != null) {
+                    navigateToDetail(resep);
                 }
-            }, getParentFragmentManager()); // Passing FragmentManager
-            recyclerViewMakanan.setAdapter(makananAdapter);
+            }
+        }, fragmentManager);
 
-            // Setup functionality
-            setupVolley();
-            setupSearch();
-            setupButtonListeners();
-            fetchMenuMakanan();
+        recyclerViewResep.setAdapter(resepAdapter);
+        requestQueue = Volley.newRequestQueue(requireContext());
+        setupSearch();
+        setupButtonListeners();
+        getResepData();
 
-            return view;
-        } catch (Exception e) {
-            Log.e(TAG, "Error in onCreateView: " + e.getMessage());
-            return null;
-        }
-    }
-
-    private void setupVolley() {
-        try {
-            requestQueue = Volley.newRequestQueue(requireContext());
-        } catch (Exception e) {
-            Log.e(TAG, "Error setting up Volley: " + e.getMessage());
-        }
+        return view;
     }
 
     private void setupButtonListeners() {
-        try {
-            btnMinumanSehat.setOnClickListener(v -> navigateToFragment(new MinumanSehatFragment()));
-            btnMakananBerat.setOnClickListener(v -> navigateToFragment(new MakananBeratFragment()));
-            btnDessert.setOnClickListener(v -> navigateToFragment(new DessertFragment()));
-        } catch (Exception e) {
-            Log.e(TAG, "Error setting up button listeners: " + e.getMessage());
-        }
+        btnMakananBerat.setOnClickListener(v -> navigateToFragment(new MakananBeratFragment()));
+        btnMinumanSehat.setOnClickListener(v -> navigateToFragment(new MinumanSehatFragment()));
+        btnDessert.setOnClickListener(v -> navigateToFragment(new DessertFragment()));
     }
 
     private void setupSearch() {
-        try {
-            searchField.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        searchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    filterMakanan(s.toString());
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {}
-            });
-        } catch (Exception e) {
-            Log.e(TAG, "Error setting up search: " + e.getMessage());
-        }
-    }
-
-    private void filterMakanan(String query) {
-        try {
-            if (menuList == null) return;
-
-            List<ResepModel> filteredList = new ArrayList<>();
-            String lowerCaseQuery = query.toLowerCase().trim();
-
-            for (ResepModel makanan : menuList) {
-                if (makanan != null && makanan.getNamaMenu() != null &&
-                        makanan.getNamaMenu().toLowerCase().contains(lowerCaseQuery)) {
-                    filteredList.add(makanan);
-                }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterResep(s.toString());
             }
 
-            makananAdapter.updateList(filteredList);
-        } catch (Exception e) {
-            Log.e(TAG, "Error filtering makanan: " + e.getMessage());
-        }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
     }
 
-    private void fetchMenuMakanan() {
+    private void filterResep(String query) {
+        List<ResepModel> filteredList = new ArrayList<>();
+        String lowerCaseQuery = query.toLowerCase();
+
+        for (ResepModel resep : menuList) {
+            if (resep.getNamaMenu().toLowerCase().contains(lowerCaseQuery)) {
+                filteredList.add(resep);
+            }
+        }
+
+        resepAdapter.updateList(filteredList);
+    }
+
+    private void getResepData() {
         String url = "http://10.0.2.2/ads_mysql/search/get_menu.php";
         progressBar.setVisibility(View.VISIBLE);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
-                        Log.d(TAG, "Full JSON Response: " + response.toString());
-
-                        if (response == null || !response.has("data")) {
+                        if (!response.has("data")) {
                             showError("Format response tidak valid");
                             return;
                         }
@@ -175,37 +134,39 @@ public class ResepFragment extends Fragment {
                         menuList.clear();
 
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject makananObj = jsonArray.getJSONObject(i);
+                            try {
+                                JSONObject resepObj = jsonArray.getJSONObject(i);
 
-                            String resep = makananObj.optString("resep", "");
-                            Log.d(TAG, "Resep Raw: " + resep);
+                                // Extract values with null checks and default values
+                                String namaMenu = resepObj.optString("nama_menu", "");
+                                int kalori = resepObj.optInt("kalori", 0);
+                                String gambarPath = resepObj.optString("gambar", "");
+                                String resep = resepObj.optString("resep", "");
 
-                            byte[] imageBytes = null;
-                            if (makananObj.has("gambar") && !makananObj.isNull("gambar")) {
-                                String base64Image = makananObj.getString("gambar");
-                                imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
-                            }
+                                // Prepend base URL to gambar path
+                                String gambarUrl = "https://adek-app.my.id/Images/" + gambarPath;
 
-                            ResepModel makanan = new ResepModel(
-                                    makananObj.optInt("id_menu", 0),
-                                    makananObj.optString("nama_menu", ""),
-                                    makananObj.optInt("kalori", 0),
-                                    imageBytes,
-                                    "" //resep kosong
-                            );
+                                // Create ResepModel with URL instead of byte array
+                                ResepModel menu = new ResepModel(
+                                        resepObj.optString("id_menu", ""),
+                                        namaMenu,
+                                        kalori,
+                                        resep,
+                                        gambarUrl,
+                                        null
+                                );
 
-                            menuList.add(makanan);
-
-                            // Simpan resep ke list lokal
-                            if (!resep.isEmpty()) {
-                                Log.d(TAG, "Resep saved: " + resep);
+                                menuList.add(menu);
+                            } catch (JSONException e) {
+                                // Log the error and continue processing other items
+                                Log.e("ResepParser", "Error parsing JSON object", e);
                             }
                         }
 
-                        makananAdapter.updateList(menuList);
+                        resepAdapter.updateList(menuList);
 
                         if (menuList.isEmpty()) {
-                            showError("Tidak ada data makanan");
+                            showError("Tidak ada data menu");
                         }
 
                     } catch (JSONException e) {
@@ -216,8 +177,8 @@ public class ResepFragment extends Fragment {
                     }
                 },
                 error -> {
-                    Log.e(TAG, "Volley Error: " + (error.getMessage() != null ? error.getMessage() : "Unknown error"));
-                    showError("Gagal mengambil data makanan");
+                    Log.e(TAG, "Volley Error: " + error.getMessage());
+                    showError("Gagal mengambil data menu");
                     progressBar.setVisibility(View.GONE);
                 });
 
@@ -229,9 +190,8 @@ public class ResepFragment extends Fragment {
         requestQueue.add(request);
     }
 
-
-    private void navigateToDetail(ResepModel menu) {
-        if (menu == null) return;
+    private void navigateToDetail(ResepModel resep) {
+        if (resep == null) return;
 
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(requireContext());
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_detail_resep, null);
@@ -239,13 +199,12 @@ public class ResepFragment extends Fragment {
         builder.setView(dialogView);
 
         TextView titleText = dialogView.findViewById(R.id.title_resep);
-        TextView kaloriText = dialogView.findViewById(R.id.kalori_resep);
         TextView detailResep = dialogView.findViewById(R.id.detail_resep);
         ImageView imageResep = dialogView.findViewById(R.id.image_resep);
         Button closeButton = dialogView.findViewById(R.id.btn_close);
 
-        titleText.setText(menu.getNamaMenu());
-        kaloriText.setText(String.format("%d Kalori", menu.getKalori()));
+        titleText.setText(resep.getNamaMenu());
+        detailResep.setText(resep.getResep());
 
         closeButton.setOnClickListener(v -> builder.create().dismiss());
 

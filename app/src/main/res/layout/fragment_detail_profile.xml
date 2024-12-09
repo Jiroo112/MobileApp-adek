@@ -73,6 +73,7 @@
                     android:layout_marginTop="16dp">
 
                     <LinearLayout
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -84,13 +85,15 @@
                             android:layout_height="wrap_content"
                             android:text="BMI"
                             android:textColor="#4A90E2"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold"
+                            android:textSize="20sp"/>
 
                         <TextView
+                            android:id="@+id/tvBmi"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="22.9"
-                            android:textSize="16sp"
+                            android:text=""
+                            android:textSize="20sp"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
 
@@ -98,22 +101,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:gravity="center">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Target"
-                            android:textColor="#4A90E2"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Gain Weight"
-                            android:textSize="16sp"
-                            android:layout_marginTop="4dp"/>
-                    </LinearLayout>
+                        android:gravity="center"/>
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -139,8 +127,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -155,17 +142,17 @@
                             android:layout_height="wrap_content"
                             android:text="Jenis Kelamin"
                             android:textColor="#4A90E2"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tvGender"
+                        <EditText
+                            android:id="@+id/etName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="Laki-laki"
-                            android:textSize="15sp"
-                            android:textColor="#2C3E50"/>
+                            android:textColor="#2C3E50"
+                            android:textSize="15sp" />
 
                         <!-- Tanggal Lahir -->
                         <TextView
@@ -174,17 +161,17 @@
                             android:layout_marginTop="16dp"
                             android:text="Tanggal Lahir"
                             android:textColor="#4A90E2"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tvBirthDate"
+                        <EditText
+                            android:id="@+id/etBirthDate"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="15 Agustus 1990"
-                            android:textSize="15sp"
-                            android:textColor="#2C3E50"/>
+                            android:textColor="#2C3E50"
+                            android:textSize="15sp" />
 
                         <!-- Email Aktif -->
                         <TextView
@@ -193,25 +180,17 @@
                             android:layout_marginTop="16dp"
                             android:text="Email Aktif"
                             android:textColor="#4A90E2"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tvEmail"
+                        <EditText
+                            android:id="@+id/etEmail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="kunMooji@gmail.com"
-                            android:textSize="15sp"
-                            android:textColor="#2C3E50"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:paddingStart="12dp">
+                            android:textColor="#2C3E50"
+                            android:textSize="15sp" />
 
                         <!-- Tinggi Badan -->
                         <TextView
@@ -219,17 +198,17 @@
                             android:layout_height="wrap_content"
                             android:text="Tinggi Badan"
                             android:textColor="#4A90E2"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tvHeight"
+                        <EditText
+                            android:id="@+id/etHeight"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="175 cm"
-                            android:textSize="15sp"
-                            android:textColor="#2C3E50"/>
+                            android:textColor="#2C3E50"
+                            android:textSize="15sp" />
 
                         <!-- Berat Badan -->
                         <TextView
@@ -238,17 +217,17 @@
                             android:layout_marginTop="16dp"
                             android:text="Berat Badan"
                             android:textColor="#4A90E2"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tvWeight"
+                        <EditText
+                            android:id="@+id/etWeight"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="70 kg"
-                            android:textSize="15sp"
-                            android:textColor="#2C3E50"/>
+                            android:textColor="#2C3E50"
+                            android:textSize="15sp" />
 
                         <!-- No Telepon -->
                         <TextView
@@ -257,17 +236,24 @@
                             android:layout_marginTop="16dp"
                             android:text="No Telepon"
                             android:textColor="#4A90E2"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tvNoTelepon"
+                        <EditText
+                            android:id="@+id/etTipeDiet"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="-"
-                            android:textSize="15sp"
-                            android:textColor="#2C3E50"/>
+                            android:textColor="#2C3E50"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:id="@+id/btnEditProfile"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="edit"/>
+
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

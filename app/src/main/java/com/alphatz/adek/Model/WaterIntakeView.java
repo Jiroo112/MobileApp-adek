@@ -116,7 +116,7 @@ public class WaterIntakeView extends View {
 
     public void setTarget(int target) {
         this.target = target;
-        this.current = Math.min(current, target); // Adjust current if needed
+        this.current = Math.min(current, target); // just current if needed
         invalidate();
     }
 

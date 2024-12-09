@@ -49,8 +49,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class AsupanFragment extends Fragment {
     private static final String TAG = "AsupanFragment";
@@ -417,20 +419,29 @@ public class AsupanFragment extends Fragment {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String currentDate = dateFormat.format(getResetTime());
 
+        // Log tambahan untuk debugging
+        Log.d(TAG, "Last Reset Date: " + lastResetDate);
+        Log.d(TAG, "Current Reset Date: " + currentDate);
+
         // Jika tanggal berbeda, lakukan reset
         if (!lastResetDate.equals(currentDate)) {
+            Log.d(TAG, "Kondisi reset terpenuhi, melakukan reset data");
             resetData(prefs, currentDate);
         }
     }
 
     private Date getResetTime() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 3); // Set pukul 03.00 pagi
+
+        // Set waktu ke 03:00 pagi
+        calendar.set(Calendar.HOUR_OF_DAY, 3);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
 
-        // Jika waktu saat ini sebelum pukul 03.00 pagi, gunakan tanggal kemarin
-        if (Calendar.getInstance().before(calendar)) {
+        // Jika waktu saat ini sebelum 03:00, gunakan tanggal kemarin
+        Calendar now = Calendar.getInstance();
+        if (now.before(calendar)) {
             calendar.add(Calendar.DAY_OF_YEAR, -1);
         }
 
@@ -438,23 +449,64 @@ public class AsupanFragment extends Fragment {
     }
 
     private void resetData(SharedPreferences prefs, String currentDate) {
-        // Hapus atau reset data di UI
-        if (tvJumlahMenu != null) {
-            tvJumlahMenu.setText("0");
-        }
-        if (kaloriMenuDetail != null) {
-            kaloriMenuDetail.setText("0");
+        // Ambil id_user dari SharedPreferences
+        String idUser = prefs.getString("idUser", "");
+
+        if (idUser.isEmpty()) {
+            Log.e(TAG, "User ID not found during reset");
+            return;
         }
 
-        // Simpan tanggal reset terbaru ke SharedPreferences
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("lastResetDate", currentDate);
-        editor.apply();
+        // URL untuk memindahkan data ke riwayat dan mereset
+        String url = "http://10.0.2.2/ads_mysql/asupan/reset_daily_intake.php";
 
-        Log.d(TAG, "Data berhasil direset pada: " + currentDate);
+        // Buat request untuk memindahkan dan mereset data
+        StringRequest request = new StringRequest(
+                Request.Method.POST,
+                url,
+                response -> {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean success = jsonResponse.getBoolean("success");
+
+                        if (success) {
+                            // Reset UI
+                            if (tvJumlahMenu != null) {
+                                tvJumlahMenu.setText("0");
+                            }
+                            if (kaloriMenuDetail != null) {
+                                kaloriMenuDetail.setText("0");
+                            }
+
+                            // Simpan tanggal reset terbaru ke SharedPreferences
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString("lastResetDate", currentDate);
+                            editor.apply();
+
+                            Log.d(TAG, "Data berhasil dipindahkan dan direset pada: " + currentDate);
+                        } else {
+                            Log.e(TAG, "Gagal memindahkan dan mereset data");
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Error parsing reset response: " + e.getMessage());
+                    }
+                },
+                error -> {
+                    Log.e(TAG, "Error during reset: " + error.getMessage());
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("id_user", idUser);
+                params.put("reset_date", currentDate);
+                return params;
+            }
+        };
+
+        // Tambahkan request ke queue
+        requestQueue.add(request);
     }
-
-
     private void handleResponse(JSONObject response) {
         try {
             String status = response.optString("status");
