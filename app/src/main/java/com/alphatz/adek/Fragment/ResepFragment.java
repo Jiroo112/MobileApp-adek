@@ -119,7 +119,7 @@ public class ResepFragment extends Fragment {
     }
 
     private void getResepData() {
-        String url = "http://10.0.2.2/ads_mysql/search/get_menu.php";
+        String url = "http://adek-app.my.id/ads_mysql/search/get_menu.php";
         progressBar.setVisibility(View.VISIBLE);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,

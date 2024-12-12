@@ -1,8 +1,6 @@
 package com.alphatz.adek.Adapter;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alphatz.adek.R;
 import com.alphatz.adek.Model.KonsultasiModel;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.List;
 
 public class KonsultasiAdapter extends RecyclerView.Adapter<KonsultasiAdapter.DoctorViewHolder> {
@@ -26,14 +23,17 @@ public class KonsultasiAdapter extends RecyclerView.Adapter<KonsultasiAdapter.Do
     }
 
     public KonsultasiAdapter(List<KonsultasiModel> konsultanList, OnDoctorClickListener listener) {
-        this.konsultanList = konsultanList;
+        this.konsultanList = konsultanList != null ? konsultanList : List.of(); // Null safety
         this.listener = listener;
     }
 
     public void updateList(List<KonsultasiModel> newList) {
-        this.konsultanList = newList;
-        notifyDataSetChanged();
+        if (newList != null) {
+            this.konsultanList = newList;
+            notifyDataSetChanged();
+        }
     }
+
 
     @NonNull
     @Override
@@ -51,7 +51,7 @@ public class KonsultasiAdapter extends RecyclerView.Adapter<KonsultasiAdapter.Do
 
     @Override
     public int getItemCount() {
-        return konsultanList.size();
+        return konsultanList != null ? konsultanList.size() : 0;
     }
 
     class DoctorViewHolder extends RecyclerView.ViewHolder {
@@ -64,35 +64,39 @@ public class KonsultasiAdapter extends RecyclerView.Adapter<KonsultasiAdapter.Do
             doctorImage = itemView.findViewById(R.id.doctor_image);
             doctorName = itemView.findViewById(R.id.doctor_name);
             contactButton = itemView.findViewById(R.id.contact_button);
-        }
-
-        void bind(final KonsultasiModel konsultan) {
-            doctorName.setText(konsultan.getNamaLengkap());
-            if (konsultan.getFotoDokter() != null && !konsultan.getFotoDokter().isEmpty()) {
-                try {
-                    byte[] decodedString = Base64.decode(konsultan.getFotoDokter(), Base64.DEFAULT);
-
-                    Glide.with(itemView.getContext())
-                            .load(decodedString)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .placeholder(R.drawable.gambar_kosong)
-                            .error(R.drawable.gambar_kosong)
-                            .centerCrop()
-                            .into(doctorImage);
-                } catch (IllegalArgumentException e) {
-                    doctorImage.setImageResource(R.drawable.gambar_kosong);
-                } catch (Exception e) {
-                    doctorImage.setImageResource(R.drawable.gambar_kosong);
-                }
-            } else {
-                doctorImage.setImageResource(R.drawable.gambar_kosong);
-            }
 
             contactButton.setOnClickListener(v -> {
-                if (listener != null) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    KonsultasiModel konsultan = konsultanList.get(position);
                     listener.onDoctorClick(konsultan);
                 }
             });
+        }
+
+        void bind(final KonsultasiModel konsultan) {
+            if (konsultan != null) {
+                doctorName.setText(konsultan.getNamaLengkap());
+
+                String imageUrl = konsultan.getGambarUrl();
+                if (imageUrl != null && !imageUrl.startsWith("http")) {
+                    // Tambahkan base URL jika gambar tidak dimulai dengan "http"
+                    String baseUrl = "https://adek-app.my.id/";
+                    imageUrl = baseUrl + imageUrl;
+                }
+
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    // Muat gambar menggunakan Glide
+                    Glide.with(itemView.getContext())
+                            .load(imageUrl)
+                            .placeholder(R.drawable.gambar_kosong)
+                            .error(R.drawable.gambar_kosong)
+                            .into(doctorImage);
+                } else {
+                    // Gunakan gambar placeholder default jika URL tidak valid
+                    doctorImage.setImageResource(R.drawable.gambar_kosong);
+                }
+            }
         }
     }
 }

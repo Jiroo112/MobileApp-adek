@@ -1,0 +1,19 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background color of the tab -->
+    <solid android:color="#FFFFFF"/>
+
+    <!-- Border for the tab -->
+    <stroke
+        android:width="2dp"
+        android:color="#555"/>
+
+    <!-- Rounded corners for the tab -->
+    <corners android:radius="12dp"/>
+
+    <!-- Padding around the text inside the tab -->
+    <padding
+        android:left="16dp"
+        android:top="8dp"
+        android:right="16dp"
+        android:bottom="8dp"/>
+</shape>

@@ -7,7 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Base64;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -59,7 +60,7 @@ public class ProfileFragment extends Fragment {
     private RequestQueue requestQueue;
     private Bitmap foto_profile;
 
-    private String baseUrl = "http://10.0.2.2/ads_mysql/account/profile_adek.php";
+    private String url = "http://adek-app.my.id/ads_mysql/account/profile_adek.php";
 
     public ProfileFragment() {
     }
@@ -132,7 +133,7 @@ public class ProfileFragment extends Fragment {
     private void getUserDataFromApi() {
         Log.d(TAG, "Fetching data for nama_lengkap: " + currentNamaLengkap);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, baseUrl,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -153,25 +154,23 @@ public class ProfileFragment extends Fragment {
                                 calculateAndDisplayBMI(berat, tinggi);
                                 calculateAndDisplayAge(tanggalLahir);
 
+                                // Penanganan gambar dari URL
                                 if (data.has("gambar") && !data.isNull("gambar")) {
-                                    String gambarBase64 = data.getString("gambar"); // Ambil data gambar dalam base64
-                                    if (!gambarBase64.isEmpty()) {
-                                        try {
-                                            // Decode Base64 menjadi bitmap
-                                            byte[] decodedString = Base64.decode(gambarBase64, Base64.DEFAULT);
-                                            Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                                    String gambarPath = data.getString("gambar");
+                                    if (!TextUtils.isEmpty(gambarPath)) {
+                                        // Buat URL lengkap gambar
+                                        String gambarUrl = "https://adek-app.my.id/Images/" + gambarPath;
 
-                                            // Pasang bitmap ke ImageView
-                                            foto_profile = decodedBitmap;
-                                            fotoProfil.setImageBitmap(decodedBitmap);
+                                        // Gunakan Glide untuk memuat gambar
+                                        Glide.with(getContext())
+                                                .load(gambarUrl)
+                                                .placeholder(R.drawable.ic_profil)
+                                                .error(R.drawable.ic_profil)
+                                                .into(fotoProfil);
 
-                                            Log.d(TAG, "Gambar berhasil didecode dan ditampilkan.");
-                                        } catch (IllegalArgumentException e) {
-                                            Log.e(TAG, "Error decoding Base64 image: " + e.getMessage());
-                                            fotoProfil.setImageResource(R.drawable.ic_profil); // Gunakan gambar default
-                                        }
+                                        Log.d(TAG, "Gambar dimuat dari URL: " + gambarUrl);
                                     } else {
-                                        Log.d(TAG, "Data gambar kosong. Menggunakan gambar default.");
+                                        Log.d(TAG, "Path gambar kosong. Menggunakan gambar default.");
                                         fotoProfil.setImageResource(R.drawable.ic_profil);
                                     }
                                 } else {
@@ -192,8 +191,12 @@ public class ProfileFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e(TAG, "Volley error: " + (error.getMessage() != null ? error.getMessage() : "Unknown error"));
-                        Toast.makeText(getContext(), "Network error occurred", Toast.LENGTH_SHORT).show();
+                        if (error.networkResponse != null) {
+                            Log.e(TAG, "Network Error: " + error.networkResponse.statusCode);
+                            Log.e(TAG, "Error Response Data: " + new String(error.networkResponse.data));
+                        }
+                        Log.e(TAG, "Volley error: " + Log.getStackTraceString(error));
+                        Toast.makeText(getContext(), "Network error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }) {
             @Override
@@ -213,7 +216,7 @@ public class ProfileFragment extends Fragment {
         };
 
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                10000,
+                20000,  // 20 detik timeout
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         ));

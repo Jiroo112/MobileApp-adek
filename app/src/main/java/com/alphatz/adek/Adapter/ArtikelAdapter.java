@@ -1,13 +1,12 @@
 package com.alphatz.adek.Adapter;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alphatz.adek.Model.ArtikelModel;
 import com.alphatz.adek.R;
 import com.alphatz.adek.Fragment.DetailArtikelFragment;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -29,14 +29,16 @@ public class ArtikelAdapter extends RecyclerView.Adapter<ArtikelAdapter.ArtikelV
     }
 
     public ArtikelAdapter(List<ArtikelModel> artikelList, OnArtikelClickListener listener, FragmentManager fragmentManager) {
-        this.artikelList = artikelList;
+        this.artikelList = artikelList != null ? artikelList : List.of(); // Null safety
         this.listener = listener;
         this.fragmentManager = fragmentManager;
     }
 
     public void updateList(List<ArtikelModel> newList) {
-        this.artikelList = newList;
-        notifyDataSetChanged();
+        if (newList != null) {
+            this.artikelList = newList;
+            notifyDataSetChanged();
+        }
     }
 
     @NonNull
@@ -72,14 +74,26 @@ public class ArtikelAdapter extends RecyclerView.Adapter<ArtikelAdapter.ArtikelV
 
         void bind(final ArtikelModel artikel) {
             if (artikel != null) {
-                tvJudulArtikel.setText(artikel.getJudulArtikell());
+                tvJudulArtikel.setText(artikel.getJudulArtikel());
                 tvDeskripsi.setText(artikel.getKategori());
 
-                if (artikel.getGambar() != null && artikel.getGambar().length > 0) {
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(artikel.getGambar(), 0, artikel.getGambar().length);
-                    ivArtikel.setImageBitmap(bitmap);
+                String imageUrl = artikel.getGambarUrl();
+                if (imageUrl != null && !imageUrl.startsWith("http")) {
+                    // Tambahkan base URL jika gambar tidak dimulai dengan "http"
+                    String baseUrl = "https://adek-app.my.id/Image/";
+                    imageUrl = baseUrl + imageUrl;
+                }
+
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    // Muat gambar menggunakan Glide
+                    Glide.with(itemView.getContext())
+                            .load(imageUrl)
+                            .placeholder(R.drawable.gambar_kosong) // Ganti dengan drawable placeholder Anda
+                            .error(R.drawable.gambar_kosong) // Ganti dengan drawable error Anda
+                            .into(ivArtikel);
                 } else {
-                    ivArtikel.setImageResource(R.drawable.default_image); // Ganti dengan drawable default Anda
+                    // Gunakan gambar placeholder default jika URL tidak valid
+                    ivArtikel.setImageResource(R.drawable.gambar_kosong); // Ganti dengan drawable default Anda
                 }
 
                 itemView.setOnClickListener(v -> {

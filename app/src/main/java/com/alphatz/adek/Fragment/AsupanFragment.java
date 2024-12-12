@@ -181,7 +181,7 @@ public class AsupanFragment extends Fragment {
                 return;
             }
 
-            String url = "http://10.0.2.2/ads_mysql/asupan/get_detail_kalori.php?id_user=" + idUser;
+            String url = "http://adek-app.my.id/ads_mysql/asupan/get_detail_kalori.php?id_user=" + idUser;
             showLoading(true);
 
             Log.d(TAG, "Fetching detailed data from URL: " + url);
@@ -278,11 +278,9 @@ public class AsupanFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new AsupanAdapter(menuList, menu -> {
             if (menu != null) {
-                // Ambil id_user dari SharedPreferences dengan key yang sama seperti di LoginActivity
                 SharedPreferences prefs = requireActivity().getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE);
                 String idUser = prefs.getString("idUser", "");
 
-                // Debug log memeriksa nilai idUser
                 Log.d(TAG, "ID User from SharedPreferences: " + idUser);
 
                 if (idUser.isEmpty()) {
@@ -290,14 +288,19 @@ public class AsupanFragment extends Fragment {
                     return;
                 }
 
-                // Teruskan id_user ke bottom sheet
                 AsupanBottomSheet bottomSheet = AsupanBottomSheet.newInstance(menu.getNamaMenu(), idUser);
+
+                // Tambahkan listener untuk refresh data setelah menyimpan
+                bottomSheet.setOnMenuSavedListener(() -> {
+                    // Panggil ulang method untuk mengambil total menu dan kalori
+                    fetchTotalMenuAndCalories();
+                });
+
                 bottomSheet.show(getParentFragmentManager(), "AsupanBottomSheet");
             }
         });
         recyclerView.setAdapter(adapter);
     }
-
     private void setupSearch() {
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -333,7 +336,7 @@ public class AsupanFragment extends Fragment {
     private void fetchMenuData() {
         if (!isAdded()) return;
 
-        String url = "http://10.0.2.2/ads_mysql/asupan/get_menu_asupan.php";
+        String url = "http://adek-app.my.id/ads_mysql/asupan/get_menu_asupan.php";
         showLoading(true);
 
         JsonObjectRequest request = new JsonObjectRequest(
@@ -361,7 +364,7 @@ public class AsupanFragment extends Fragment {
         // Periksa dan lakukan reset jika tanggal berubah
         checkAndResetDataIfNewDay(prefs);
 
-        String url = "http://10.0.2.2/ads_mysql/asupan/get_detail_kalorinew.php?id_user=" + idUser;
+        String url = "http://adek-app.my.id/ads_mysql/asupan/get_detail_kalorinew.php?id_user=" + idUser;
         showLoading(true);
 
         Log.d(TAG, "Fetching data from URL: " + url);
@@ -458,7 +461,7 @@ public class AsupanFragment extends Fragment {
         }
 
         // URL untuk memindahkan data ke riwayat dan mereset
-        String url = "http://10.0.2.2/ads_mysql/asupan/reset_daily_intake.php";
+        String url = "http://adek-app.my.id/ads_mysql/asupan/reset_daily_intake.php";
 
         // Buat request untuk memindahkan dan mereset data
         StringRequest request = new StringRequest(

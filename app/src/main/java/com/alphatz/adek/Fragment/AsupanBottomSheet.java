@@ -41,6 +41,11 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
     private static final String ARG_NAMA_MENU = "nama_menu";
     private static final String ARG_ID_USER = "idUser";
 
+    // Interface untuk callback setelah menu disimpan
+    public interface OnMenuSavedListener {
+        void onMenuSaved();
+    }
+
     private String idUser;
     private String idMenu;
     private double baseKalori;
@@ -53,6 +58,9 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
     private Button tambahButton;
     private RequestQueue requestQueue;
 
+    // Listener untuk callback
+    private OnMenuSavedListener mListener;
+
     public static AsupanBottomSheet newInstance(String namaMenu, String idUser) {
         AsupanBottomSheet fragment = new AsupanBottomSheet();
         Bundle args = new Bundle();
@@ -60,6 +68,11 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
         args.putString(ARG_ID_USER, idUser);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    // Metode untuk set listener
+    public void setOnMenuSavedListener(OnMenuSavedListener listener) {
+        this.mListener = listener;
     }
 
     @SuppressLint("MissingInflatedId")
@@ -122,7 +135,6 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
             double totalLemak = baseLemak * porsi;
             double totalGula = baseGula * porsi;
 
-
             textKalori.setText(String.format("Kalori: %.1f", totalKalori));
             textProtein.setText(String.format("Protein: %.1f", totalProtein));
             textKarbohidrat.setText(String.format("Karbohidrat: %.1f", totalKarbohidrat));
@@ -138,7 +150,7 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
     private void fetchMenuDetail(String namaMenu) {
         try {
             String encodedNamaMenu = URLEncoder.encode(namaMenu, "UTF-8");
-            String url = "http://10.0.2.2/ads_mysql/asupan/bot_sheet_asupan.php?nama_menu=" + encodedNamaMenu;
+            String url = "http://adek-app.my.id/ads_mysql/asupan/bot_sheet_asupan.php?nama_menu=" + encodedNamaMenu;
 
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                     response -> {
@@ -151,7 +163,6 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
                                 baseKarbohidrat = data.getDouble("karbohidrat");
                                 baseLemak = data.getDouble("lemak");
                                 baseGula = data.getDouble("gula");
-
 
                                 textTitle.setText(data.getString("nama_menu"));
                                 updateNutritionValues();
@@ -195,11 +206,11 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
         double totalProtein = baseProtein * porsi;
         double totalKarbohidrat = baseKarbohidrat * porsi;
         double totalLemak = baseLemak * porsi;
-        double totalGula = baseGula * porsi; // Tambahkan ini
+        double totalGula = baseGula * porsi;
 
         String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-        String url = "http://10.0.2.2/ads_mysql/asupan/simpan_detail_kalori.php";
+        String url = "http://adek-app.my.id/ads_mysql/asupan/simpan_detail_kalori.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
@@ -210,6 +221,12 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
 
                         if (success) {
                             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+
+                            // Panggil callback jika listener tidak null
+                            if (mListener != null) {
+                                mListener.onMenuSaved();
+                            }
+
                             getDialog().dismiss();
                         } else {
                             Toast.makeText(getContext(), "Gagal: " + message, Toast.LENGTH_SHORT).show();
@@ -234,7 +251,7 @@ public class AsupanBottomSheet extends BottomSheetDialogFragment {
                 params.put("total_protein", String.valueOf(totalProtein));
                 params.put("total_karbohidrat", String.valueOf(totalKarbohidrat));
                 params.put("total_lemak", String.valueOf(totalLemak));
-                params.put("total_gula", String.valueOf(totalGula)); // Tambahkan ini
+                params.put("total_gula", String.valueOf(totalGula));
                 return params;
             }
         };

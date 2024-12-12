@@ -134,40 +134,50 @@ public class SearchFragment extends Fragment implements ArtikelAdapter.OnArtikel
     }
 
     private void fetchArtikelData() {
-        String url = "http://10.0.2.2/ads_mysql/search/get_artikel.php";
+        String url = "http://adek-app.my.id/ads_mysql/search/get_artikel.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
                     try {
+                        Log.d("FetchArtikelData", "Response received: " + response);
+
                         JSONObject jsonResponse = new JSONObject(response);
                         if ("success".equals(jsonResponse.getString("status"))) {
                             JSONArray artikelArray = jsonResponse.getJSONArray("data");
 
+                            artikelList.clear(); // Bersihkan daftar artikel sebelum menambahkan data baru
+
+                            Log.d("FetchArtikelData", "Jumlah artikel ditemukan: " + artikelArray.length());
+
                             for (int i = 0; i < artikelArray.length(); i++) {
                                 JSONObject artikel = artikelArray.getJSONObject(i);
 
-                                String judul = artikel.getString("judulArtikel");
-                                String kategori = artikel.getString("kategori");
+                                String judul = artikel.optString("judulArtikel", "");
+                                String kategori = artikel.optString("kategori", "");
+                                String gambarPath = artikel.optString("gambar", "");
 
-                                byte[] gambarBytes = artikel.isNull("gambar")
-                                        ? null
-                                        : android.util.Base64.decode(
-                                        artikel.getString("gambar"),
-                                        android.util.Base64.DEFAULT
-                                );
+                                Log.d("FetchArtikelData", "Artikel ke-" + i + ": Judul = " + judul + ", Kategori = " + kategori);
 
-                                ArtikelModel artikelModel = new ArtikelModel(judul, kategori, gambarBytes);
+                                // Buat URL lengkap untuk gambar jika path tersedia
+                                String gambarUrl = gambarPath.isEmpty() ? null : "http://adek-app.my.id/Images/" + gambarPath;
+
+                                // Buat model ArtikelModel menggunakan URL gambar
+                                ArtikelModel artikelModel = new ArtikelModel(judul, kategori, gambarUrl);
                                 artikelList.add(artikelModel);
                             }
 
                             artikelAdapter.notifyDataSetChanged();
+                            Log.d("FetchArtikelData", "Artikel list updated. Total: " + artikelList.size());
+                        } else {
+                            Toast.makeText(getContext(), "Gagal memuat artikel", Toast.LENGTH_SHORT).show();
+                            Log.e("FetchArtikelData", "Server response status: " + jsonResponse.getString("status"));
                         }
                     } catch (JSONException e) {
-                        Log.e("SearchFragment", "JSON Parsing Error: " + e.getMessage());
+                        Log.e("FetchArtikelData", "JSON Parsing Error: " + e.getMessage());
                     }
                 },
                 error -> {
-                    Log.e("SearchFragment", "Volley Error: " + error.toString());
+                    Log.e("FetchArtikelData", "Volley Error: " + error.toString());
                     Toast.makeText(getContext(), "Error fetching articles", Toast.LENGTH_SHORT).show();
                 }
         );
@@ -175,7 +185,6 @@ public class SearchFragment extends Fragment implements ArtikelAdapter.OnArtikel
         RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
         requestQueue.add(stringRequest);
     }
-
     @Override
     public void onArtikelClick(ArtikelModel artikel) {
         // Optional additional handling if needed

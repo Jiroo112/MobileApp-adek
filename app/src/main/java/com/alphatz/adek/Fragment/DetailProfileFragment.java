@@ -35,8 +35,8 @@ import java.util.Map;
 
 public class DetailProfileFragment extends Fragment {
     private static final String TAG = "DetailProfileFragment";
-    private static final String URL_PROFILE = "http://10.0.2.2/ads_mysql/account/get_profile.php";
-    private static final String URL_UPDATE_PROFILE = "http://10.0.2.2/ads_mysql/account/update_profile.php";
+    private static final String URL_PROFILE = "http://adek-app.my.id/ads_mysql/account/get_profile.php";
+    private static final String URL_UPDATE_PROFILE = "http://adek-app.my.id/ads_mysql/account/update_profile.php";
 
     // TextViews untuk profil
     private TextView tvName, tvTipeDiet, tvGender, tvBirthDate,

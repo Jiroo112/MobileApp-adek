@@ -125,7 +125,7 @@ public class TerakhirDimakan extends Fragment {
         }
 
         // API URL
-        String url = "http://10.0.2.2/ads_mysql/asupan/get_terakhir_makanan.php?id_user=" + idUser;
+        String url = "http://adek-app.my.id/ads_mysql/asupan/get_terakhir_makanan.php?id_user=" + idUser;
 
         // Show loading indicator
         showLoading(true);

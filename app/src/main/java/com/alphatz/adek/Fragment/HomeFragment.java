@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
             return;
         }
 
-        String url = "http://10.0.2.2/ads_mysql/get_totals.php?id_user=" + idUser;
+        String url = "http://adek-app.my.id/ads_mysql/get_totals.php?id_user=" + idUser;
         Log.d(TAG, "Fetching totals data from URL: " + url);
 
         JsonObjectRequest request = new JsonObjectRequest(

@@ -38,7 +38,7 @@ public class Regist extends AppCompatActivity {
 
     private EditText editTextNamaLengkap, editTextEmail, editTextPassword, editTextRePassword;
     private Button buttonRegister;
-    private String URL_REGISTER = "http://10.0.2.2/ads_mysql/account/registrasi_lengkap.php";
+    private String URL_REGISTER = "http://adek-app.my.id/ads_mysql/account/registrasi_lengkap.php";
     private static final String TAG = "Regist";
 
     @Override

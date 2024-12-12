@@ -32,7 +32,7 @@ public class AddAsupanFragment extends Fragment {
 
     private EditText editTextNamaMenu, editTextTakaran, editTextKalori, editTextKarbohidrat, editTextLemak, editTextProtein;
     private Spinner spinnerKategori;
-    private String URL_POST_MENU = "http://10.0.2.2/ads_mysql/asupan/post_menu.php";
+    private String URL_POST_MENU = "http://adek-app.my.id/ads_mysql/asupan/post_menu.php";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -56,7 +56,7 @@ public class CatatanMinum extends Fragment {
     private TextView tabCariMakanan, tabTerakhirDimakan, tabCatatanMinum;
     private WaterIntakeView waterIntakeView;
     private static final int DECREASE_AMOUNT = 2500;
-    private String baseUrl = "http://10.0.2.2/ads_mysql/account/profile_adek.php";
+    private String baseUrl = "http://adek-app.my.id/ads_mysql/account/profile_adek.php";
     private Context context;
     private RequestQueue requestQueue;
     public CatatanMinum() {
@@ -178,7 +178,7 @@ public class CatatanMinum extends Fragment {
         }
 
         String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        String url = "http://10.0.2.2/ads_mysql/asupan/simpan_minum.php"; // Change to your server URL
+        String url = "http://adek-app.my.id/ads_mysql/asupan/simpan_minum.php"; // Change to your server URL
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 

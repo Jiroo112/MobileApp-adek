@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     Button buttonLogin;
     TextView textViewSignUp;
 
-    String URL_LOGIN = "http://10.0.2.2/ads_mysql/account/login_adek.php";
+    String URL_LOGIN = "http://adek-app.my.id/ads_mysql/account/login_adek.php";
 
     SharedPreferences sharedPreferences;
     public static final String PREF_NAME = "LoginPrefs";

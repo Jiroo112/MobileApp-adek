@@ -49,7 +49,7 @@ public class MinumanSehatFragment extends Fragment {
     private EditText searchField;
     private Button btnMakananSehat, btnDessert, btnFilter;
 
-    private static final String URL = "http://10.0.2.2/ads_mysql/get_only_minuman.php";
+    private static final String URL = "http://adek-app.my.id/ads_mysql/get_only_minuman.php";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

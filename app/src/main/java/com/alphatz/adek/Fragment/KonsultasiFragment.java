@@ -21,7 +21,7 @@ import com.alphatz.adek.R;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
@@ -101,38 +101,24 @@ public class KonsultasiFragment extends Fragment {
                 response -> {
                     progressBar.setVisibility(View.GONE);
                     try {
-                        //buat debug
-                        Log.d(TAG, "Raw response: " + response.toString());
-
-                        if (!response.has("data")) {
-                            showError("Format response tidak valid: Tidak ada field 'data'");
-                            return;
-                        }
-
-                        JSONArray jsonArray = response.getJSONArray("data");
                         konsultanList.clear();
 
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject konsultanObj = jsonArray.getJSONObject(i);
+                        // Ambil array "data" dari respons JSON
+                        JSONArray dataArray = response.getJSONArray("data");
 
-                            Log.d(TAG, "Processing konsultan: " + konsultanObj.toString());
+                        for (int i = 0; i < dataArray.length(); i++) {
+                            JSONObject konsultanObj = dataArray.getJSONObject(i);
 
-                            String id = konsultanObj.optString("id_konsultan", "");
-                            String nama = konsultanObj.optString("nama_lengkap", "");
-                            String noHp = konsultanObj.optString("no_hp", "");
-                            String foto = konsultanObj.optString("foto_dokter", null);
+                            String id = konsultanObj.getString("id_konsultan");
+                            String nama = konsultanObj.getString("nama_lengkap");
+                            String noHp = konsultanObj.getString("no_hp");
+                            String gambarPath = konsultanObj.getString("gambar");
+                            String gambarUrl = "https://adek-app.my.id/Images/" + gambarPath;
 
-                            //validasi data konsultannya
-                            if (id.isEmpty() || nama.isEmpty()) {
-                                Log.e(TAG, "Invalid data for konsultan: " + konsultanObj.toString());
-                                continue;
-                            }
-
-                            KonsultasiModel konsultan = new KonsultasiModel(id, nama, noHp, foto);
+                            KonsultasiModel konsultan = new KonsultasiModel(id, nama, noHp, gambarUrl);
                             konsultanList.add(konsultan);
                         }
 
-                        // Update adapter
                         if (getActivity() != null) {
                             getActivity().runOnUiThread(() -> {
                                 adapter.updateList(konsultanList);
@@ -141,7 +127,6 @@ public class KonsultasiFragment extends Fragment {
                                 }
                             });
                         }
-
                     } catch (JSONException e) {
                         Log.e(TAG, "Error parsing JSON: " + e.getMessage());
                         showError("Gagal memproses data: " + e.getMessage());
