@@ -205,8 +205,6 @@ public class OlahragaFragment extends Fragment {
         titleText.setText(olahraga.getNamaOlahraga());
 
         closeButton.setOnClickListener(v -> builder.create().dismiss());
-
-        androidx.appcompat.app.AlertDialog dialog = builder.create();
     }
 
     private void navigateToFragment(Fragment fragment) {
