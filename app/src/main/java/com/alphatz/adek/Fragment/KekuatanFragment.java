@@ -141,15 +141,18 @@ public class KekuatanFragment extends Fragment {
                                 // Extract values with null checks and default values
                                 String namaOlahraga = olahragaObj.optString("nama_olahraga", "");
                                 String deskripsi = olahragaObj.optString("deskripsi", "");
-                                String gambarUrl = olahragaObj.optString("gambar", "");
-                                String caraOlahraga = olahragaObj.optString("cara_olahraga","");// Directly get the URL
+                                String gambarPath = olahragaObj.optString("gambar", "");
+                                String caraOlahraga = olahragaObj.optString("cara_olahraga","");
 
-                                // Create OlahragaModel with corrected constructor
+                                // Prepend base URL to gambar path
+                                String gambarUrl = "https://adek-app.my.id/Images/" + gambarPath;
+
+                                // Create OlahragaModel with URL instead of byte array
                                 OlahragaModel olahraga = new OlahragaModel(
                                         namaOlahraga,
                                         deskripsi,
                                         gambarUrl,
-                                        caraOlahraga// Pass URL directly to the model
+                                        caraOlahraga
                                 );
 
                                 olahragaList.add(olahraga);
@@ -162,7 +165,7 @@ public class KekuatanFragment extends Fragment {
                         olahragaAdapter.updateList(olahragaList);
 
                         if (olahragaList.isEmpty()) {
-                            showError("Tidak ada data olahraga");
+                            showError("Tidak ada data olahraga kekuatan");
                         }
 
                     } catch (JSONException e) {
@@ -174,7 +177,7 @@ public class KekuatanFragment extends Fragment {
                 },
                 error -> {
                     Log.e(TAG, "Volley Error: " + error.getMessage());
-                    showError("Gagal mengambil data olahraga");
+                    showError("Gagal mengambil data olahraga kekuatan");
                     progressBar.setVisibility(View.GONE);
                 });
 

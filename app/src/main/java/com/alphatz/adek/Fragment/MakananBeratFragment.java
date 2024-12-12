@@ -209,9 +209,6 @@ public class MakananBeratFragment extends Fragment {
         detailResep.setText(resep.getResep());
 
         closeButton.setOnClickListener(v -> builder.create().dismiss());
-
-        androidx.appcompat.app.AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
     private void navigateToFragment(Fragment fragment) {
