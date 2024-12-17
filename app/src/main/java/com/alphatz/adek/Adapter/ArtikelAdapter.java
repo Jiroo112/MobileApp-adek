@@ -1,7 +1,9 @@
 package com.alphatz.adek.Adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,6 +22,10 @@ import com.alphatz.adek.Model.ArtikelModel;
 import com.alphatz.adek.R;
 import com.alphatz.adek.Fragment.DetailArtikelFragment;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 
@@ -100,15 +107,16 @@ public class ArtikelAdapter extends RecyclerView.Adapter<ArtikelAdapter.ArtikelV
 
             String artikelDetail = artikel.getIsiArtikel();
             if (artikelDetail == null || artikelDetail.isEmpty()) {
-                artikelDetail = "Artikel tidak tersedia.";
+                artikelDetail = "sEBENTAARRR, Artikel akan di update.";
             }
             detailArtikel.setText(artikelDetail);
 
-            String imageUrl = artikel.getGambarUrl();
-            if (imageUrl != null && !imageUrl.startsWith("http")) {
-                String baseUrl = "https://adek-app.my.id/";
-                imageUrl = baseUrl + imageUrl;
-            }
+            Glide.with(context)
+                    .load(artikel.getGambarUrl())
+                    .placeholder(R.drawable.button_filter) // Placeholder image
+                    .error(R.drawable.button_filter) // Error image
+                    .into(imageResep);
+
             androidx.appcompat.app.AlertDialog dialog = builder.create();
             closeButton.setOnClickListener(view -> dialog.dismiss());
             dialog.show();
@@ -121,28 +129,37 @@ public class ArtikelAdapter extends RecyclerView.Adapter<ArtikelAdapter.ArtikelV
 
         void bind(final ArtikelModel artikel) {
             if (artikel != null) {
+
                 tvJudulArtikel.setText(artikel.getJudulArtikel());
                 tvDeskripsi.setText(artikel.getKategori());
 
+                Log.d("ArtikelAdapter", "loading image URL : " + artikel.getGambarUrl());
+
                 String imageUrl = artikel.getGambarUrl();
                 if (imageUrl != null && !imageUrl.startsWith("http")) {
-                    // Tambahkan base URL jika gambar tidak dimulai dengan "http"
-                    String baseUrl = "https://adek-app.my.id/Image/";
+                    String baseUrl = "https://adek-app.my.id/";
                     imageUrl = baseUrl + imageUrl;
                 }
 
-                if (imageUrl != null && !imageUrl.isEmpty()) {
-                    // Muat gambar menggunakan Glide
-                    Glide.with(itemView.getContext())
-                            .load(imageUrl)
-                            .placeholder(R.drawable.gambar_kosong) // Ganti dengan drawable placeholder Anda
-                            .error(R.drawable.gambar_kosong) // Ganti dengan drawable error Anda
-                            .into(ivArtikel);
-                } else {
-                    // Gunakan gambar placeholder default jika URL tidak valid
-                    ivArtikel.setImageResource(R.drawable.gambar_kosong); // Ganti dengan drawable default Anda
-                }
-                }
+                Glide.with(itemView.getContext())
+                        .load(imageUrl)
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                Log.e("Glide", "Image load failed", e);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                Log.d("Glide", "Image loaded successfully");
+                                return false;
+                            }
+                        })
+                        .placeholder(R.drawable.button_filter)
+                        .error(R.drawable.button_filter)
+                        .into(ivArtikel);
+            }
+        }
         }
     }
-}

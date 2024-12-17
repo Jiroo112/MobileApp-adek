@@ -22,10 +22,10 @@
             android:layout_height="80dp"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="12dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/gambar_kosong"
             android:background="@drawable/custom_imageview"
-            android:clipToOutline="true" />
+            android:clipToOutline="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/gambar_kosong" />
 
         <LinearLayout
             android:layout_width="0dp"
