@@ -154,6 +154,7 @@ public class SearchFragment extends Fragment implements ArtikelAdapter.OnArtikel
 
                                 String judul = artikel.optString("judulArtikel", "");
                                 String kategori = artikel.optString("kategori", "");
+                                String isiArtikel = artikel.optString("isiArtikel", "");
                                 String gambarPath = artikel.optString("gambar", "");
 
                                 Log.d("FetchArtikelData", "Artikel ke-" + i + ": Judul = " + judul + ", Kategori = " + kategori);
@@ -162,7 +163,7 @@ public class SearchFragment extends Fragment implements ArtikelAdapter.OnArtikel
                                 String gambarUrl = gambarPath.isEmpty() ? null : "http://adek-app.my.id/Images/" + gambarPath;
 
                                 // Buat model ArtikelModel menggunakan URL gambar
-                                ArtikelModel artikelModel = new ArtikelModel(judul, kategori, gambarUrl);
+                                ArtikelModel artikelModel = new ArtikelModel(judul, kategori, gambarUrl, isiArtikel);
                                 artikelList.add(artikelModel);
                             }
 

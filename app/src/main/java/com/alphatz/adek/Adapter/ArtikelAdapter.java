@@ -1,13 +1,16 @@
 package com.alphatz.adek.Adapter;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,6 +73,50 @@ public class ArtikelAdapter extends RecyclerView.Adapter<ArtikelAdapter.ArtikelV
             tvJudulArtikel = itemView.findViewById(R.id.tv_judul_artikel);
             tvDeskripsi = itemView.findViewById(R.id.tv_deskripsi_artikel);
             ivArtikel = itemView.findViewById(R.id.iv_artikel);
+
+            itemView.setOnClickListener(view -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    ArtikelModel artikel = artikelList.get(position);
+                    listener.onArtikelClick(artikel);
+                    showDialog(itemView.getContext(), artikel);
+                }
+            });
+        }
+
+        private void showDialog(Context context, ArtikelModel artikel) {
+            if  (!(context instanceof FragmentActivity)) return;
+
+            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
+            View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_artikel, null);
+            builder.setView(dialogView);
+
+            TextView titleText = dialogView.findViewById(R.id.title_artikel);
+            TextView detailArtikel = dialogView.findViewById(R.id.isi_artikel);
+            ImageView imageResep = dialogView.findViewById(R.id.image_artikel);
+            Button closeButton = dialogView.findViewById(R.id.btn_close);
+
+            titleText.setText(artikel.getJudulArtikel());
+
+            String artikelDetail = artikel.getIsiArtikel();
+            if (artikelDetail == null || artikelDetail.isEmpty()) {
+                artikelDetail = "Artikel tidak tersedia.";
+            }
+            detailArtikel.setText(artikelDetail);
+
+            String imageUrl = artikel.getGambarUrl();
+            if (imageUrl != null && !imageUrl.startsWith("http")) {
+                String baseUrl = "https://adek-app.my.id/";
+                imageUrl = baseUrl + imageUrl;
+            }
+            androidx.appcompat.app.AlertDialog dialog = builder.create();
+            closeButton.setOnClickListener(view -> dialog.dismiss());
+            dialog.show();
+
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            }
+
         }
 
         void bind(final ArtikelModel artikel) {
@@ -95,24 +142,7 @@ public class ArtikelAdapter extends RecyclerView.Adapter<ArtikelAdapter.ArtikelV
                     // Gunakan gambar placeholder default jika URL tidak valid
                     ivArtikel.setImageResource(R.drawable.gambar_kosong); // Ganti dengan drawable default Anda
                 }
-
-                itemView.setOnClickListener(v -> {
-                    if (listener != null) {
-                        listener.onArtikelClick(artikel);
-                    }
-
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    DetailArtikelFragment detailFragment = new DetailArtikelFragment();
-
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("artikel_key", artikel);
-                    detailFragment.setArguments(bundle);
-
-                    fragmentTransaction.replace(R.id.fragment_container, detailFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                });
-            }
+                }
         }
     }
 }

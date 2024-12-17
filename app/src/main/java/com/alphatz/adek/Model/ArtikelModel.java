@@ -8,11 +8,13 @@ import androidx.annotation.NonNull;
 public class ArtikelModel implements Parcelable {
     private String judulArtikel;
     private String kategori;
-    private String gambarUrl; // Changed from byte[] to String for URL storage
+    private String isiArtikel;
+    private String gambarUrl;
 
-    public ArtikelModel(@NonNull String judulartikel, @NonNull String kategori_artikel, @NonNull String gambarUrl) {
+    public ArtikelModel(@NonNull String judulartikel, @NonNull String kategori_artikel, @NonNull String gambarUrl, @NonNull String isiArtikel) {
         this.judulArtikel = judulartikel;
         this.kategori = kategori_artikel;
+        this.isiArtikel = isiArtikel;
         this.gambarUrl = gambarUrl;
     }
 
@@ -20,6 +22,10 @@ public class ArtikelModel implements Parcelable {
     @NonNull
     public String getJudulArtikel() {
         return judulArtikel != null ? judulArtikel : "";
+    }
+    @NonNull
+    public String getIsiArtikel() {
+        return isiArtikel != null ? isiArtikel : "";
     }
 
     @NonNull
@@ -37,6 +43,10 @@ public class ArtikelModel implements Parcelable {
         this.judulArtikel = judulArtikel;
     }
 
+    public void setIsiArtikel(@NonNull String isiArtikel) {
+        this.isiArtikel = isiArtikel;
+    }
+
     public void setKategori(@NonNull String kategori) {
         this.kategori = kategori;
     }
@@ -49,7 +59,9 @@ public class ArtikelModel implements Parcelable {
     protected ArtikelModel(Parcel in) {
         judulArtikel = in.readString();
         kategori = in.readString();
-        gambarUrl = in.readString(); // Read the URL as String
+        gambarUrl = in.readString();
+        isiArtikel = in.readString();
+        // Read the URL as String
     }
 
     public static final Creator<ArtikelModel> CREATOR = new Creator<ArtikelModel>() {
@@ -73,6 +85,7 @@ public class ArtikelModel implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(judulArtikel);
         dest.writeString(kategori);
+        dest.writeString(isiArtikel);
         dest.writeString(gambarUrl); // Write the URL as String
     }
 }

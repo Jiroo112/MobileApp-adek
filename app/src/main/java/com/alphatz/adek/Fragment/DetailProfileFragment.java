@@ -42,7 +42,7 @@ public class DetailProfileFragment extends Fragment {
             tvHeight,
             tvWeight,
             tvBmi,
-            tvUsia,  // Make sure this matches your layout
+            tvUsia,
             tvNoHP;
 
     private String currentNamaLengkap;
