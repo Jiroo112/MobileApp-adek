@@ -20,9 +20,9 @@ import com.alphatz.adek.R;
 public class SettingsFragment extends Fragment {
 
     private static final String PREF_NAME = "LoginPrefs";
+    private static final String KEY_NAMA_LENGKAP = "namaLengkap";
 
     public SettingsFragment() {
-
     }
 
     @Override
@@ -35,51 +35,37 @@ public class SettingsFragment extends Fragment {
         LinearLayout layoutProfile = view.findViewById(R.id.layout_profile);
         TextView tvProfile = view.findViewById(R.id.text_profile);
 
+        // Retrieve nama_lengkap from SharedPreferences
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, requireActivity().MODE_PRIVATE);
+        String namaLengkap = sharedPreferences.getString(KEY_NAMA_LENGKAP, "Pengguna");
+
         // Klik untuk Ganti Password
-        tvGantiPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment changepwFragment = new ChangepwFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, changepwFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
+        tvGantiPassword.setOnClickListener(v -> {
+            Fragment changepwFragment = new ChangepwFragment();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, changepwFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
 
-        tvProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment DetailProfileFragment = new DetailProfileFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, DetailProfileFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
+        // Update both click listeners to pass nama_lengkap
+        tvProfile.setOnClickListener(v -> openDetailProfileFragment(namaLengkap));
 
-
-        // Klik untuk membuka Detail Profil
-        layoutProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment detailProfileFragment = new DetailProfileFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, detailProfileFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
+        layoutProfile.setOnClickListener(v -> openDetailProfileFragment(namaLengkap));
 
         // Implementasi Logout yang terintegrasi dengan LoginActivity
-        tvLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                performLogout();
-            }
-        });
+        tvLogout.setOnClickListener(v -> performLogout());
 
         return view;
+    }
+
+    private void openDetailProfileFragment(String namaLengkap) {
+        // Use the newInstance method to pass the name
+        Fragment detailProfileFragment = DetailProfileFragment.newInstance(namaLengkap);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, detailProfileFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void performLogout() {
@@ -87,16 +73,13 @@ public class SettingsFragment extends Fragment {
             new AlertDialog.Builder(getActivity())
                     .setTitle("Konfirmasi Logout")
                     .setMessage("Apakah Anda yakin ingin keluar?")
-                    .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREF_NAME, getActivity().MODE_PRIVATE);
-                            LoginActivity.logout(sharedPreferences);
-                            Intent intent = new Intent(getActivity(), LoginActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            getActivity().finish();
-                        }
+                    .setPositiveButton("Ya", (dialog, which) -> {
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREF_NAME, getActivity().MODE_PRIVATE);
+                        LoginActivity.logout(sharedPreferences);
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        getActivity().finish();
                     })
                     .setNegativeButton("Tidak", null)
                     .show();
