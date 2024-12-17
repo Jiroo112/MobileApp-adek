@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
     tools:context=".Fragment.SearchFragment">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gelombang"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gelombang"
+        android:rotation="180"
+        android:layout_gravity="bottom"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,7 +52,6 @@
             android:padding="16dp"
             app:cardCornerRadius="20dp">
 
-            <!-- FrameLayout to stack ImageView and TextView -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -62,9 +72,7 @@
                     android:visibility="gone" />
 
             </FrameLayout>
-
         </androidx.cardview.widget.CardView>
-
 
       <LinearLayout
           android:layout_width="wrap_content"
@@ -90,52 +98,43 @@
       </LinearLayout>
 
         <!-- Horizontal ScrollView for Resep Images -->
-        <HorizontalScrollView
-            android:id="@+id/horizontalScrollViewResep"
-            android:layout_width="match_parent"
-            android:layout_height="130dp"
-            android:layout_marginTop="16dp"
-            android:scrollbars="none">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/makanan_berat"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@drawable/makanan_berat"
-                    android:elevation="8dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"/>
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/minuman_sehat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-5dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@drawable/minuman_sehat"
-                    android:elevation="8dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"/>
+                    <ImageView
+                        android:id="@+id/makanan_berat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:src="@drawable/makanan_berat"
+                        android:elevation="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"/>
 
-                <ImageView
-                    android:id="@+id/desert"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@drawable/dessert2"
-                    android:elevation="8dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"/>
+                    <ImageView
+                        android:id="@+id/minuman_sehat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-5dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:src="@drawable/minuman_sehat"
+                        android:elevation="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"/>
 
-            </LinearLayout>
-        </HorizontalScrollView>
+                    <ImageView
+                        android:id="@+id/desert"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:src="@drawable/dessert2"
+                        android:elevation="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"/>
 
+                </LinearLayout>
 
         <!-- Olahraga TextView -->
         <LinearLayout
@@ -162,44 +161,43 @@
         </LinearLayout>
 
         <!-- Horizontal ScrollView for Olahraga Images -->
-        <HorizontalScrollView
-            android:id="@+id/horizontalScrollViewOlahraga"
-            android:layout_width="match_parent"
-            android:layout_height="130dp"
-            android:layout_marginTop="16dp"
-            android:scrollbars="none">
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollViewOlahraga"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginTop="16dp"
+                android:scrollbars="none">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/kardio"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@drawable/kardio" />
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/kekuatan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@drawable/kekuatan" />
+                    <ImageView
+                        android:id="@+id/kardio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:src="@drawable/kardio" />
 
-                <ImageView
-                    android:id="@+id/interval"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@drawable/interval" />
-            </LinearLayout>
-        </HorizontalScrollView>
+                    <ImageView
+                        android:id="@+id/kekuatan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:src="@drawable/kekuatan" />
 
+                    <ImageView
+                        android:id="@+id/interval"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:src="@drawable/interval" />
+                </LinearLayout>
+            </HorizontalScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -228,4 +226,4 @@
             <!-- Other existing views -->
         </LinearLayout>
     </LinearLayout>
-</ScrollView>
+</FrameLayout>

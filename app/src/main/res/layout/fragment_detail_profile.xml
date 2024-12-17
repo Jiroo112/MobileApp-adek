@@ -2,7 +2,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_profile"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F0F4F8">
@@ -14,7 +13,7 @@
         android:paddingTop="32dp"
         android:paddingBottom="24dp">
 
-        <!-- Profil Card -->
+        <!-- Profile Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/profileCard"
             android:layout_width="match_parent"
@@ -30,79 +29,39 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
-                <!-- Foto Profil with Circular Border -->
+                <!-- Profile Image -->
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profileImage"
                     android:layout_width="140dp"
                     android:layout_height="140dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/lemak_1"
-                    android:contentDescription="Profile Image"
+                    android:src="@drawable/ic_profil"
                     app:civ_border_width="4dp"
                     app:civ_border_color="#4A90E2"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="16dp" />
 
-                <!-- Nama -->
+                <!-- Name -->
                 <TextView
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="John Doe"
+                    android:text="Nama Lengkap"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="#2C3E50" />
 
-                <!-- Bio -->
+                <!-- Diet Type -->
                 <TextView
                     android:id="@+id/tv_tipediet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Menambah Berat Badan"
+                    android:text="Tipe Diet"
                     android:textSize="16sp"
                     android:textColor="#7F8C8D"
                     android:layout_marginTop="8dp" />
 
-                <!-- Quick Stats -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:layout_marginTop="16dp">
-
-                    <LinearLayout
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:layout_marginEnd="24dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="BMI"
-                            android:textColor="#4A90E2"
-                            android:textStyle="bold"
-                            android:textSize="20sp"/>
-
-                        <TextView
-                            android:id="@+id/tvBmi"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textSize="20sp"
-                            android:layout_marginTop="4dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center"/>
-                </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -123,139 +82,108 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
-                <!-- Detail Informasi -->
-                <LinearLayout
+                <!-- Gender -->
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:text="Jenis Kelamin"
+                    android:textColor="#4A90E2"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:paddingEnd="12dp">
+                <TextView
+                    android:id="@+id/tvGender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="#2C3E50"
+                    android:textSize="15sp" />
 
-                        <!-- Jenis Kelamin -->
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Jenis Kelamin"
-                            android:textColor="#4A90E2"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                <!-- Birthdate -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tanggal Lahir"
+                    android:layout_marginTop="16dp"
+                    android:textColor="#4A90E2"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="Laki-laki"
-                            android:textColor="#2C3E50"
-                            android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/tvBirthDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#2C3E50"
+                    android:textSize="15sp" />
 
-                        <!-- Tanggal Lahir -->
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="Tanggal Lahir"
-                            android:textColor="#4A90E2"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                <!-- Email -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Email"
+                    android:layout_marginTop="16dp"
+                    android:textColor="#4A90E2"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etBirthDate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="15 Agustus 1990"
-                            android:textColor="#2C3E50"
-                            android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/tvEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#2C3E50"
+                    android:textSize="15sp" />
 
-                        <!-- Email Aktif -->
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="Email Aktif"
-                            android:textColor="#4A90E2"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                <!-- Height -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tinggi Badan"
+                    android:layout_marginTop="16dp"
+                    android:textColor="#4A90E2"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etEmail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="kunMooji@gmail.com"
-                            android:textColor="#2C3E50"
-                            android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/tvHeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#2C3E50"
+                    android:textSize="15sp" />
 
-                        <!-- Tinggi Badan -->
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Tinggi Badan"
-                            android:textColor="#4A90E2"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                <!-- Weight -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Berat Badan"
+                    android:layout_marginTop="16dp"
+                    android:textColor="#4A90E2"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etHeight"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="175 cm"
-                            android:textColor="#2C3E50"
-                            android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/tvWeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#2C3E50"
+                    android:textSize="15sp" />
 
-                        <!-- Berat Badan -->
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="Berat Badan"
-                            android:textColor="#4A90E2"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                <!-- BMI -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="BMI"
+                    android:layout_marginTop="16dp"
+                    android:textColor="#4A90E2"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etWeight"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="70 kg"
-                            android:textColor="#2C3E50"
-                            android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/tvBmi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#2C3E50"
+                    android:textSize="15sp" />
 
-                        <!-- No Telepon -->
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="No Telepon"
-                            android:textColor="#4A90E2"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                        <EditText
-                            android:id="@+id/etTipeDiet"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="-"
-                            android:textColor="#2C3E50"
-                            android:textSize="15sp" />
-
-                        <Button
-                            android:id="@+id/btnEditProfile"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="edit"/>
-
-                    </LinearLayout>
-                </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

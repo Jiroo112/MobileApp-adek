@@ -60,7 +60,7 @@ public class ProfileFragment extends Fragment {
     private RequestQueue requestQueue;
     private Bitmap foto_profile;
 
-    private String url = "http://adek-app.my.id/ads_mysql/account/profile_adek.php";
+    private String url = "http://adek-app.my.id/ads_mysql/account/get_profile.php";
 
     public ProfileFragment() {
     }
@@ -72,7 +72,6 @@ public class ProfileFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

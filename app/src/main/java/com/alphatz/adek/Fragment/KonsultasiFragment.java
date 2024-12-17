@@ -91,7 +91,7 @@ public class KonsultasiFragment extends Fragment {
     }
 
     private void getDokterData() {
-        String url = "http://10.0.2.2/ads_mysql/get_dokter.php";
+        String url = "http://adek-app.my.id/ads_mysql/get_dokter.php";
         progressBar.setVisibility(View.VISIBLE);
 
         JsonObjectRequest request = new JsonObjectRequest(

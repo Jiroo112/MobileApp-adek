@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="1000dp"
+    android:height="1000dp"
+    android:viewportWidth="1000"
+    android:viewportHeight="1000">
+
+    <!-- Upper wave -->
+    <path
+        android:fillColor="#4027ae60"
+        android:pathData="M0,100 C200,200 400,0 600,100 C800,200 1000,0 1000,100 L1000,0 L0,0 Z" />
+
+    <!-- Lower wave -->
+    <path
+        android:fillColor="#4027ae60"
+        android:pathData="M0,700 C200,600 400,800 600,700 C800,600 1000,800 1000,900 L1000,1000 L0,1000 Z" />
+</vector>
