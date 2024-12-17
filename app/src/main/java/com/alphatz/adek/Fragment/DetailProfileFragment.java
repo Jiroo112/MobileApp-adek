@@ -35,7 +35,15 @@ public class DetailProfileFragment extends Fragment {
     private static final String TAG = "DetailProfileFragment";
     private static final String URL_PROFILE = "http://adek-app.my.id/ads_mysql/account/get_profile.php";
 
-    private TextView tvName, tvTipeDiet, tvGender, tvBirthDate, tvEmail, tvHeight, tvWeight, tvBmi;
+    private TextView tvName,
+            tvTipeDiet,
+            tvGender,
+            tvBirthDate,
+            tvEmail,
+            tvHeight,
+            tvWeight,
+
+    tvBmi;
     private ImageView profileImage;
     private String namaLengkap;
     private RequestQueue requestQueue;
