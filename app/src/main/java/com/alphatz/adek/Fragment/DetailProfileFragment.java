@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +17,6 @@ import androidx.fragment.app.Fragment;
 
 import com.alphatz.adek.R;
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -33,20 +34,23 @@ import java.util.Map;
 public class DetailProfileFragment extends Fragment {
     private static final String TAG = "DetailProfileFragment";
     private static final String URL_PROFILE = "http://adek-app.my.id/ads_mysql/account/profile_adek.php";
+    private static final String URL_EDIT_PROFILE = "http://adek-app.my.id/ads_mysql/account/edit_profile_adek.php";
 
-    private TextView tvName,
-            tvTipeDiet,
-            tvGender,
-            tvBirthDate,
-            tvEmail,
-            tvHeight,
-            tvWeight,
-            tvBmi,
-            tvUsia,
-            tvNoHP;
+    // TextView fields
+    private TextView tvName, tvTipeDiet, tvGender, tvBirthDate,
+            tvEmail, tvHeight, tvWeight, tvBmi,
+            tvUsia, tvNoHP;
+
+    // EditText fields
+    private EditText etTipeDiet, etGender, etBirthDate,
+            etEmail, etHeight, etWeight, etNoHP;
+
+    // Edit Button
+    private Button ButtonEdit;
 
     private String currentNamaLengkap;
     private RequestQueue requestQueue;
+    private boolean isEditMode = false;
 
     public DetailProfileFragment() {
     }
@@ -88,6 +92,7 @@ public class DetailProfileFragment extends Fragment {
     }
 
     private void initializeViews(View view) {
+        // Initialize TextViews
         tvName = view.findViewById(R.id.tvName);
         tvTipeDiet = view.findViewById(R.id.tv_tipediet);
         tvGender = view.findViewById(R.id.tvGender);
@@ -96,16 +101,68 @@ public class DetailProfileFragment extends Fragment {
         tvHeight = view.findViewById(R.id.tvHeight);
         tvWeight = view.findViewById(R.id.tvWeight);
         tvBmi = view.findViewById(R.id.tvBmi);
+        tvNoHP = view.findViewById(R.id.tvNoHP);
 
-        // Optional: Set default text to prevent null issues
-        if (tvUsia != null) {
-            tvUsia.setText("Usia: Tidak tersedia");
+        // Initialize EditTexts
+        etTipeDiet = view.findViewById(R.id.etTipeDiet);
+        etGender = view.findViewById(R.id.etGender);
+        etBirthDate = view.findViewById(R.id.etBirthDate);
+        etEmail = view.findViewById(R.id.etEmail);
+        etHeight = view.findViewById(R.id.etHeight);
+        etWeight = view.findViewById(R.id.etWeight);
+        etNoHP = view.findViewById(R.id.etNoHP);
+
+        // Initialize Edit Button
+        ButtonEdit = view.findViewById(R.id.btnEditProfile);
+        ButtonEdit.setOnClickListener(v -> toggleEditMode());
+    }
+
+    private void toggleEditMode() {
+        isEditMode = !isEditMode;
+
+        // Toggle visibility of TextViews and EditTexts
+        int textViewVisibility = isEditMode ? View.GONE : View.VISIBLE;
+        int editTextVisibility = isEditMode ? View.VISIBLE : View.GONE;
+
+        // TextViews
+        tvTipeDiet.setVisibility(textViewVisibility);
+        tvGender.setVisibility(textViewVisibility);
+        tvBirthDate.setVisibility(textViewVisibility);
+        tvEmail.setVisibility(textViewVisibility);
+        tvHeight.setVisibility(textViewVisibility);
+        tvWeight.setVisibility(textViewVisibility);
+        tvNoHP.setVisibility(textViewVisibility);
+
+        // EditTexts
+        etTipeDiet.setVisibility(editTextVisibility);
+        etGender.setVisibility(editTextVisibility);
+        etBirthDate.setVisibility(editTextVisibility);
+        etEmail.setVisibility(editTextVisibility);
+        etHeight.setVisibility(editTextVisibility);
+        etWeight.setVisibility(editTextVisibility);
+        etNoHP.setVisibility(editTextVisibility);
+
+        if (isEditMode) {
+            // Populate EditTexts with current values
+            etTipeDiet.setText(tvTipeDiet.getText());
+            etGender.setText(tvGender.getText());
+            etBirthDate.setText(tvBirthDate.getText());
+            etEmail.setText(tvEmail.getText());
+            String heightValue = tvHeight.getText().toString();
+            etHeight.setText(heightValue.replace(" cm", ""));
+            String weightValue = tvWeight.getText().toString();
+            etWeight.setText(weightValue.replace(" kg", ""));
+            etNoHP.setText(tvNoHP.getText());
+
+            ButtonEdit.setText("Simpan");
+        } else {
+            // Save changes
+            saveProfileChanges();
+            ButtonEdit.setText("Edit Profile");
         }
     }
 
     private void fetchProfileData() {
-        Log.d(TAG, "Fetching data for nama_lengkap: " + currentNamaLengkap);
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_PROFILE,
                 response -> {
                     Log.d(TAG, "Response: " + response);
@@ -125,10 +182,6 @@ public class DetailProfileFragment extends Fragment {
                     }
                 },
                 error -> {
-                    if (error.networkResponse != null) {
-                        Log.e(TAG, "Network Error: " + error.networkResponse.statusCode);
-                        Log.e(TAG, "Error Response Data: " + new String(error.networkResponse.data));
-                    }
                     Log.e(TAG, "Volley error: " + Log.getStackTraceString(error));
                     Toast.makeText(getContext(), "Network error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 }) {
@@ -136,15 +189,58 @@ public class DetailProfileFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("nama_lengkap", currentNamaLengkap);
-                Log.d(TAG, "Sending params: " + params.toString());
                 return params;
             }
+        };
 
+        requestQueue.add(stringRequest);
+    }
+
+    private void saveProfileChanges() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_EDIT_PROFILE,
+                response -> {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        if (jsonObject.getString("status").equals("success")) {
+                            Toast.makeText(getContext(), "Profil berhasil diperbarui", Toast.LENGTH_SHORT).show();
+
+                            // Update TextViews with new values
+                            tvTipeDiet.setText(etTipeDiet.getText());
+                            tvGender.setText(etGender.getText());
+                            tvBirthDate.setText(etBirthDate.getText());
+                            tvEmail.setText(etEmail.getText());
+                            tvHeight.setText(etHeight.getText() + " cm");
+                            tvWeight.setText(etWeight.getText() + " kg");
+                            tvNoHP.setText(etNoHP.getText());
+
+                            // Recalculate BMI and Age
+                            calculateAndDisplayBMI(etWeight.getText().toString(), etHeight.getText().toString());
+                            calculateAndDisplayAge(etBirthDate.getText().toString());
+                        } else {
+                            String message = jsonObject.getString("message");
+                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG, "JSON Parsing error: " + e.getMessage());
+                        Toast.makeText(getContext(), "Error parsing data", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> {
+                    Log.e(TAG, "Volley error: " + Log.getStackTraceString(error));
+                    Toast.makeText(getContext(), "Gagal memperbarui profil", Toast.LENGTH_SHORT).show();
+                }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("Content-Type", "application/x-www-form-urlencoded");
-                return headers;
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("nama_lengkap", currentNamaLengkap);
+                params.put("tipe_diet", etTipeDiet.getText().toString());
+                params.put("gender", etGender.getText().toString());
+                params.put("email", etEmail.getText().toString());
+                params.put("no_hp", etNoHP.getText().toString());
+                params.put("berat_badan", etWeight.getText().toString());
+                params.put("tinggi_badan", etHeight.getText().toString());
+                params.put("tanggal_lahir", etBirthDate.getText().toString());
+                return params;
             }
         };
 
@@ -152,66 +248,29 @@ public class DetailProfileFragment extends Fragment {
     }
 
     private void updateUIWithProfileData(JSONObject data) throws JSONException {
-        // Null checks for all TextViews
-        if (tvName != null)
-            tvName.setText(data.optString("nama_lengkap", "Tidak diketahui"));
-
-        if (tvTipeDiet != null)
-            tvTipeDiet.setText(data.optString("tipe_diet", "Tidak diketahui"));
-
-        if (tvGender != null)
-            tvGender.setText(data.optString("gender", "Tidak diketahui"));
-
-        if (tvEmail != null)
-            tvEmail.setText(data.optString("email", "Tidak diketahui"));
-
-        if (tvNoHP != null)
-            tvNoHP.setText(data.optString("no_hp", "Tidak diketahui"));
+        // Update TextViews with profile data
+        tvName.setText(data.optString("nama_lengkap", "Tidak diketahui"));
+        tvTipeDiet.setText(data.optString("tipe_diet", "Tidak diketahui"));
+        tvGender.setText(data.optString("gender", "Tidak diketahui"));
+        tvEmail.setText(data.optString("email", "Tidak diketahui"));
+        tvNoHP.setText(data.optString("no_hp", "Tidak diketahui"));
 
         String berat = data.optString("berat_badan", "0");
         String tinggi = data.optString("tinggi_badan", "0");
         String tanggalLahir = data.optString("tanggal_lahir", "");
 
-        if (tvWeight != null)
-            tvWeight.setText(berat + " kg");
-
-        if (tvHeight != null)
-            tvHeight.setText(tinggi + " cm");
+        tvWeight.setText(berat + " kg");
+        tvHeight.setText(tinggi + " cm");
+        tvBirthDate.setText(tanggalLahir);
 
         // Calculate and display BMI
         calculateAndDisplayBMI(berat, tinggi);
 
-        // Set birth date and calculate age
-        if (tvBirthDate != null)
-            tvBirthDate.setText(tanggalLahir);
-
+        // Calculate and display Age
         calculateAndDisplayAge(tanggalLahir);
     }
 
-    private void calculateAndDisplayAge(String tanggalLahir) {
-        // Null check for tvUsia
-        if (tvUsia == null) {
-            Log.e(TAG, "tvUsia is null, cannot display age");
-            return;
-        }
-
-        try {
-            // Format tanggal lahir
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate birthDate = LocalDate.parse(tanggalLahir, formatter);
-            LocalDate today = LocalDate.now();
-
-            // Hitung usia
-            int age = Period.between(birthDate, today).getYears();
-            tvUsia.setText(age + " tahun");
-        } catch (Exception e) {
-            Log.e(TAG, "Error parsing tanggal_lahir: " + e.getMessage());
-            tvUsia.setText("Error menghitung tahun");
-        }
-    }
-
     private void calculateAndDisplayBMI(String beratStr, String tinggiStr) {
-        // Null check for tvBmi
         if (tvBmi == null) {
             Log.e(TAG, "tvBmi is null, cannot display BMI");
             return;
@@ -226,6 +285,25 @@ public class DetailProfileFragment extends Fragment {
         } catch (NumberFormatException e) {
             Log.e(TAG, "Error parsing berat or tinggi: " + e.getMessage());
             tvBmi.setText("BMI: Tidak tersedia");
+        }
+    }
+
+    private void calculateAndDisplayAge(String tanggalLahir) {
+        if (tvUsia == null) {
+            Log.e(TAG, "tvUsia is null, cannot display age");
+            return;
+        }
+
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate birthDate = LocalDate.parse(tanggalLahir, formatter);
+            LocalDate today = LocalDate.now();
+
+            int age = Period.between(birthDate, today).getYears();
+            tvUsia.setText(age + " tahun");
+        } catch (Exception e) {
+            Log.e(TAG, "Error parsing tanggal_lahir: " + e.getMessage());
+            tvUsia.setText("Error menghitung tahun");
         }
     }
 }
