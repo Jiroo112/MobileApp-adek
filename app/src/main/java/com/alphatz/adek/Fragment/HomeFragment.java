@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -162,8 +164,10 @@ public class HomeFragment extends Fragment {
     }
 
     private void showDietTypeDialog() {
-        // Create the dialog using AlertDialog.Builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        // Create the dialog using AlertDialog.Builder with a custom theme
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(requireContext(), R.style.RoundedDialogTheme)
+        );
 
         // Inflate the custom layout for the dialog
         View dialogView = LayoutInflater.from(requireContext())
@@ -172,13 +176,17 @@ public class HomeFragment extends Fragment {
         // Set the custom view for the dialog
         builder.setView(dialogView);
 
-        // Add a close/OK button
-        builder.setPositiveButton("Tutup", (dialog, which) -> dialog.dismiss());
-
-        // Create and show the dialog
+        // Create the dialog
         AlertDialog dialog = builder.create();
+
+        // Get the button and set an OnClickListener to close the dialog
+        Button btnClose = dialogView.findViewById(R.id.btn_close);
+        btnClose.setOnClickListener(v -> dialog.dismiss());
+
+        // Show the dialog
         dialog.show();
     }
+
 
     private void fetchTotalsData() {
         if (!isAdded()) return;

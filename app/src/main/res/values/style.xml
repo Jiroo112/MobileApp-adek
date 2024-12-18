@@ -13,6 +13,14 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="RoundedDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+
     <!-- Gaya-gaya lain yang mungkin Anda miliki -->
 
 </resources>
