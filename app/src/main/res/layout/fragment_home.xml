@@ -67,6 +67,7 @@
 
         <!-- Kartu Gula -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/card_gula"
             android:layout_width="110dp"
             android:layout_height="120dp"
             app:cardCornerRadius="12dp"
@@ -108,6 +109,7 @@
 
         <!-- Kartu Karbohidrat -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/card_karbohidrat"
             android:layout_width="110dp"
             android:layout_height="120dp"
             app:cardCornerRadius="12dp"
@@ -149,6 +151,7 @@
 
         <!-- Kartu Lemak -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/card_lemak"
             android:layout_width="115dp"
             android:layout_height="120dp"
             app:cardCornerRadius="12dp"
@@ -203,6 +206,7 @@
 
         <!-- Kartu Protein -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/card_protein"
             android:layout_width="110dp"
             android:layout_height="120dp"
             app:cardCornerRadius="12dp"
@@ -244,6 +248,7 @@
 
         <!-- Kartu Air -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/card_air"
             android:layout_width="240dp"
             android:layout_height="120dp"
             app:cardCornerRadius="12dp"
@@ -292,11 +297,13 @@
         android:layout_marginBottom="60dp"/>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/card_tipeDiet"
             android:layout_width="380dp"
             android:layout_height="wrap_content"
             app:cardCornerRadius="16dp"
             android:layout_gravity="center"
-            android:layout_marginTop="190dp">
+            android:layout_marginTop="190dp"
+            android:clickable="true">
 
             <LinearLayout
                 android:layout_width="match_parent"

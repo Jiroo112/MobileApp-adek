@@ -11,6 +11,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import androidx.core.content.ContextCompat;
+
+import androidx.appcompat.widget.TooltipCompat;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -20,6 +29,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import androidx.appcompat.app.AlertDialog;
+import android.view.LayoutInflater;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,6 +89,95 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fetchTotalsData();
+
+        CardView cardTipeDiet = view.findViewById(R.id.card_tipeDiet);
+        cardTipeDiet.setOnClickListener(v -> showDietTypeDialog());
+
+        // Initialize CardViews
+        CardView cardGula = view.findViewById(R.id.card_gula);
+        CardView cardKarbohidrat = view.findViewById(R.id.card_karbohidrat);
+        CardView cardProtein = view.findViewById(R.id.card_protein);
+        CardView cardLemak = view.findViewById(R.id.card_lemak);
+        CardView cardAir = view.findViewById(R.id.card_air);
+
+        // Set custom tooltip listeners
+        cardGula.setOnLongClickListener(v -> {
+            showCustomTooltip(v, "Kelas King Gula");
+            return true;
+        });
+
+        cardKarbohidrat.setOnLongClickListener(v -> {
+            showCustomTooltip(v, "Kelas King Karbohidrat");
+            return true;
+        });
+
+        cardProtein.setOnLongClickListener(v -> {
+            showCustomTooltip(v, "Kelas King Protein");
+            return true;
+        });
+
+        cardLemak.setOnLongClickListener(v -> {
+            showCustomTooltip(v, "Kelas King Lemak");
+            return true;
+        });
+
+        cardAir.setOnLongClickListener(v -> {
+            showCustomTooltip(v, "Kelas King Air");
+            return true;
+        });
+    }
+
+    private void showCustomTooltip(View anchorView, String message) {
+        // Inflate the custom tooltip layout
+        View tooltipView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.custom_tooltip, null);
+
+        // Find the TextView in the custom layout
+        TextView tooltipText = tooltipView.findViewById(R.id.tooltip_text);
+        tooltipText.setText(message);
+
+        // Create the PopupWindow
+        PopupWindow popupWindow = new PopupWindow(
+                tooltipView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+
+        // Set background and enable outside touch dismissal
+        popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.tooltip_background));
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setFocusable(true);
+
+        // Calculate position
+        int[] anchorLocation = new int[2];
+        anchorView.getLocationOnScreen(anchorLocation);
+
+        // Show tooltip above the view
+        popupWindow.showAtLocation(
+                anchorView,
+                Gravity.NO_GRAVITY,
+                anchorLocation[0] + (anchorView.getWidth() / 2),
+                anchorLocation[1] - tooltipView.getHeight()
+        );
+    }
+
+    private void showDietTypeDialog() {
+        // Create the dialog using AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+
+        // Inflate the custom layout for the dialog
+        View dialogView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.dialog_upberat_badan, null);
+
+        // Set the custom view for the dialog
+        builder.setView(dialogView);
+
+        // Add a close/OK button
+        builder.setPositiveButton("Tutup", (dialog, which) -> dialog.dismiss());
+
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void fetchTotalsData() {
