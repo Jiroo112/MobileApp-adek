@@ -139,16 +139,14 @@ public class MakananBeratFragment extends Fragment {
                             try {
                                 JSONObject resepObj = jsonArray.getJSONObject(i);
 
-                                // Extract values with null checks and default values
+
                                 String namaMenu = resepObj.optString("nama_menu", "");
                                 int kalori = resepObj.optInt("kalori", 0);
                                 String gambarPath = resepObj.optString("gambar", "");
                                 String resep = resepObj.optString("resep", "");
 
-                                // Prepend base URL to gambar path
                                 String gambarUrl = "https://adek-app.my.id/Images/" + gambarPath;
 
-                                // Create ResepModel with URL instead of byte array
                                 ResepModel menu = new ResepModel(
                                         resepObj.optString("id_menu", ""),
                                         namaMenu,
@@ -160,7 +158,6 @@ public class MakananBeratFragment extends Fragment {
 
                                 menuList.add(menu);
                             } catch (JSONException e) {
-                                // Log the error and continue processing other items
                                 Log.e("ResepParser", "Error parsing JSON object", e);
                             }
                         }
